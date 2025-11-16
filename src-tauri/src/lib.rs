@@ -25,7 +25,7 @@ use std::sync::{LazyLock, Mutex, OnceLock};
 use storage::Storage;
 use tasks::monitor::TaskMonitor;
 use utils::portable::is_portable;
-use utils::web::build_lxmcl_client;
+use utils::web::build_xmcl_client;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 use tauri::path::BaseDirectory;
@@ -209,7 +209,7 @@ pub async fn run() {
 
       app.manage(Box::pin(TaskMonitor::new(app.handle().clone())));
 
-      let client = build_lxmcl_client(app.handle(), true, false);
+      let client = build_xmcl_client(app.handle(), true, false);
       app.manage(client);
 
       let launching_queue = Vec::<LaunchingState>::new();

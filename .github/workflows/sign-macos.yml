@@ -74,7 +74,7 @@ jobs:
       - name: Download macOS artifacts
         uses: actions/download-artifact@v4
         with:
-          name: LXMCL_${{ inputs.version }}_macos_${{ matrix.arch }}
+          name: XMCL_${{ inputs.version }}_macos_${{ matrix.arch }}
           path: artifacts
 
       - name: Setup signing environment
@@ -111,7 +111,7 @@ jobs:
           cd artifacts
           
           # Extract the .app from tar.gz
-          tar -xzf LXMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.app.tar.gz
+          tar -xzf XMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.app.tar.gz
           
           # Sign the .app bundle
           codesign --deep --force --options runtime \
@@ -122,8 +122,8 @@ jobs:
           codesign --verify --deep --strict --verbose=2 SJMCL.app
           
           # Re-compress the signed .app
-          rm LXMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.app.tar.gz
-          tar -czf LXMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.app.tar.gz SJMCL.app
+          rm XMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.app.tar.gz
+          tar -czf XMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.app.tar.gz SJMCL.app
 
       - name: Create DMG configuration
         run: |
@@ -167,17 +167,17 @@ jobs:
           cd artifacts
           
           # Remove the original DMG if it exists (build workflow no longer creates DMG)
-          rm -f LXMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.dmg
+          rm -f XMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.dmg
           
           # Create a new DMG with the signed app using appdmg
-          appdmg dmg-config.json LXMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.dmg
+          appdmg dmg-config.json XMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.dmg
           
           # Sign the new DMG
           codesign --force --sign "$SIGNING_IDENTITY" \
-            LXMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.dmg
+            XMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.dmg
           
           # Verify DMG signing
-          codesign --verify --deep --strict --verbose=2 LXMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.dmg
+          codesign --verify --deep --strict --verbose=2 XMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.dmg
           
           # Clean up extracted .app and config file
           rm -rf SJMCL.app dmg-config.json
@@ -191,7 +191,7 @@ jobs:
           cd artifacts
           
           # Extract .app for notarization
-          tar -xzf LXMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.app.tar.gz
+          tar -xzf XMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.app.tar.gz
           
           # Create zip for notarization
           ditto -c -k --keepParent SJMCL.app SJMCL.zip
@@ -207,8 +207,8 @@ jobs:
           xcrun stapler staple SJMCL.app
           
           # Re-compress the notarized .app
-          rm LXMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.app.tar.gz SJMCL.zip
-          tar -czf LXMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.app.tar.gz SJMCL.app
+          rm XMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.app.tar.gz SJMCL.zip
+          tar -czf XMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.app.tar.gz SJMCL.app
           rm -rf SJMCL.app
 
       - name: Notarize DMG
@@ -220,21 +220,21 @@ jobs:
           cd artifacts
           
           # Submit DMG for notarization
-          xcrun notarytool submit LXMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.dmg \
+          xcrun notarytool submit XMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.dmg \
             --apple-id "$NOTARY_APPLE_ID" \
             --password "$NOTARY_PASSWORD" \
             --team-id "$NOTARY_TEAM_ID" \
             --wait
           
           # Staple the notarization to DMG
-          xcrun stapler staple LXMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.dmg
+          xcrun stapler staple XMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.dmg
 
       - name: Verify notarization
         run: |
           cd artifacts
           
           # Extract the notarized .app for verification
-          tar -xzf LXMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.app.tar.gz
+          tar -xzf XMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.app.tar.gz
           
           echo "=== Testing Gatekeeper assessment on notarized app ==="
           spctl --verbose=4 --assess --type execute SJMCL.app
@@ -256,6 +256,6 @@ jobs:
       - name: Upload signed artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: LXMCL_${{ inputs.version }}_macos_${{ matrix.arch }}_signed
+          name: XMCL_${{ inputs.version }}_macos_${{ matrix.arch }}_signed
           path: artifacts/*
           if-no-files-found: error

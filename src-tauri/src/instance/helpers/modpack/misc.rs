@@ -1,4 +1,4 @@
-use crate::error::LXMCLResult;
+use crate::error::XMCLResult;
 use crate::instance::helpers::modpack::curseforge::CurseForgeManifest;
 use crate::instance::helpers::modpack::modrinth::ModrinthManifest;
 use crate::instance::helpers::modpack::multimc::MultiMcManifest;
@@ -23,7 +23,7 @@ pub struct ModpackMetaInfo {
 }
 
 impl ModpackMetaInfo {
-  pub async fn from_archive(file: &File) -> LXMCLResult<Self> {
+  pub async fn from_archive(file: &File) -> XMCLResult<Self> {
     if let Ok(manifest) = CurseForgeManifest::from_archive(file) {
       let client_version = manifest.get_client_version();
       let (loader_type, version) = manifest.get_mod_loader_type_version();
@@ -82,7 +82,7 @@ pub fn extract_overrides(
   overrides_path: &String,
   file: &File,
   instance_path: &Path,
-) -> LXMCLResult<()> {
+) -> XMCLResult<()> {
   let mut archive = ZipArchive::new(file)?;
   for i in 0..archive.len() {
     let mut file = archive.by_index(i)?;

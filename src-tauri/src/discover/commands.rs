@@ -1,5 +1,5 @@
 use crate::discover::models::{NewsPostRequest, NewsPostResponse, NewsSourceInfo};
-use crate::error::LXMCLResult;
+use crate::error::XMCLResult;
 use crate::launcher_config::models::LauncherConfig;
 use crate::utils::web::with_retry;
 use futures::future;
@@ -9,7 +9,7 @@ use tauri::{AppHandle, Manager};
 use tauri_plugin_http::reqwest;
 
 #[tauri::command]
-pub async fn fetch_news_sources_info(app: AppHandle) -> LXMCLResult<Vec<NewsSourceInfo>> {
+pub async fn fetch_news_sources_info(app: AppHandle) -> XMCLResult<Vec<NewsSourceInfo>> {
   let post_source_urls = {
     let binding = app.state::<Mutex<LauncherConfig>>();
     let state = binding.lock().unwrap();
@@ -58,7 +58,7 @@ pub async fn fetch_news_sources_info(app: AppHandle) -> LXMCLResult<Vec<NewsSour
 pub async fn fetch_news_post_summaries(
   app: AppHandle,
   requests: Vec<NewsPostRequest>,
-) -> LXMCLResult<NewsPostResponse> {
+) -> XMCLResult<NewsPostResponse> {
   let client = with_retry(app.state::<reqwest::Client>().inner().clone());
   let tasks: Vec<_> = requests
     .into_iter()

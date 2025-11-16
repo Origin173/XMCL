@@ -2,7 +2,7 @@ use crate::account::constants::DEFAULT_POLLING_INTERVAL;
 use crate::account::models::{
   AccountError, AccountInfo, DeviceAuthResponseInfo, OAuthErrorResponse, OAuthTokens, PlayerInfo,
 };
-use crate::error::LXMCLResult;
+use crate::error::XMCLResult;
 use crate::launcher_config::models::LauncherConfig;
 use crate::storage::Storage;
 use crate::utils::image::{decode_image, ImageWrapper};
@@ -11,7 +11,7 @@ use std::sync::Mutex;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_http::reqwest::{self, RequestBuilder};
 
-pub async fn fetch_image(app: &AppHandle, url: String) -> LXMCLResult<ImageWrapper> {
+pub async fn fetch_image(app: &AppHandle, url: String) -> XMCLResult<ImageWrapper> {
   let client = app.state::<reqwest::Client>();
 
   let response = client
@@ -33,7 +33,7 @@ pub async fn fetch_image(app: &AppHandle, url: String) -> LXMCLResult<ImageWrapp
   )
 }
 
-pub fn get_selected_player_info(app: &AppHandle) -> LXMCLResult<PlayerInfo> {
+pub fn get_selected_player_info(app: &AppHandle) -> XMCLResult<PlayerInfo> {
   let account_binding = app.state::<Mutex<AccountInfo>>();
   let account_state = account_binding.lock()?;
 
@@ -54,7 +54,7 @@ pub fn get_selected_player_info(app: &AppHandle) -> LXMCLResult<PlayerInfo> {
   Ok(player_info.clone())
 }
 
-pub async fn check_full_login_availability(app: &AppHandle) -> LXMCLResult<()> {
+pub async fn check_full_login_availability(app: &AppHandle) -> XMCLResult<()> {
   let loc_flag = is_china_mainland_ip(app).await;
 
   let account_binding = app.state::<Mutex<AccountInfo>>();
@@ -91,7 +91,7 @@ pub async fn oauth_polling(
   app: &AppHandle,
   sender: RequestBuilder,
   auth_info: DeviceAuthResponseInfo,
-) -> LXMCLResult<OAuthTokens> {
+) -> XMCLResult<OAuthTokens> {
   let account_binding = app.state::<Mutex<AccountInfo>>();
   {
     let mut account_state = account_binding.lock()?;

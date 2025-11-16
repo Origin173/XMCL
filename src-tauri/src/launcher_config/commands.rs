@@ -1,5 +1,5 @@
-use crate::error::LXMCLError;
-use crate::error::LXMCLResult;
+use crate::error::XMCLError;
+use crate::error::XMCLResult;
 use crate::instance::helpers::misc::refresh_instances;
 use crate::launcher_config::helpers::java::{
   build_mojang_java_download_params, get_java_info_from_command, get_java_info_from_release_file,
@@ -24,14 +24,14 @@ use tauri_plugin_http::reqwest;
 use tauri_plugin_opener::reveal_item_in_dir;
 
 #[tauri::command]
-pub fn retrieve_launcher_config(app: AppHandle) -> LXMCLResult<LauncherConfig> {
+pub fn retrieve_launcher_config(app: AppHandle) -> XMCLResult<LauncherConfig> {
   let binding = app.state::<Mutex<LauncherConfig>>();
   let state = binding.lock()?;
   Ok(state.clone())
 }
 
 #[tauri::command]
-pub fn update_launcher_config(app: AppHandle, key_path: String, value: String) -> LXMCLResult<()> {
+pub fn update_launcher_config(app: AppHandle, key_path: String, value: String) -> XMCLResult<()> {
   let config_binding = app.state::<Mutex<LauncherConfig>>();
   let mut config_state = config_binding.lock()?;
   let key_path = camel_to_snake_case(key_path.as_str());
@@ -41,7 +41,7 @@ pub fn update_launcher_config(app: AppHandle, key_path: String, value: String) -
 }
 
 #[tauri::command]
-pub fn restore_launcher_config(app: AppHandle) -> LXMCLResult<LauncherConfig> {
+pub fn restore_launcher_config(app: AppHandle) -> XMCLResult<LauncherConfig> {
   let mut default_config = LauncherConfig::default();
   default_config.setup_with_app(&app)?;
 
@@ -58,7 +58,7 @@ pub fn restore_launcher_config(app: AppHandle) -> LXMCLResult<LauncherConfig> {
 pub async fn export_launcher_config(
   app: AppHandle,
   client: tauri::State<'_, reqwest::Client>,
-) -> LXMCLResult<String> {
+) -> XMCLResult<String> {
   let binding = app.state::<Mutex<LauncherConfig>>();
   let state = { binding.lock()?.clone() };
   match client
@@ -96,7 +96,7 @@ pub async fn import_launcher_config(
   app: AppHandle,
   client: tauri::State<'_, reqwest::Client>,
   code: String,
-) -> LXMCLResult<LauncherConfig> {
+) -> XMCLResult<LauncherConfig> {
   match client
     .post("https://mc.sjtu.cn/api-sjmcl/validate")
     .json(&json!({
@@ -140,13 +140,13 @@ pub async fn import_launcher_config(
 }
 
 #[tauri::command]
-pub fn reveal_launcher_config() -> LXMCLResult<()> {
+pub fn reveal_launcher_config() -> XMCLResult<()> {
   let file_path = LauncherConfig::file_path();
-  reveal_item_in_dir(file_path).map_err(LXMCLError::from)
+  reveal_item_in_dir(file_path).map_err(XMCLError::from)
 }
 
 #[tauri::command]
-pub fn retrieve_custom_background_list(app: AppHandle) -> LXMCLResult<Vec<String>> {
+pub fn retrieve_custom_background_list(app: AppHandle) -> XMCLResult<Vec<String>> {
   let custom_bg_dir = app
     .path()
     .resolve::<PathBuf>("UserContent/Backgrounds".into(), BaseDirectory::AppData)?;
@@ -178,7 +178,7 @@ pub fn retrieve_custom_background_list(app: AppHandle) -> LXMCLResult<Vec<String
 }
 
 #[tauri::command]
-pub fn add_custom_background(app: AppHandle, source_src: String) -> LXMCLResult<String> {
+pub fn add_custom_background(app: AppHandle, source_src: String) -> XMCLResult<String> {
   let source_path = Path::new(&source_src);
   if !source_path.exists() || !source_path.is_file() {
     return Ok(String::new());
@@ -201,7 +201,7 @@ pub fn add_custom_background(app: AppHandle, source_src: String) -> LXMCLResult<
 }
 
 #[tauri::command]
-pub fn delete_custom_background(app: AppHandle, file_name: String) -> LXMCLResult<()> {
+pub fn delete_custom_background(app: AppHandle, file_name: String) -> XMCLResult<()> {
   let custom_bg_dir = app
     .path()
     .resolve::<PathBuf>("UserContent/Backgrounds".into(), BaseDirectory::AppData)?;
@@ -214,7 +214,7 @@ pub fn delete_custom_background(app: AppHandle, file_name: String) -> LXMCLResul
 }
 
 #[tauri::command]
-pub async fn retrieve_java_list(app: AppHandle) -> LXMCLResult<Vec<JavaInfo>> {
+pub async fn retrieve_java_list(app: AppHandle) -> XMCLResult<Vec<JavaInfo>> {
   refresh_and_update_javas(&app).await; // firstly refresh and update
   let binding = app.state::<Mutex<Vec<JavaInfo>>>();
   let state = binding.lock()?;
@@ -222,7 +222,7 @@ pub async fn retrieve_java_list(app: AppHandle) -> LXMCLResult<Vec<JavaInfo>> {
 }
 
 #[tauri::command]
-pub async fn validate_java(java_path: String) -> LXMCLResult<()> {
+pub async fn validate_java(java_path: String) -> XMCLResult<()> {
   if get_java_info_from_release_file(&java_path)
     .or_else(|| get_java_info_from_command(&java_path))
     .is_some()
@@ -234,7 +234,7 @@ pub async fn validate_java(java_path: String) -> LXMCLResult<()> {
 }
 
 #[tauri::command]
-pub async fn download_mojang_java(app: AppHandle, version: String) -> LXMCLResult<()> {
+pub async fn download_mojang_java(app: AppHandle, version: String) -> XMCLResult<()> {
   let download_params = build_mojang_java_download_params(&app, &version).await?;
 
   schedule_progressive_task_group(
@@ -249,7 +249,7 @@ pub async fn download_mojang_java(app: AppHandle, version: String) -> LXMCLResul
 }
 
 #[tauri::command]
-pub async fn check_game_directory(app: AppHandle, dir: String) -> LXMCLResult<String> {
+pub async fn check_game_directory(app: AppHandle, dir: String) -> XMCLResult<String> {
   let local_game_directories: Vec<_>;
   {
     let binding = app.state::<Mutex<LauncherConfig>>();
@@ -307,7 +307,7 @@ pub async fn check_game_directory(app: AppHandle, dir: String) -> LXMCLResult<St
 }
 
 #[tauri::command]
-pub async fn clear_download_cache(app: AppHandle) -> LXMCLResult<()> {
+pub async fn clear_download_cache(app: AppHandle) -> XMCLResult<()> {
   let launcher_config = app.state::<Mutex<LauncherConfig>>();
   let monitor = app.state::<Pin<Box<TaskMonitor>>>();
 
@@ -328,7 +328,7 @@ pub async fn clear_download_cache(app: AppHandle) -> LXMCLResult<()> {
 }
 
 #[tauri::command]
-pub async fn check_launcher_update(app: AppHandle) -> LXMCLResult<VersionMetaInfo> {
+pub async fn check_launcher_update(app: AppHandle) -> XMCLResult<VersionMetaInfo> {
   let config_binding = app.state::<Mutex<LauncherConfig>>();
   let current_version = {
     let config_state = config_binding.lock()?;
@@ -367,7 +367,7 @@ pub async fn check_launcher_update(app: AppHandle) -> LXMCLResult<VersionMetaInf
 }
 
 #[tauri::command]
-pub async fn download_launcher_update(app: AppHandle, version: VersionMetaInfo) -> LXMCLResult<()> {
+pub async fn download_launcher_update(app: AppHandle, version: VersionMetaInfo) -> XMCLResult<()> {
   if version.version.is_empty() || version.version == "up2date" {
     Ok(())
   } else {
@@ -381,7 +381,7 @@ pub async fn install_launcher_update(
   _app: AppHandle,
   _downloaded_filename: String,
   _restart: bool,
-) -> LXMCLResult<()> {
+) -> XMCLResult<()> {
   #[cfg(target_os = "windows")]
   {
     return Ok(());

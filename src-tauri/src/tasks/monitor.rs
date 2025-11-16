@@ -1,4 +1,4 @@
-use crate::error::LXMCLResult;
+use crate::error::XMCLResult;
 use crate::launcher_config::commands::retrieve_launcher_config;
 use crate::tasks::download::DownloadTask;
 use crate::tasks::events::{GEvent, GEventStatus, PEvent, TEvent};
@@ -123,7 +123,7 @@ impl TaskMonitor {
     task: T,
     p_handle: Arc<RwLock<PTaskHandle>>,
   ) where
-    T: Future<Output = LXMCLResult<()>> + Send + 'static,
+    T: Future<Output = XMCLResult<()>> + Send + 'static,
   {
     p_handle.write().unwrap().desc.status = PStatus::Waiting;
     self.phs.write().unwrap().insert(id, p_handle.clone());

@@ -3,12 +3,12 @@ use tauri::AppHandle;
 use tauri_plugin_http::reqwest;
 
 use crate::{
-  error::LXMCLError as Error,
+  error::XMCLError as Error,
   launcher_config::models::LauncherConfig,
   tasks::{commands::schedule_progressive_task_group, download::DownloadParam, PTaskParam},
 };
 
-const OPENLIST_BASE_URL: &str = env!("LXMCL_OPENLIST_BASE_URL");
+const OPENLIST_BASE_URL: &str = env!("XMCL_OPENLIST_BASE_URL");
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct OpenListResponse {

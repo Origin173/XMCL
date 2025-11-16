@@ -119,14 +119,14 @@ const AboutSettingsPage = () => {
           title: t("AboutSettingsPage.about.settings.reportIssue.title"),
           children: (
             <CommonIconButton
-              label="https://github.com/Origin173/LXMCL/issues"
+              label="https://github.com/Origin173/XMCL/issues"
               icon="external"
               withTooltip
               tooltipPlacement="bottom-end"
               size="xs"
               h={18}
               onClick={() => {
-                openUrl("https://github.com/Origin173/LXMCL/issues");
+                openUrl("https://github.com/Origin173/XMCL/issues");
               }}
             />
           ),
@@ -293,14 +293,14 @@ const AboutSettingsPage = () => {
           ),
           children: (
             <CommonIconButton
-              label="https://github.com/Origin173/LXMCL?tab=readme-ov-file#copyright"
+              label="https://github.com/Origin173/XMCL?tab=readme-ov-file#copyright"
               icon="external"
               withTooltip
               tooltipPlacement="bottom-end"
               size="xs"
               onClick={() => {
                 openUrl(
-                  "https://github.com/Origin173/LXMCL?tab=readme-ov-file#copyright"
+                  "https://github.com/Origin173/XMCL?tab=readme-ov-file#copyright"
                 );
               }}
             />

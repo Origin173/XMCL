@@ -8,7 +8,7 @@ use tauri::{AppHandle, Manager};
 use tauri_plugin_http::reqwest;
 use zip::ZipArchive;
 
-use crate::error::{LXMCLError, LXMCLResult};
+use crate::error::{XMCLError, XMCLResult};
 use crate::instance::models::misc::{InstanceError, ModLoaderType};
 use crate::resource::helpers::curseforge::misc::CurseForgeProject;
 use crate::tasks::download::DownloadParam;
@@ -69,7 +69,7 @@ pub struct CurseForgeProjectRes {
 }
 
 impl CurseForgeManifest {
-  pub fn from_archive(file: &File) -> LXMCLResult<Self> {
+  pub fn from_archive(file: &File) -> XMCLResult<Self> {
     let mut archive = ZipArchive::new(file)?;
     let mut manifest_file = archive.by_name("manifest.json")?;
     let mut manifest_content = String::new();
@@ -105,7 +105,7 @@ impl CurseForgeManifest {
     &self,
     app: &AppHandle,
     instance_path: &Path,
-  ) -> LXMCLResult<Vec<PTaskParam>> {
+  ) -> XMCLResult<Vec<PTaskParam>> {
     let client = app.state::<reqwest::Client>();
     let instance_path = instance_path.to_path_buf();
 
@@ -119,7 +119,7 @@ impl CurseForgeManifest {
         let class_id = {
           let project_resp = client
             .get(format!("https://api.curseforge.com/v1/mods/{project_id}"))
-            .header("x-api-key", env!("LXMCL_CURSEFORGE_API_KEY"))
+            .header("x-api-key", env!("XMCL_CURSEFORGE_API_KEY"))
             .header("accept", "application/json")
             .send()
             .await
@@ -133,7 +133,7 @@ impl CurseForgeManifest {
             .get(format!(
               "https://api.curseforge.com/v1/mods/{project_id}/files/{file_id}"
             ))
-            .header("x-api-key", env!("LXMCL_CURSEFORGE_API_KEY"))
+            .header("x-api-key", env!("XMCL_CURSEFORGE_API_KEY"))
             .header("accept", "application/json")
             .send()
             .await
@@ -175,7 +175,7 @@ impl CurseForgeManifest {
           filename: Some(file_manifest.data.file_name.clone()),
         });
 
-        Ok::<PTaskParam, LXMCLError>(task_param)
+        Ok::<PTaskParam, XMCLError>(task_param)
       }
     });
 

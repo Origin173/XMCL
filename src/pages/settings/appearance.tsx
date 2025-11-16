@@ -485,7 +485,7 @@ const AppearanceSettingsPage = () => {
           title: t("AppearanceSettingsPage.font.settings.fontFamily.title"),
           children: <FontFamilyMenu />,
         },
-        // font size settings cannot work in Windows now: https://github.com/Origin173/LXMCL/issues/376
+        // font size settings cannot work in Windows now: https://github.com/Origin173/XMCL/issues/376
         ...(config.basicInfo.osType !== "windows"
           ? [
               {

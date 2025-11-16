@@ -6,7 +6,7 @@
 # This script was used in the original SJMCL project to deploy releases
 # to SJMC (Shanghai Jiao Tong Minecraft Club) servers.
 # 
-# LXMCL does not use SJMC deployment infrastructure, so this script
+# XMCL does not use SJMC deployment infrastructure, so this script
 # has been commented out but preserved for reference.
 #
 # Original functionality: Uploaded release artifacts to SJMC deployment server
@@ -15,7 +15,7 @@
 
 set -euo pipefail
 
-echo "This script is deprecated and no longer used in LXMCL"
+echo "This script is deprecated and no longer used in XMCL"
 echo "SJMC server deployment has been disabled for this fork"
 exit 0
 

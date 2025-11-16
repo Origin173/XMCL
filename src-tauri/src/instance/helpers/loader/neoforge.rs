@@ -6,7 +6,7 @@ use tauri::AppHandle;
 use url::Url;
 use zip::ZipArchive;
 
-use crate::error::LXMCLResult;
+use crate::error::XMCLResult;
 use crate::instance::helpers::client_json::{LaunchArgumentTemplate, McClientInfo, PatchesInfo};
 use crate::instance::helpers::loader::common::add_library_entry;
 use crate::instance::helpers::loader::forge::InstallProfile;
@@ -24,7 +24,7 @@ pub async fn install_neoforge_loader(
   loader: &ModLoader,
   lib_dir: PathBuf,
   task_params: &mut Vec<PTaskParam>,
-) -> LXMCLResult<()> {
+) -> XMCLResult<()> {
   let loader_ver = &loader.version;
 
   let (installer_url, installer_coord) = if loader_ver.starts_with("1.20.1-") {
@@ -74,7 +74,7 @@ pub async fn download_neoforge_libraries(
   instance: &Instance,
   client_info: &McClientInfo,
   is_retry: bool, // do not modify client info, just download necessary files
-) -> LXMCLResult<()> {
+) -> XMCLResult<()> {
   let subdirs = get_instance_subdir_paths(
     app,
     instance,

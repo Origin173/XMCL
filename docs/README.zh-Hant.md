@@ -1,8 +1,8 @@
-<img src="figs/banner.png" alt="LXMCL" />
+<img src="figs/banner.png" alt="XMCL" />
 
-[![Test Build](https://img.shields.io/github/actions/workflow/status/Origin173/LXMCL/test.yml?label=test%20build&logo=github&style=for-the-badge)](https://github.com/Origin173/LXMCL/blob/main/.github/workflows/test.yml)
-![Downloads](https://img.shields.io/github/downloads/Origin173/LXMCL/total?style=for-the-badge)
-![Stars](https://img.shields.io/github/stars/Origin173/LXMCL?style=for-the-badge)
+[![Test Build](https://img.shields.io/github/actions/workflow/status/Origin173/XMCL/test.yml?label=test%20build&logo=github&style=for-the-badge)](https://github.com/Origin173/XMCL/blob/main/.github/workflows/test.yml)
+![Downloads](https://img.shields.io/github/downloads/Origin173/XMCL/total?style=for-the-badge)
+![Stars](https://img.shields.io/github/stars/Origin173/XMCL?style=for-the-badge)
 
 [English](../README.md) · [简体中文](README.zh-Hans.md) · **繁體中文**
 
@@ -24,9 +24,9 @@
 
 ## 開始使用
 
-開始使用 LXMCL，只需前往 [GitHub Releases](https://github.com/Origin173/LXMCL/releases) 下載最新版即可。
+開始使用 XMCL，只需前往 [GitHub Releases](https://github.com/Origin173/XMCL/releases) 下載最新版即可。
 
-LXMCL 目前支援以下平臺：
+XMCL 目前支援以下平臺：
 
 | 平臺    | 系統版本            | 架構               | 提供的的分發型別                              |
 |---------|---------------------|--------------------|--------------------------------------------|
@@ -36,14 +36,14 @@ LXMCL 目前支援以下平臺：
 
 ### Windows 7
 
-若您需要在 Windows 7 上執行 LXMCL，請先[下載 Microsoft Edge WebView2 運行時](https://developer.microsoft.com/zh-tw/microsoft-edge/webview2#download)並安裝，建議選擇「常青引導程式」。
+若您需要在 Windows 7 上執行 XMCL，請先[下載 Microsoft Edge WebView2 運行時](https://developer.microsoft.com/zh-tw/microsoft-edge/webview2#download)並安裝，建議選擇「常青引導程式」。
 
 ## 開發與貢獻
 
 首先克隆本專案並安裝前端依賴：
 
 ```bash
-git clone git@github.com:Origin173/LXMCL.git
+git clone git@github.com:Origin173/XMCL.git
 npm install
 ```
 
@@ -55,19 +55,19 @@ npm run tauri dev
 
 我們熱烈歡迎每一位開發者的貢獻。
 
-* 在開始前，請先閱讀我們的 [貢獻指南](https://github.com/Origin173/LXMCL/blob/main/CONTRIBUTING.md)（內含開發流程詳細說明）。
-* 歡迎透過 [Pull Request](https://github.com/Origin173/LXMCL/pulls) 或 [GitHub Issues](https://github.com/Origin173/LXMCL/issues) 分享您的想法。
+* 在開始前，請先閱讀我們的 [貢獻指南](https://github.com/Origin173/XMCL/blob/main/CONTRIBUTING.md)（內含開發流程詳細說明）。
+* 歡迎透過 [Pull Request](https://github.com/Origin173/XMCL/pulls) 或 [GitHub Issues](https://github.com/Origin173/XMCL/issues) 分享您的想法。
 
 ## 版權宣告
 
-版權所有 © 2025 LXMCL 團隊。
+版權所有 © 2025 XMCL 團隊。
 
 > 本軟體並非官方 Minecraft 服務。未獲得 Mojang 或 Microsoft 批准或關聯許可。
 
 本專案基於 [GNU 通用公共許可證 v3.0](../LICENSE) 釋出。
 
-LXMCL 是 SJMCL 0.5.0 的分支版本。
+XMCL 是 SJMCL 0.5.0 的分支版本。
 
 ## 聯絡我們
 
-您可以透過 [GitHub Issues](https://github.com/Origin173/LXMCL/issues) 來聯絡我們。
+您可以透過 [GitHub Issues](https://github.com/Origin173/XMCL/issues) 來聯絡我們。

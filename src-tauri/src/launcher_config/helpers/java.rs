@@ -1,4 +1,4 @@
-use crate::error::{LXMCLError, LXMCLResult};
+use crate::error::{XMCLError, XMCLResult};
 use crate::launcher_config::models::{JavaInfo, LauncherConfig};
 use crate::resource::helpers::misc::{get_download_api, get_source_priority_list};
 use crate::resource::models::ResourceType;
@@ -171,7 +171,7 @@ pub fn get_java_paths(app: &AppHandle) -> Vec<String> {
   }
 }
 
-fn resolve_java_home(path: PathBuf) -> LXMCLResult<String> {
+fn resolve_java_home(path: PathBuf) -> XMCLResult<String> {
   #[cfg(target_os = "windows")]
   let java_bin = path.join(r"bin\java.exe");
   #[cfg(not(target_os = "windows"))]
@@ -460,7 +460,7 @@ pub fn parse_java_major_version(full_version: &str) -> (i32, bool) {
 pub async fn build_mojang_java_download_params(
   app: &AppHandle,
   version: &str,
-) -> LXMCLResult<Vec<PTaskParam>> {
+) -> XMCLResult<Vec<PTaskParam>> {
   let config = app.state::<Mutex<LauncherConfig>>().lock()?.clone();
   let client = app.state::<reqwest::Client>();
 
@@ -494,10 +494,10 @@ pub async fn build_mojang_java_download_params(
   }
 
   let json =
-    json.ok_or_else(|| LXMCLError("Failed to fetch Mojang Java runtime manifest".into()))?;
+    json.ok_or_else(|| XMCLError("Failed to fetch Mojang Java runtime manifest".into()))?;
   let manifest_url = json[platform][runtime_type][0]["manifest"]["url"]
     .as_str()
-    .ok_or_else(|| LXMCLError("Failed to parse manifest URL".into()))?;
+    .ok_or_else(|| XMCLError("Failed to parse manifest URL".into()))?;
 
   let manifest: Value = client.get(manifest_url).send().await?.json().await?;
   let runtime_dir = app.path().resolve(
@@ -507,7 +507,7 @@ pub async fn build_mojang_java_download_params(
 
   let download_params: Vec<_> = manifest["files"]
     .as_object()
-    .ok_or_else(|| LXMCLError("Invalid files data".into()))?
+    .ok_or_else(|| XMCLError("Invalid files data".into()))?
     .iter()
     .filter_map(|(path, info)| {
       let raw = info["downloads"]["raw"].as_object()?;

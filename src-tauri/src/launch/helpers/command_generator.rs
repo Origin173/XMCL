@@ -1,6 +1,6 @@
 use crate::account::helpers::authlib_injector::jar::get_jar_path as get_authlib_injector_jar_path;
 use crate::account::models::{AccountError, PlayerType};
-use crate::error::{LXMCLError, LXMCLResult};
+use crate::error::{XMCLError, XMCLResult};
 use crate::instance::helpers::client_json::FeaturesInfo;
 use crate::instance::helpers::game_version::compare_game_versions;
 use crate::instance::helpers::misc::get_instance_subdir_paths;
@@ -62,12 +62,12 @@ pub struct LaunchArguments {
 }
 
 impl LaunchArguments {
-  pub fn into_hashmap(self) -> LXMCLResult<HashMap<String, String>> {
+  pub fn into_hashmap(self) -> XMCLResult<HashMap<String, String>> {
     let value =
-      serde_json::to_value(self).map_err(|e| LXMCLError(format!("Serialization error: {}", e)))?;
+      serde_json::to_value(self).map_err(|e| XMCLError(format!("Serialization error: {}", e)))?;
     let obj = value
       .as_object()
-      .ok_or_else(|| LXMCLError("Failed to convert LaunchParams to HashMap".to_string()))?;
+      .ok_or_else(|| XMCLError("Failed to convert LaunchParams to HashMap".to_string()))?;
 
     let mut map = HashMap::new();
 
@@ -96,7 +96,7 @@ pub async fn generate_launch_command(
   app: &AppHandle,
   quick_play_singleplayer: Option<String>,
   quick_play_multiplayer: Option<String>,
-) -> LXMCLResult<LaunchCommand> {
+) -> XMCLResult<LaunchCommand> {
   let launcher_config = { app.state::<Mutex<LauncherConfig>>().lock()?.clone() };
   let launching_queue = { app.state::<Mutex<Vec<LaunchingState>>>().lock()?.clone() };
 

@@ -92,7 +92,7 @@ const ContributorsPage = () => {
             title: t("ContributorsPage.all"),
             children: (
               <CommonIconButton
-                label="https://github.com/Origin173/LXMCL/graphs/contributors"
+                label="https://github.com/Origin173/XMCL/graphs/contributors"
                 icon="external"
                 withTooltip
                 tooltipPlacement="bottom-end"
@@ -100,7 +100,7 @@ const ContributorsPage = () => {
                 h={18}
                 onClick={() =>
                   openUrl(
-                    "https://github.com/Origin173/LXMCL/graphs/contributors"
+                    "https://github.com/Origin173/XMCL/graphs/contributors"
                   )
                 }
               />

@@ -10,7 +10,7 @@ use tauri_plugin_http::reqwest;
 use url::Url;
 use zip::ZipArchive;
 
-use crate::error::LXMCLResult;
+use crate::error::XMCLResult;
 use crate::instance::helpers::client_json::{
   LaunchArgumentTemplate, LibrariesValue, McClientInfo, PatchesInfo,
 };
@@ -54,7 +54,7 @@ pub async fn install_forge_loader(
   loader: &ModLoader,
   lib_dir: PathBuf,
   task_params: &mut Vec<PTaskParam>,
-) -> LXMCLResult<()> {
+) -> XMCLResult<()> {
   let loader_ver = &loader.version;
 
   let root = get_download_api(priority[0], ResourceType::ForgeInstall)?;
@@ -99,7 +99,7 @@ pub async fn download_forge_libraries(
   instance: &Instance,
   client_info: &McClientInfo,
   is_retry: bool, // do not modify client info, just download necessary files
-) -> LXMCLResult<()> {
+) -> XMCLResult<()> {
   let subdirs = get_instance_subdir_paths(
     app,
     instance,

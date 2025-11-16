@@ -1,5 +1,5 @@
 // Prevent prototype pollution by blocking dangerous keys
-// ref: https://github.com/Origin173/LXMCL/security/code-scanning/4
+// ref: https://github.com/Origin173/XMCL/security/code-scanning/4
 const isUnsafeKey = (key: string): boolean =>
   ["__proto__", "constructor", "prototype"].includes(key);
 

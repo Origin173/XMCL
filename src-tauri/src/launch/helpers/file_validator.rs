@@ -1,4 +1,4 @@
-use crate::error::LXMCLResult;
+use crate::error::XMCLResult;
 use crate::instance::helpers::asset_index::load_asset_index;
 use crate::instance::helpers::client_json::{
   DownloadsArtifact, FeaturesInfo, IsAllowed, LibrariesValue, McClientInfo,
@@ -69,7 +69,7 @@ pub async fn get_invalid_library_files(
   library_path: &Path,
   client_info: &McClientInfo,
   check_hash: bool,
-) -> LXMCLResult<Vec<PTaskParam>> {
+) -> XMCLResult<Vec<PTaskParam>> {
   let mut artifacts = Vec::new();
   artifacts.extend(get_native_library_artifacts(client_info));
   artifacts.extend(get_nonnative_library_artifacts(client_info));
@@ -102,7 +102,7 @@ pub async fn get_invalid_library_files(
     }
   });
 
-  let results: Vec<LXMCLResult<Option<PTaskParam>>> = join_all(futs).await;
+  let results: Vec<XMCLResult<Option<PTaskParam>>> = join_all(futs).await;
 
   let mut params = Vec::new();
   for r in results {
@@ -122,7 +122,7 @@ pub struct LibraryParts {
   pub extension: String,
 }
 
-pub fn parse_library_name(name: &str, native: Option<String>) -> LXMCLResult<LibraryParts> {
+pub fn parse_library_name(name: &str, native: Option<String>) -> XMCLResult<LibraryParts> {
   let parts: Vec<&str> = name.split('@').collect();
   let file_ext = if parts.len() > 1 {
     parts[1].to_string()
@@ -207,7 +207,7 @@ fn parse_sem_version(version: &str) -> Version {
   })
 }
 
-pub fn convert_library_name_to_path(name: &str, native: Option<String>) -> LXMCLResult<String> {
+pub fn convert_library_name_to_path(name: &str, native: Option<String>) -> XMCLResult<String> {
   let LibraryParts {
     path,
     pack_name,
@@ -234,7 +234,7 @@ pub fn convert_library_name_to_path(name: &str, native: Option<String>) -> LXMCL
 pub fn get_nonnative_library_paths(
   client_info: &McClientInfo,
   library_path: &Path,
-) -> LXMCLResult<Vec<PathBuf>> {
+) -> XMCLResult<Vec<PathBuf>> {
   let mut libraries = Vec::new();
   let feature = FeaturesInfo::default();
   for library in &client_info.libraries {
@@ -257,7 +257,7 @@ pub fn get_nonnative_library_paths(
 pub fn get_native_library_paths(
   client_info: &McClientInfo,
   library_path: &Path,
-) -> LXMCLResult<Vec<PathBuf>> {
+) -> XMCLResult<Vec<PathBuf>> {
   let mut result = Vec::new();
   let feature = FeaturesInfo::default();
   for library in &client_info.libraries {
@@ -280,12 +280,12 @@ pub async fn extract_native_libraries(
   client_info: &McClientInfo,
   library_path: &Path,
   natives_dir: &PathBuf,
-) -> LXMCLResult<()> {
+) -> XMCLResult<()> {
   if !natives_dir.exists() {
     fs::create_dir(natives_dir).await?;
   }
   let native_libraries = get_native_library_paths(client_info, library_path)?;
-  let tasks: Vec<tokio::task::JoinHandle<LXMCLResult<()>>> = native_libraries
+  let tasks: Vec<tokio::task::JoinHandle<XMCLResult<()>>> = native_libraries
     .into_iter()
     .map(|library_path| {
       let patches_dir_clone = natives_dir.clone();
@@ -304,7 +304,7 @@ pub async fn extract_native_libraries(
   for result in results {
     if let Err(e) = result {
       println!("Error handling artifact: {:?}", e);
-      return Err(crate::error::LXMCLError::from(e)); // Assuming e is of type LXMCLResult
+      return Err(crate::error::XMCLError::from(e)); // Assuming e is of type XMCLResult
     }
   }
 
@@ -317,7 +317,7 @@ pub async fn get_invalid_assets(
   source: SourceType,
   asset_path: &Path,
   check_hash: bool,
-) -> LXMCLResult<Vec<PTaskParam>> {
+) -> XMCLResult<Vec<PTaskParam>> {
   let assets_download_api = get_download_api(source, ResourceType::Assets)?;
 
   let asset_index_path = asset_path.join(format!("indexes/{}.json", client_info.asset_index.id));
@@ -333,11 +333,11 @@ pub async fn get_invalid_assets(
       let exists = fs::try_exists(&dest).await?;
 
       if exists && (!check_hash || validate_sha1(dest.clone(), item.hash.clone()).is_ok()) {
-        Ok::<Option<PTaskParam>, crate::error::LXMCLError>(None)
+        Ok::<Option<PTaskParam>, crate::error::XMCLError>(None)
       } else {
         let src = assets_download_api
           .join(&path_in_repo)
-          .map_err(crate::error::LXMCLError::from)?;
+          .map_err(crate::error::XMCLError::from)?;
         Ok(Some(PTaskParam::Download(DownloadParam {
           src,
           dest,
@@ -348,7 +348,7 @@ pub async fn get_invalid_assets(
     }
   });
 
-  let results: Vec<LXMCLResult<Option<PTaskParam>>> = join_all(futs).await;
+  let results: Vec<XMCLResult<Option<PTaskParam>>> = join_all(futs).await;
 
   let mut params = Vec::new();
   for r in results {

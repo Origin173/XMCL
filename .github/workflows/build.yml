@@ -20,7 +20,7 @@ on:
         type: string
         default: 'main'
     secrets:
-      LXMCL_CURSEFORGE_API_KEY:
+      XMCL_CURSEFORGE_API_KEY:
         required: true
 
 jobs:
@@ -104,8 +104,8 @@ jobs:
         if: matrix.platform == 'macos'
         run: pnpm run tauri build --bundles app --target ${{ matrix.target }}
         env:
-          LXMCL_CURSEFORGE_API_KEY: ${{ secrets.LXMCL_CURSEFORGE_API_KEY }}
-          LXMCL_OPENLIST_BASE_URL: ${{ secrets.LXMCL_OPENLIST_BASE_URL }}
+          XMCL_CURSEFORGE_API_KEY: ${{ secrets.XMCL_CURSEFORGE_API_KEY }}
+          XMCL_OPENLIST_BASE_URL: ${{ secrets.XMCL_OPENLIST_BASE_URL }}
           NEXT_PUBLIC_OPENLIST_BASE_URL: ${{ secrets.NEXT_PUBLIC_OPENLIST_BASE_URL }}
 
 
@@ -113,8 +113,8 @@ jobs:
         if: matrix.platform != 'macos'
         run: pnpm run tauri build --target ${{ matrix.target }}
         env:
-          LXMCL_CURSEFORGE_API_KEY: ${{ secrets.LXMCL_CURSEFORGE_API_KEY }}
-          LXMCL_OPENLIST_BASE_URL: ${{ secrets.LXMCL_OPENLIST_BASE_URL }}
+          XMCL_CURSEFORGE_API_KEY: ${{ secrets.XMCL_CURSEFORGE_API_KEY }}
+          XMCL_OPENLIST_BASE_URL: ${{ secrets.XMCL_OPENLIST_BASE_URL }}
           NEXT_PUBLIC_OPENLIST_BASE_URL: ${{ secrets.NEXT_PUBLIC_OPENLIST_BASE_URL }}
 
 
@@ -123,7 +123,7 @@ jobs:
         env:
           VERSION: ${{ inputs.version }}
         run: |
-          ARTIFACT_NAME="LXMCL_${{ env.VERSION }}_${{ matrix.platform }}_${{ matrix.arch }}"
+          ARTIFACT_NAME="XMCL_${{ env.VERSION }}_${{ matrix.platform }}_${{ matrix.arch }}"
           echo "Artifact Name: $ARTIFACT_NAME"
           mkdir artifacts
           if [ "${{ matrix.platform }}" = "windows" ]; then

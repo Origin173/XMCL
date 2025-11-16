@@ -62,7 +62,7 @@
         },
         "userAgreement": {
           "title": "使用者協議",
-          "url": "https://github.com/Origin173/LXMCL/blob/main/docs/tos.md"
+          "url": "https://github.com/Origin173/XMCL/blob/main/docs/tos.md"
         },
         "openSourceLicense": {
           "title": "開源協議",
@@ -157,7 +157,7 @@
         "title": "高階選項",
         "uuid": {
           "label": "UUID",
-          "placeholder": "（由 LXMCL 自動生成）",
+          "placeholder": "（由 XMCL 自動生成）",
           "errorMessage": "UUID 格式不正確"
         }
       }
@@ -186,7 +186,7 @@
       "description": {
         "start": {
           "3rdparty": "此認證源支援 Yggdrasil Connect 規範提案",
-          "microsoft": "LXMCL 支援微軟 OAuth 2.0 裝置許可權授予流"
+          "microsoft": "XMCL 支援微軟 OAuth 2.0 裝置許可權授予流"
         },
         "next": "請點選繼續登入按鈕跳轉登入頁面，輸入以上程式碼（已自動複製）"
       },
@@ -471,7 +471,7 @@
       "type": "型別"
     },
     "warning": {
-      "mojang": "由 Mojang 分發的 Java 執行時將由 LXMCL 安裝到特定目錄",
+      "mojang": "由 Mojang 分發的 Java 執行時將由 XMCL 安裝到特定目錄",
       "oracle": "從 Oracle 源下載可能需要登入"
     }
   },
@@ -973,14 +973,14 @@
         "directories": {
           "special": {
             "CURRENT_DIR": "當前資料夾",
-            "APP_DATA_SUBDIR": "LXMCL 資料資料夾",
+            "APP_DATA_SUBDIR": "XMCL 資料資料夾",
             "OFFICIAL_DIR": "官方啟動器資料夾"
           }
         }
       },
       "deleteDialog": {
         "title": "刪除遊戲目錄",
-        "content": "確定要刪除遊戲目錄 {{dirName}} 嗎？（LXMCL 將不會掃描此目錄，但不會刪除硬碟上的檔案）"
+        "content": "確定要刪除遊戲目錄 {{dirName}} 嗎？（XMCL 將不會掃描此目錄，但不會刪除硬碟上的檔案）"
       },
       "directoryNotExist": "該目錄不存在，請刪除並重新新增"
     },
@@ -1125,8 +1125,8 @@
     "top": {
       "settings": {
         "LauncherDocs": {
-          "title": "LXMCL 文件",
-          "url": "https://github.com/Origin173/LXMCL"
+          "title": "XMCL 文件",
+          "url": "https://github.com/Origin173/XMCL"
         }
       }
     }
@@ -1310,7 +1310,7 @@
     },
     "confirmDelete": {
       "title": "移除 Java",
-      "description": "確認要移除此版本 Java 嗎？（LXMCL 將無法使用此 Java 啟動遊戲，但不會刪除硬碟上的檔案）"
+      "description": "確認要移除此版本 Java 嗎？（XMCL 將無法使用此 Java 啟動遊戲，但不會刪除硬碟上的檔案）"
     }
   },
   "LaunchPage": {
@@ -1418,7 +1418,7 @@
       "neoforge": "NeoForge",
       "authlibInjector": "Authlib Injector",
       "github": "GitHub",
-      "sjmclapi": "LXMCL API"
+      "sjmclapi": "XMCL API"
     }
   },
   "ReLoginPlayerModal": {
@@ -1438,8 +1438,8 @@
   },
   "RestartForUpdateConfirmDialog": {
     "title": "啟動器更新",
-    "body": "新版本已完成下載，重新啟動 LXMCL 以完成更新",
-    "bodyMSI": "新版本已完成下載，點選安裝將關閉 LXMCL 並執行安裝程式",
+    "body": "新版本已完成下載，重新啟動 XMCL 以完成更新",
+    "bodyMSI": "新版本已完成下載，點選安裝將關閉 XMCL 並執行安裝程式",
     "button": {
       "restart": "重新啟動",
       "install": "安裝",
@@ -2432,7 +2432,7 @@
     "header": {
       "title": "在 GitHub 為我們點亮星標"
     },
-    "body": "如果您喜愛 LXMCL，並希望支援我們，可以在 GitHub 為我們點一顆星嗎？這個小小的動作對我們來說意義重大，能激勵我們為您持續提供特性體驗。LXMCL 基於 SJMC（上海交通大學 Minecraft 社）開發的 SJMCL。",
+    "body": "如果您喜愛 XMCL，並希望支援我們，可以在 GitHub 為我們點一顆星嗎？這個小小的動作對我們來說意義重大，能激勵我們為您持續提供特性體驗。XMCL 基於 SJMC（上海交通大學 Minecraft 社）開發的 SJMCL。",
     "button": {
       "later": "稍後",
       "starUs": "點亮星標"
@@ -2507,12 +2507,12 @@
       "title": "歡迎！"
     },
     "body": {
-      "part1": "歡迎使用 LXMCL！在開始使用之前，請務必閱讀並同意我們的",
+      "part1": "歡迎使用 XMCL！在開始使用之前，請務必閱讀並同意我們的",
       "terms": "使用者協議",
       "periods": "。"
     },
     "warning": {
-      "unstableVersion": "您正在使用{{versionLabel}}的 LXMCL，部分功能可能不穩定或未開發完成，歡迎報告使用問題與功能建議。"
+      "unstableVersion": "您正在使用{{versionLabel}}的 XMCL，部分功能可能不穩定或未開發完成，歡迎報告使用問題與功能建議。"
     },
     "button": {
       "exit": "退出",

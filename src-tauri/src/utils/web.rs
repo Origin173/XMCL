@@ -13,13 +13,13 @@ use reqwest_retry::RetryTransientMiddleware;
 use std::sync::Mutex;
 use std::time::Duration;
 
-/// Builds a reqwest client with LXMCL version header and proxy support.
+/// Builds a reqwest client with XMCL version header and proxy support.
 /// Defaults to 10s timeout.
 ///
 /// # Arguments
 ///
 /// * `app` - The Tauri AppHandle.
-/// * `use_version_header` - Whether to include the LXMCL version header.
+/// * `use_version_header` - Whether to include the XMCL version header.
 /// * `use_proxy` - Whether to use the proxy settings from the config.
 ///
 /// TODO: support more custom config from reqwest::Config
@@ -32,9 +32,9 @@ use std::time::Duration;
 /// # Example
 ///
 /// ```rust
-/// let client = build_lxmcl_client(&app, true, true);
+/// let client = build_xmcl_client(&app, true, true);
 /// ```
-pub fn build_lxmcl_client(app: &AppHandle, use_version_header: bool, use_proxy: bool) -> Client {
+pub fn build_xmcl_client(app: &AppHandle, use_version_header: bool, use_proxy: bool) -> Client {
   let mut builder = ClientBuilder::new()
     .timeout(Duration::from_secs(10))
     .tcp_keepalive(Duration::from_secs(10));
@@ -44,7 +44,7 @@ pub fn build_lxmcl_client(app: &AppHandle, use_version_header: bool, use_proxy: 
       // According to the User-Agent requirements of mozilla and BMCLAPI, the User-Agent is set to start with ${NAME}/${VERSION}
       // https://github.com/MCLF-CN/docs/issues/2
       // https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Reference/Headers/User-Agent
-      if let Ok(header_value) = format!("LXMCL/{}", &config.basic_info.launcher_version).parse() {
+      if let Ok(header_value) = format!("XMCL/{}", &config.basic_info.launcher_version).parse() {
         let mut headers = HeaderMap::new();
         headers.insert("User-Agent", header_value);
         builder = builder.default_headers(headers);
@@ -67,9 +67,9 @@ pub fn build_lxmcl_client(app: &AppHandle, use_version_header: bool, use_proxy: 
   builder.build().unwrap_or_else(|_| Client::new())
 }
 
-struct LXMCLRetryableStrategy;
+struct XMCLRetryableStrategy;
 
-impl RetryableStrategy for LXMCLRetryableStrategy {
+impl RetryableStrategy for XMCLRetryableStrategy {
   fn handle(
     &self,
     res: &Result<tauri_plugin_http::reqwest::Response, reqwest_middleware::Error>,
@@ -93,7 +93,7 @@ pub fn with_retry(client: Client) -> ClientWithMiddleware {
   ClientWithMiddlewareBuilder::new(client)
     .with(RetryTransientMiddleware::new_with_policy_and_strategy(
       ExponentialBackoff::builder().build_with_total_retry_duration(Duration::from_secs(3600)),
-      LXMCLRetryableStrategy {},
+      XMCLRetryableStrategy {},
     ))
     .build()
 }

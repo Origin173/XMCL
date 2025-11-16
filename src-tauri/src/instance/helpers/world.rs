@@ -1,16 +1,16 @@
-use crate::error::{LXMCLError, LXMCLResult};
+use crate::error::{XMCLError, XMCLResult};
 use crate::instance::models::world::level::{Level, LevelData};
 use quartz_nbt::io::Flavor;
 use quartz_nbt::serde::deserialize;
 use std::path::PathBuf;
 
-pub async fn load_level_data_from_path(path: &PathBuf) -> LXMCLResult<LevelData> {
+pub async fn load_level_data_from_path(path: &PathBuf) -> XMCLResult<LevelData> {
   let nbt_bytes = tokio::fs::read(path).await?;
   let (level, _) = deserialize::<Level>(&nbt_bytes, Flavor::GzCompressed)?;
   Ok(level.data)
 }
 
-pub fn level_data_to_world_info(data: &LevelData) -> LXMCLResult<(i64, String, String)> {
+pub fn level_data_to_world_info(data: &LevelData) -> XMCLResult<(i64, String, String)> {
   // return (last_played, difficulty, gamemode)
   let last_played = data.last_played / 1000;
   let mut difficulty: u8;
@@ -24,7 +24,7 @@ pub fn level_data_to_world_info(data: &LevelData) -> LXMCLResult<(i64, String, S
   }
   const DIFFICULTY_STR: [&str; 5] = ["peaceful", "easy", "normal", "hard", "hardcore"];
   if difficulty >= DIFFICULTY_STR.len() as u8 {
-    return Err(LXMCLError(format!(
+    return Err(XMCLError(format!(
       "difficulty = {}, which is greater than 5",
       difficulty
     )));
@@ -32,7 +32,7 @@ pub fn level_data_to_world_info(data: &LevelData) -> LXMCLResult<(i64, String, S
   let gametype = data.game_type;
   const GAMEMODE_STR: [&str; 4] = ["survival", "creative", "adventure", "spectator"];
   if gametype < 0 || gametype >= GAMEMODE_STR.len() as i64 {
-    return Err(LXMCLError(format!(
+    return Err(XMCLError(format!(
       "gametype = {}, which < 0 or >= 4",
       gametype
     )));

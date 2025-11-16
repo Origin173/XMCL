@@ -46,7 +46,7 @@ export default function App({ Component, pageProps }: AppProps) {
       });
     }
 
-    // forbid keyboard shortcut in webview: https://github.com/Origin173/LXMCL/issues/163
+    // forbid keyboard shortcut in webview: https://github.com/Origin173/XMCL/issues/163
     document.addEventListener("keydown", (event) => {
       const disabledShortcuts =
         ["F3", "F5", "F7"].includes(event.key) ||
@@ -110,7 +110,7 @@ export default function App({ Component, pageProps }: AppProps) {
   }, [layoutKey, layoutMappings]);
   // use layoutKey as a dependency to ensure SpecLayout remains stable
   // when switching tabs in game instance page
-  // see https://github.com/Origin173/LXMCL/pull/491
+  // see https://github.com/Origin173/XMCL/pull/491
 
   return (
     <ChakraProvider theme={chakraExtendTheme}>

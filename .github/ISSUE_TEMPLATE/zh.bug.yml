@@ -8,8 +8,8 @@ body:
       value: |
         感谢您抽出时间报告问题！
         在提交错误报告之前，请确保：
-          * 您已验证此问题与 LXMCL 本身有关，而不是由 Minecraft 或已安装的模组导致
-          * 您已搜索过[现有问题](https://github.com/Origin173/LXMCL/issues)并确认该问题此前未被报告
+          * 您已验证此问题与 XMCL 本身有关，而不是由 Minecraft 或已安装的模组导致
+          * 您已搜索过[现有问题](https://github.com/Origin173/XMCL/issues)并确认该问题此前未被报告
 
         请为您的问题提供一个简洁、清晰的标题。
 
@@ -33,8 +33,8 @@ body:
   - type: input
     id: launcherVersion
     attributes:
-      label: LXMCL 版本（可选）
-      description: "请输入您使用的 LXMCL 版本。"
+      label: XMCL 版本（可选）
+      description: "请输入您使用的 XMCL 版本。"
       placeholder: "0.0.0"
     validations:
       required: false

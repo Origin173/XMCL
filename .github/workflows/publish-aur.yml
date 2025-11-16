@@ -37,7 +37,7 @@ jobs:
         if: always() && ${{ inputs.deb_hash != '' }}
         uses: actions/download-artifact@v4
         with:
-          pattern: "LXMCL_${{ inputs.version }}_linux_x86_64"
+          pattern: "XMCL_${{ inputs.version }}_linux_x86_64"
           path: artifacts
           merge-multiple: true
 
@@ -47,7 +47,7 @@ jobs:
           DEB_HASH=${{ inputs.deb_hash }} # Use input deb_hash if provided
           if [[ -z "$DEB_HASH" ]]; then
             ls -la artifacts
-            DEB_HASH=$(sha512sum artifacts/LXMCL_${{ inputs.version }}_linux_x86_64.deb)
+            DEB_HASH=$(sha512sum artifacts/XMCL_${{ inputs.version }}_linux_x86_64.deb)
           fi
           echo "DEB_HASH=$DEB_HASH"
           LICENSE_HASH=$(sha512sum LICENSE.EXTRA)
@@ -92,7 +92,7 @@ jobs:
           echo "PKGBUILD generated with version $LATEST_TAG"
           cat PKGBUILD
 
-      - name: Publish LXMCL to the AUR
+      - name: Publish XMCL to the AUR
         uses: KSXGitHub/github-actions-deploy-aur@v4.1.1
         with:
           pkgname: sjmcl-bin

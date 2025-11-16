@@ -1,13 +1,13 @@
 use crate::account::constants::TEXTURE_ROLES;
 use crate::account::models::{AccountError, PlayerInfo, PlayerType, Texture};
-use crate::error::LXMCLResult;
+use crate::error::XMCLResult;
 use crate::utils::fs::get_app_resource_filepath;
 use crate::utils::image::load_image_from_dir;
 use rand::seq::IndexedRandom;
 use tauri::AppHandle;
 use uuid::Uuid;
 
-pub fn load_preset_skin(app: &AppHandle, preset_role: String) -> LXMCLResult<Vec<Texture>> {
+pub fn load_preset_skin(app: &AppHandle, preset_role: String) -> XMCLResult<Vec<Texture>> {
   let texture_path = get_app_resource_filepath(app, &format!("assets/skins/{}.png", preset_role))
     .map_err(|_| AccountError::TextureError)?;
 
@@ -21,7 +21,7 @@ pub fn load_preset_skin(app: &AppHandle, preset_role: String) -> LXMCLResult<Vec
   }])
 }
 
-pub async fn login(app: &AppHandle, username: String, raw_uuid: String) -> LXMCLResult<PlayerInfo> {
+pub async fn login(app: &AppHandle, username: String, raw_uuid: String) -> XMCLResult<PlayerInfo> {
   let name_with_prefix = format!("OfflinePlayer:{}", username);
   let uuid = if let Ok(id) = Uuid::parse_str(&raw_uuid) {
     id

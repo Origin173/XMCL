@@ -1,7 +1,7 @@
 // This file is used to read mod info for Forge or NeoForge (structure almost identical)
 // https://forge.gemwire.uk/wiki/Mods.toml
 // https://docs.neoforged.net/docs/gettingstarted/modfiles/#neoforgemodstoml
-use crate::error::{LXMCLError, LXMCLResult};
+use crate::error::{XMCLError, XMCLResult};
 use crate::instance::models::misc::ModLoaderType;
 use crate::utils::image::{load_image_from_dir_async, load_image_from_jar, ImageWrapper};
 use serde::{Deserialize, Serialize};
@@ -41,7 +41,7 @@ pub struct ForgeModSubItem {
 
 pub fn get_mod_metadata_from_jar<R: Read + Seek>(
   jar: &mut ZipArchive<R>,
-) -> LXMCLResult<ForgeModMetadata> {
+) -> XMCLResult<ForgeModMetadata> {
   let mut meta_result = None;
   if let Ok(mut file) = jar.by_name("META-INF/mods.toml") {
     let mut buf = String::new();
@@ -73,12 +73,12 @@ pub fn get_mod_metadata_from_jar<R: Read + Seek>(
           valid_logo_file: None,
         })
       } else {
-        Err(LXMCLError("no mods.toml or MANIFEST.MF found".to_string()))
+        Err(XMCLError("no mods.toml or MANIFEST.MF found".to_string()))
       }
     }
   };
   if meta.mods.is_empty() {
-    return Err(LXMCLError("forge mod len(mods) == 0".to_string()));
+    return Err(XMCLError("forge mod len(mods) == 0".to_string()));
   }
   // seek logo
   let mut logo_candidates = vec![];
@@ -111,7 +111,7 @@ pub fn get_mod_metadata_from_jar<R: Read + Seek>(
   Ok(meta)
 }
 
-pub async fn get_mod_metadata_from_dir(dir_path: &Path) -> LXMCLResult<ForgeModMetadata> {
+pub async fn get_mod_metadata_from_dir(dir_path: &Path) -> XMCLResult<ForgeModMetadata> {
   let mut meta_result = None;
   if let Ok(val) = tokio::fs::read_to_string(dir_path.join("META-INF/mods.toml")).await {
     let mut meta = toml::from_str::<ForgeModMetadata>(val.as_str())?;
@@ -142,12 +142,12 @@ pub async fn get_mod_metadata_from_dir(dir_path: &Path) -> LXMCLResult<ForgeModM
           valid_logo_file: None,
         })
       } else {
-        Err(LXMCLError("no mods.toml or MANIFEST.MF found".to_string()))
+        Err(XMCLError("no mods.toml or MANIFEST.MF found".to_string()))
       }
     }
   };
   if meta.mods.is_empty() {
-    return Err(LXMCLError("forge mod len(mods) == 0".to_string()));
+    return Err(XMCLError("forge mod len(mods) == 0".to_string()));
   }
   // seek logo
   let mut logo_candidates = vec![];

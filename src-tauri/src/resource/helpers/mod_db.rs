@@ -1,4 +1,4 @@
-use crate::error::LXMCLResult;
+use crate::error::XMCLResult;
 use crate::resource::models::{OtherResourceSource, ResourceError};
 use crate::utils::fs::get_app_resource_filepath;
 use std::collections::{HashMap, HashSet};
@@ -298,7 +298,7 @@ impl ModDataBase {
   }
 }
 
-pub async fn initialize_mod_db(app: &AppHandle) -> LXMCLResult<()> {
+pub async fn initialize_mod_db(app: &AppHandle) -> XMCLResult<()> {
   let csv_path = get_app_resource_filepath(app, "assets/db/mod_data.csv")
     .ok()
     .unwrap_or_default();
@@ -370,7 +370,7 @@ pub async fn initialize_mod_db(app: &AppHandle) -> LXMCLResult<()> {
   Ok(())
 }
 
-pub async fn handle_search_query(app: &AppHandle, query: &String) -> LXMCLResult<String> {
+pub async fn handle_search_query(app: &AppHandle, query: &String) -> XMCLResult<String> {
   // Only process Chinese queries
   if !query.chars().any(|c| matches!(c, '\u{4e00}'..='\u{9fbb}')) {
     return Ok(query.clone());

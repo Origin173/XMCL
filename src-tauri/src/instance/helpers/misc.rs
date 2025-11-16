@@ -1,4 +1,4 @@
-use crate::error::LXMCLResult;
+use crate::error::XMCLResult;
 use crate::instance::helpers::client_jar::load_game_version_from_jar;
 use crate::instance::helpers::client_json::{libraries_to_info, patches_to_info, McClientInfo};
 use crate::instance::helpers::loader::forge::download_forge_libraries;
@@ -90,7 +90,7 @@ pub fn get_instance_subdir_path_by_id(
   get_instance_subdir_paths(app, instance, &[directory_type]).and_then(|mut paths| paths.pop())
 }
 
-pub fn unify_instance_name(src_version_path: &PathBuf, tgt_name: &String) -> LXMCLResult<PathBuf> {
+pub fn unify_instance_name(src_version_path: &PathBuf, tgt_name: &String) -> XMCLResult<PathBuf> {
   if !sanitize_filename::is_sanitized(tgt_name) {
     return Err(InstanceError::InvalidNameError.into());
   }
@@ -132,7 +132,7 @@ pub async fn refresh_instances(
   app: &AppHandle,
   game_directory: &GameDirectory,
   is_first_run: bool,
-) -> LXMCLResult<Vec<Instance>> {
+) -> XMCLResult<Vec<Instance>> {
   let mut instances = vec![];
   // traverse the "versions" directory
   let versions_dir = game_directory.dir.join("versions");

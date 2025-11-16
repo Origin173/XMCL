@@ -1,4 +1,4 @@
-use crate::error::LXMCLResult;
+use crate::error::XMCLResult;
 use crate::instance::models::misc::{InstanceError, ModLoaderType};
 use config::Config;
 use serde::{Deserialize, Serialize};
@@ -41,7 +41,7 @@ structstruck::strike! {
 }
 
 impl MultiMcManifest {
-  pub fn from_archive(file: &File) -> LXMCLResult<Self> {
+  pub fn from_archive(file: &File) -> XMCLResult<Self> {
     let mut archive = ZipArchive::new(file)?;
 
     let base_path = Self::find_manifest_path(&mut archive)?;
@@ -70,7 +70,7 @@ impl MultiMcManifest {
     Ok(manifest)
   }
 
-  fn find_manifest_path(archive: &mut ZipArchive<&File>) -> LXMCLResult<String> {
+  fn find_manifest_path(archive: &mut ZipArchive<&File>) -> XMCLResult<String> {
     if archive.by_name("mmc-pack.json").is_ok() {
       return Ok(String::new());
     }
@@ -93,7 +93,7 @@ impl MultiMcManifest {
     Err(InstanceError::ModpackManifestParseError.into())
   }
 
-  pub fn get_client_version(&self) -> LXMCLResult<String> {
+  pub fn get_client_version(&self) -> XMCLResult<String> {
     let component = self
       .components
       .iter()
@@ -103,7 +103,7 @@ impl MultiMcManifest {
     get_version(component)
   }
 
-  pub fn get_mod_loader_type_version(&self) -> LXMCLResult<(ModLoaderType, String)> {
+  pub fn get_mod_loader_type_version(&self) -> XMCLResult<(ModLoaderType, String)> {
     for component in &self.components {
       match component.uid.as_str() {
         "net.minecraft" => continue,
@@ -119,7 +119,7 @@ impl MultiMcManifest {
   }
 }
 
-fn get_version(component: &MultiMcComponent) -> LXMCLResult<String> {
+fn get_version(component: &MultiMcComponent) -> XMCLResult<String> {
   component
     .version
     .as_ref()

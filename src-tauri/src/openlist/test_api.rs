@@ -1,7 +1,7 @@
 use serde_json::json;
 use tauri_plugin_http::reqwest;
 
-const OPENLIST_BASE_URL: &str = env!("LXMCL_OPENLIST_BASE_URL");
+const OPENLIST_BASE_URL: &str = env!("XMCL_OPENLIST_BASE_URL");
 
 #[tauri::command]
 pub async fn test_openlist_connection() -> Result<String, String> {

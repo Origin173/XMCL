@@ -5,7 +5,7 @@ pub mod events;
 pub mod monitor;
 pub mod streams;
 
-use crate::error::LXMCLResult;
+use crate::error::XMCLResult;
 use download::DownloadParam;
 use events::TauriEventSink;
 use futures::stream::Stream;
@@ -16,7 +16,7 @@ use std::sync::{Arc, RwLock};
 use streams::{GDesc, PDesc, PHandle};
 use tokio::time::Duration;
 
-pub type SJMCLBoxedFuture = Pin<Box<dyn Future<Output = LXMCLResult<()>> + Send>>;
+pub type SJMCLBoxedFuture = Pin<Box<dyn Future<Output = XMCLResult<()>> + Send>>;
 
 pub struct SJMCLFuture {
   pub task_id: u32,

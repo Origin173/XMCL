@@ -2,7 +2,7 @@ import { getCurrent, onOpenUrl } from "@tauri-apps/plugin-deep-link";
 import micromatch from "micromatch";
 import { useEffect, useRef } from "react";
 
-const LXMCL_LINK_PREFIX = "lxmcl://";
+const XMCL_LINK_PREFIX = "xmcl://";
 
 type TriggerRule = string | string[] | RegExp | ((subpath: string) => boolean);
 
@@ -29,8 +29,8 @@ export const useDeepLink = ({ trigger, onCall }: UseDeepLinkOptions) => {
 
     const handleUrls = (urls: string[]) => {
       urls.forEach((url) => {
-        if (url.startsWith(LXMCL_LINK_PREFIX)) {
-          const subpath = url.slice(LXMCL_LINK_PREFIX.length);
+        if (url.startsWith(XMCL_LINK_PREFIX)) {
+          const subpath = url.slice(XMCL_LINK_PREFIX.length);
           if (matchSubpath(subpath, trigger)) {
             onCall(url, subpath);
           }

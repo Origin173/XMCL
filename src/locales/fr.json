@@ -62,7 +62,7 @@
         },
         "userAgreement": {
           "title": "Accord d'utilisateur",
-          "url": "https://github.com/Origin173/LXMCL/blob/main/docs/tos.md"
+          "url": "https://github.com/Origin173/XMCL/blob/main/docs/tos.md"
         },
         "openSourceLicense": {
           "title": "Licence open source",
@@ -157,7 +157,7 @@
         "title": "Options avancées",
         "uuid": {
           "label": "UUID",
-          "placeholder": "(Généré automatiquement par LXMCL)",
+          "placeholder": "(Généré automatiquement par XMCL)",
           "errorMessage": "Format UUID incorrect"
         }
       }
@@ -186,7 +186,7 @@
       "description": {
         "start": {
           "3rdparty": "Cette source d'authentification prend en charge la proposition Yggdrasil Connect",
-          "microsoft": "LXMCL prend en charge le flux d'autorisation d'appareil OAuth 2.0 de Microsoft"
+          "microsoft": "XMCL prend en charge le flux d'autorisation d'appareil OAuth 2.0 de Microsoft"
         },
         "next": "Veuillez cliquer sur le bouton Continuer la connexion pour ouvrir la fenêtre de connexion et saisir le code ci-dessus (déjà copié)"
       },
@@ -892,14 +892,14 @@
         "directories": {
           "special": {
             "CURRENT_DIR": "Dossier actuel",
-            "APP_DATA_SUBDIR": "Dossier de données LXMCL",
+            "APP_DATA_SUBDIR": "Dossier de données XMCL",
             "OFFICIAL_DIR": "Dossier du lanceur officiel"
           }
         }
       },
       "deleteDialog": {
         "title": "Supprimer le répertoire du jeu",
-        "content": "Êtes-vous sûr de vouloir supprimer le répertoire du jeu {{dirName}} ? (LXMCL ne le scannera plus, mais les fichiers ne seront pas supprimés du disque)"
+        "content": "Êtes-vous sûr de vouloir supprimer le répertoire du jeu {{dirName}} ? (XMCL ne le scannera plus, mais les fichiers ne seront pas supprimés du disque)"
       },
       "directoryNotExist": "Ce répertoire n'existe pas, veuillez le supprimer et l'ajouter à nouveau"
     },
@@ -1030,8 +1030,8 @@
     "top": {
       "settings": {
         "LauncherDocs": {
-          "title": "Documentation LXMCL",
-          "url": "https://github.com/Origin173/LXMCL"
+          "title": "Documentation XMCL",
+          "url": "https://github.com/Origin173/XMCL"
         }
       }
     }
@@ -1198,7 +1198,7 @@
     },
     "confirmDelete": {
       "title": "Supprimer Java",
-      "description": "Êtes-vous sûr de vouloir supprimer cette version de Java ? (LXMCL ne pourra plus l'utiliser pour lancer le jeu, mais les fichiers ne seront pas supprimés du disque)"
+      "description": "Êtes-vous sûr de vouloir supprimer cette version de Java ? (XMCL ne pourra plus l'utiliser pour lancer le jeu, mais les fichiers ne seront pas supprimés du disque)"
     }
   },
   "LaunchPage": {
@@ -2293,7 +2293,7 @@
     "header": {
       "title": "Étoilez-nous sur GitHub !"
     },
-    "body": "Si vous aimez LXMCL et souhaitez nous soutenir, pouvez-vous nous donner une étoile sur GitHub ? Ce petit geste compte beaucoup pour nous et nous motive à continuer à améliorer l'expérience. LXMCL est basé sur SJMCL développé par SJMC (Club Minecraft de l'Université Jiao Tong de Shanghai).",
+    "body": "Si vous aimez XMCL et souhaitez nous soutenir, pouvez-vous nous donner une étoile sur GitHub ? Ce petit geste compte beaucoup pour nous et nous motive à continuer à améliorer l'expérience. XMCL est basé sur SJMCL développé par SJMC (Club Minecraft de l'Université Jiao Tong de Shanghai).",
     "button": {
       "later": "Plus tard",
       "starUs": "Étoiler"
@@ -2365,7 +2365,7 @@
       "title": "Bienvenue !"
     },
     "body": {
-      "part1": "Bienvenue sur LXMCL ! Avant de commencer, veuillez lire et accepter notre ",
+      "part1": "Bienvenue sur XMCL ! Avant de commencer, veuillez lire et accepter notre ",
       "terms": "Accord d'utilisateur",
       "periods": "."
     },
@@ -2374,7 +2374,7 @@
       "agree": "Accepter"
     },
     "warning": {
-      "unstableVersion": "You are using the {{versionLabel}} of LXMCL. Some features may be unstable or incomplete. Bug reports and feature requests are welcome."
+      "unstableVersion": "You are using the {{versionLabel}} of XMCL. Some features may be unstable or incomplete. Bug reports and feature requests are welcome."
     }
   },
   "WorldLevelDataModal": {
@@ -2460,7 +2460,7 @@
       "type": "Type"
     },
     "warning": {
-      "mojang": "Java runtime from Mojang will be installed by LXMCL into a specific directory.",
+      "mojang": "Java runtime from Mojang will be installed by XMCL into a specific directory.",
       "oracle": "Downloading from Oracle may require login."
     }
   },
@@ -2526,8 +2526,8 @@
   },
   "RestartForUpdateConfirmDialog": {
     "title": "Launcher Update",
-    "body": "The new version has been downloaded. Restart LXMCL to complete the update.",
-    "bodyMSI": "The new version has been downloaded. Clicking Install will close LXMCL and run the installer.",
+    "body": "The new version has been downloaded. Restart XMCL to complete the update.",
+    "bodyMSI": "The new version has been downloaded. Clicking Install will close XMCL and run the installer.",
     "button": {
       "restart": "Restart",
       "install": "Install",

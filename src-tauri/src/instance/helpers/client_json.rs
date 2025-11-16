@@ -1,4 +1,4 @@
-use crate::error::{LXMCLError, LXMCLResult};
+use crate::error::{XMCLError, XMCLResult};
 use crate::instance::models::misc::{Instance, ModLoaderType};
 use crate::utils::fs::get_app_resource_filepath;
 use regex::RegexBuilder;
@@ -122,16 +122,11 @@ pub struct InstructionRule {
 }
 
 impl InstructionRule {
-  pub fn is_allowed(&self, target_feature: &FeaturesInfo) -> LXMCLResult<(bool, bool)> {
+  pub fn is_allowed(&self, target_feature: &FeaturesInfo) -> XMCLResult<(bool, bool)> {
     let mut positive = match self.action.to_lowercase().as_str() {
       "allow" => true,
       "disallow" => false,
-      _ => {
-        return Err(LXMCLError(format!(
-          "unknown action format: {}",
-          self.action
-        )))
-      }
+      _ => return Err(XMCLError(format!("unknown action format: {}", self.action))),
     };
     let mut strong = false;
     if let Some(ref os_rule) = self.os {
@@ -356,7 +351,7 @@ pub async fn libraries_to_info(
   (game_version, loader_version, loader_type)
 }
 
-fn rules_is_allowed(rules: &Vec<InstructionRule>, feature: &FeaturesInfo) -> LXMCLResult<bool> {
+fn rules_is_allowed(rules: &Vec<InstructionRule>, feature: &FeaturesInfo) -> XMCLResult<bool> {
   let mut weak_allowed = true;
   for rule in rules {
     let (allow, strong) = rule.is_allowed(feature)?;
@@ -369,23 +364,23 @@ fn rules_is_allowed(rules: &Vec<InstructionRule>, feature: &FeaturesInfo) -> LXM
 }
 
 pub trait IsAllowed {
-  fn is_allowed(&self, feature: &FeaturesInfo) -> LXMCLResult<bool>;
+  fn is_allowed(&self, feature: &FeaturesInfo) -> XMCLResult<bool>;
 }
 
 impl IsAllowed for ArgumentsItem {
-  fn is_allowed(&self, feature: &FeaturesInfo) -> LXMCLResult<bool> {
+  fn is_allowed(&self, feature: &FeaturesInfo) -> XMCLResult<bool> {
     rules_is_allowed(&self.rules, feature)
   }
 }
 
 impl IsAllowed for LibrariesValue {
-  fn is_allowed(&self, feature: &FeaturesInfo) -> LXMCLResult<bool> {
+  fn is_allowed(&self, feature: &FeaturesInfo) -> XMCLResult<bool> {
     rules_is_allowed(&self.rules, feature)
   }
 }
 
 impl LaunchArgumentTemplate {
-  pub fn to_jvm_arguments(&self, feature: &FeaturesInfo) -> LXMCLResult<Vec<String>> {
+  pub fn to_jvm_arguments(&self, feature: &FeaturesInfo) -> XMCLResult<Vec<String>> {
     let mut arguments = Vec::new();
     for argument in &self.jvm {
       if argument.is_allowed(feature).unwrap_or_default() {
@@ -394,7 +389,7 @@ impl LaunchArgumentTemplate {
     }
     Ok(arguments)
   }
-  pub fn to_game_arguments(&self, feature: &FeaturesInfo) -> LXMCLResult<Vec<String>> {
+  pub fn to_game_arguments(&self, feature: &FeaturesInfo) -> XMCLResult<Vec<String>> {
     let mut arguments = Vec::new();
     for argument in &self.game {
       if argument.is_allowed(feature).unwrap_or_default() {
@@ -410,12 +405,12 @@ impl LaunchArgumentTemplate {
 // ref: https://github.com/HMCL-dev/HMCL/blob/main/HMCL/src/main/resources/assets/natives.json
 pub fn load_native_libraries_replace_map(
   app: &AppHandle,
-) -> LXMCLResult<HashMap<String, HashMap<String, Option<LibrariesValue>>>> {
+) -> XMCLResult<HashMap<String, HashMap<String, Option<LibrariesValue>>>> {
   let path = get_app_resource_filepath(app, "assets/game/natives.json")?;
   let txt =
-    fs::read_to_string(&path).map_err(|e| LXMCLError(format!("read natives.json failed: {e}")))?;
-  let map: HashMap<String, HashMap<String, Option<LibrariesValue>>> = serde_json::from_str(&txt)
-    .map_err(|e| LXMCLError(format!("parse natives.json failed: {e}")))?;
+    fs::read_to_string(&path).map_err(|e| XMCLError(format!("read natives.json failed: {e}")))?;
+  let map: HashMap<String, HashMap<String, Option<LibrariesValue>>> =
+    serde_json::from_str(&txt).map_err(|e| XMCLError(format!("parse natives.json failed: {e}")))?;
   Ok(map)
 }
 
@@ -423,7 +418,7 @@ pub async fn replace_native_libraries(
   _app: &AppHandle,
   _client_info: &mut McClientInfo,
   _instance: &Instance,
-) -> LXMCLResult<()> {
+) -> XMCLResult<()> {
   #[cfg(any(
     all(
       any(target_arch = "x86", target_arch = "x86_64"),

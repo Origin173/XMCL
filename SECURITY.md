@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-The following releases of LXMCL are currently supported.
+The following releases of XMCL are currently supported.
 
 | Version | Supported |
 | ------- | --------- |
@@ -14,7 +14,7 @@ The following releases of LXMCL are currently supported.
 If you believe you have found a security vulnerability in our launcher, please report it to us through the following steps:
 
 1. **DO NOT** create a public GitHub issue for security vulnerabilities
-2. Report the vulnerability via [GitHub Security Advisories](https://github.com/Origin173/LXMCL/security/advisories/new)
+2. Report the vulnerability via [GitHub Security Advisories](https://github.com/Origin173/XMCL/security/advisories/new)
    - Provide as much information as possible about the vulnerability
 
 ## Response Time

@@ -2,15 +2,15 @@ use serde::Serialize;
 use std::error::Error;
 
 #[derive(Debug, Serialize, PartialEq, Eq)]
-pub struct LXMCLError(pub String);
+pub struct XMCLError(pub String);
 
-pub type LXMCLResult<T> = Result<T, LXMCLError>;
+pub type XMCLResult<T> = Result<T, XMCLError>;
 
-impl<T> From<T> for LXMCLError
+impl<T> From<T> for XMCLError
 where
   T: Error,
 {
   fn from(err: T) -> Self {
-    LXMCLError(err.to_string())
+    XMCLError(err.to_string())
   }
 }

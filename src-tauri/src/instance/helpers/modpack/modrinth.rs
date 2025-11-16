@@ -6,7 +6,7 @@ use std::path::Path;
 use serde::{Deserialize, Serialize};
 use zip::ZipArchive;
 
-use crate::error::LXMCLResult;
+use crate::error::XMCLResult;
 use crate::instance::models::misc::{InstanceError, ModLoaderType};
 use crate::tasks::download::DownloadParam;
 use crate::tasks::PTaskParam;
@@ -40,7 +40,7 @@ pub struct ModrinthManifest {
 }
 
 impl ModrinthManifest {
-  pub fn from_archive(file: &File) -> LXMCLResult<Self> {
+  pub fn from_archive(file: &File) -> XMCLResult<Self> {
     let mut archive = ZipArchive::new(file)?;
     let mut manifest_file = archive.by_name("modrinth.index.json")?;
     let mut manifest_content = String::new();
@@ -51,7 +51,7 @@ impl ModrinthManifest {
     Ok(manifest)
   }
 
-  pub fn get_client_version(&self) -> LXMCLResult<String> {
+  pub fn get_client_version(&self) -> XMCLResult<String> {
     Ok(
       self
         .dependencies
@@ -61,7 +61,7 @@ impl ModrinthManifest {
     )
   }
 
-  pub fn get_mod_loader_type_version(&self) -> LXMCLResult<(ModLoaderType, String)> {
+  pub fn get_mod_loader_type_version(&self) -> XMCLResult<(ModLoaderType, String)> {
     for (key, val) in &self.dependencies {
       match key.as_str() {
         "minecraft" => continue,
@@ -74,7 +74,7 @@ impl ModrinthManifest {
     Err(InstanceError::ModpackManifestParseError.into())
   }
 
-  pub fn get_download_params(&self, instance_path: &Path) -> LXMCLResult<Vec<PTaskParam>> {
+  pub fn get_download_params(&self, instance_path: &Path) -> XMCLResult<Vec<PTaskParam>> {
     self
       .files
       .iter()
@@ -90,6 +90,6 @@ impl ModrinthManifest {
           filename: None,
         }))
       })
-      .collect::<LXMCLResult<Vec<_>>>()
+      .collect::<XMCLResult<Vec<_>>>()
   }
 }

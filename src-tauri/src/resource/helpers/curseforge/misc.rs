@@ -1,4 +1,4 @@
-use crate::error::{LXMCLError, LXMCLResult};
+use crate::error::{XMCLError, XMCLResult};
 use crate::resource::helpers::misc::version_pack_sort;
 use crate::resource::models::{
   OtherResourceApiEndpoint, OtherResourceDependency, OtherResourceFileInfo, OtherResourceInfo,
@@ -12,13 +12,13 @@ use std::env;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_http::reqwest;
 
-const CURSEFORGE_API_KEY: &str = env!("LXMCL_CURSEFORGE_API_KEY");
+const CURSEFORGE_API_KEY: &str = env!("XMCL_CURSEFORGE_API_KEY");
 
 pub async fn make_curseforge_request<T, P>(
   client: &reqwest::Client,
   url: &str,
   request_type: OtherResourceRequestType<'_, P>,
-) -> LXMCLResult<T>
+) -> XMCLResult<T>
 where
   T: serde::de::DeserializeOwned,
   P: serde::Serialize,
@@ -48,7 +48,7 @@ where
 pub fn get_curseforge_api(
   endpoint: OtherResourceApiEndpoint,
   id: Option<&str>,
-) -> LXMCLResult<String> {
+) -> XMCLResult<String> {
   let base_url = "https://api.curseforge.com/v1";
 
   let url_str = match endpoint {
@@ -521,7 +521,7 @@ pub fn cvt_id_to_dependency_type(dependency_type: u32) -> String {
 pub async fn translate_description_curseforge(
   app: &AppHandle,
   resource_id: &str,
-) -> LXMCLResult<Option<String>> {
+) -> XMCLResult<Option<String>> {
   let result = async {
     let url = get_curseforge_api(OtherResourceApiEndpoint::TranslateDesc, Some(resource_id))?;
     let client = app.state::<reqwest::Client>();
@@ -534,7 +534,7 @@ pub async fn translate_description_curseforge(
       .json::<CurseForgeTranslationRes>()
       .await?;
 
-    Ok::<_, LXMCLError>(translation_res.translated)
+    Ok::<_, XMCLError>(translation_res.translated)
   }
   .await;
 

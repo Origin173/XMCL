@@ -1,7 +1,7 @@
 {
   "AboutSettingsPage": {
     "about": {
-      "title": "LXMCLについて",
+      "title": "XMCLについて",
       "settings": {
         "version": {
           "title": "バージョン",
@@ -62,7 +62,7 @@
         },
         "userAgreement": {
           "title": "利用規約",
-          "url": "https://github.com/Origin173/LXMCL/blob/main/docs/tos.md"
+          "url": "https://github.com/Origin173/XMCL/blob/main/docs/tos.md"
         },
         "openSourceLicense": {
           "title": "オープンソースライセンス",
@@ -186,7 +186,7 @@
       "description": {
         "start": {
           "3rdparty": "この認証ソースは Yggdrasil Connect 仕様提案をサポート",
-          "microsoft": " LXMCL は Microsoft OAuth 2.0 デバイス認証フローをサポート"
+          "microsoft": " XMCL は Microsoft OAuth 2.0 デバイス認証フローをサポート"
         },
         "next": "次へ進むボタンをクリックし、ログインウィンドウに上記のコードを入力してください。（自動コピー済）"
       },
@@ -821,7 +821,7 @@
       "settings": {
         "language": {
           "title": "言語（Language）",
-          "communityAck": "LXMCL のローカリゼーションはコミュニティによる提供されました。@LAR73 さんのご協力を感謝いたします"
+          "communityAck": "XMCL のローカリゼーションはコミュニティによる提供されました。@LAR73 さんのご協力を感謝いたします"
         }
       }
     },
@@ -877,7 +877,7 @@
           "special": {
             "CURRENT_DIR": "現在フォルダー",
             "OFFICIAL_DIR": "公式ランチャーフォルダー",
-            "APP_DATA_SUBDIR": "LXMCL Data"
+            "APP_DATA_SUBDIR": "XMCL Data"
           }
         }
       },
@@ -1014,8 +1014,8 @@
     "top": {
       "settings": {
         "LauncherDocs": {
-          "title": "LXMCL ドキュメント",
-          "url": "https://github.com/Origin173/LXMCL"
+          "title": "XMCL ドキュメント",
+          "url": "https://github.com/Origin173/XMCL"
         }
       }
     }
@@ -1267,7 +1267,7 @@
       "modrinth": "Modrinth",
       "mojang": "Mojang",
       "github": "GitHub",
-      "sjmclapi": "LXMCL API",
+      "sjmclapi": "XMCL API",
       "forge": "Forge",
       "fabric": "Fabric",
       "neoforge": "NeoForge",
@@ -2255,9 +2255,9 @@
   },
   "StarUsModal": {
     "header": {
-      "title": "GitHub で LXMCL をスター"
+      "title": "GitHub で XMCL をスター"
     },
-    "body": "LXMCL にご支援をお考えの場合は、GitHub リポジトリへのスターの付与をご検討ください。コミュニティーからの評価は開発チームの重要な指標となりまして、品質向上の原動力となっております。LXMCL は SJMC（上海交通大学 Minecraft クラブ）が開発した SJMCL に基づいております。",
+    "body": "XMCL にご支援をお考えの場合は、GitHub リポジトリへのスターの付与をご検討ください。コミュニティーからの評価は開発チームの重要な指標となりまして、品質向上の原動力となっております。XMCL は SJMC（上海交通大学 Minecraft クラブ）が開発した SJMCL に基づいております。",
     "button": {
       "later": "あとで",
       "starUs": "スターを付与"
@@ -2329,7 +2329,7 @@
       "title": "ようこそ！"
     },
     "body": {
-      "part1": "LXMCL をご利用いただき、ありがとうございます。開始前に、必ず下記の",
+      "part1": "XMCL をご利用いただき、ありがとうございます。開始前に、必ず下記の",
       "terms": "利用規約",
       "periods": "をお読みいただき、同意をお願いいたします。"
     },
@@ -2338,7 +2338,7 @@
       "agree": "同意して続ける"
     },
     "warning": {
-      "unstableVersion": "You are using the {{versionLabel}} of LXMCL. Some features may be unstable or incomplete. Bug reports and feature requests are welcome."
+      "unstableVersion": "You are using the {{versionLabel}} of XMCL. Some features may be unstable or incomplete. Bug reports and feature requests are welcome."
     }
   },
   "WorldLevelDataModal": {
@@ -2427,7 +2427,7 @@
       "type": "Type"
     },
     "warning": {
-      "mojang": "Java runtime from Mojang will be installed by LXMCL into a specific directory.",
+      "mojang": "Java runtime from Mojang will be installed by XMCL into a specific directory.",
       "oracle": "Downloading from Oracle may require login."
     }
   },
@@ -2526,8 +2526,8 @@
   },
   "RestartForUpdateConfirmDialog": {
     "title": "Launcher Update",
-    "body": "The new version has been downloaded. Restart LXMCL to complete the update.",
-    "bodyMSI": "The new version has been downloaded. Clicking Install will close LXMCL and run the installer.",
+    "body": "The new version has been downloaded. Restart XMCL to complete the update.",
+    "bodyMSI": "The new version has been downloaded. Clicking Install will close XMCL and run the installer.",
     "button": {
       "restart": "Restart",
       "install": "Install",

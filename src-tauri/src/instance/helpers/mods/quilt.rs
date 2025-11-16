@@ -1,5 +1,5 @@
 // https://github.com/QuiltMC/rfcs/blob/main/specification/0002-quilt.mod.json.md
-use crate::error::{LXMCLError, LXMCLResult};
+use crate::error::{XMCLError, XMCLResult};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::io::{Read, Seek};
@@ -35,18 +35,18 @@ pub struct QuiltLoaderMetadata {
 
 pub fn get_mod_metadata_from_jar<R: Read + Seek>(
   jar: &mut ZipArchive<R>,
-) -> LXMCLResult<QuiltLoader> {
+) -> XMCLResult<QuiltLoader> {
   let meta: QuiltLoader = match jar.by_name("quilt.mod.json") {
     Ok(val) => match serde_json::from_reader(val) {
       Ok(val) => val,
-      Err(e) => return Err(LXMCLError::from(e)),
+      Err(e) => return Err(XMCLError::from(e)),
     },
-    Err(e) => return Err(LXMCLError::from(e)),
+    Err(e) => return Err(XMCLError::from(e)),
   };
   Ok(meta)
 }
 
-pub async fn get_mod_metadata_from_dir(dir_path: &Path) -> LXMCLResult<QuiltLoader> {
+pub async fn get_mod_metadata_from_dir(dir_path: &Path) -> XMCLResult<QuiltLoader> {
   let quilt_file_path = dir_path.join("quilt.mod.json");
   let content = tokio::fs::read_to_string(quilt_file_path).await?;
   let meta: QuiltLoader = serde_json::from_str(&content)?;

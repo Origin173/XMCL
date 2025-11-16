@@ -1,7 +1,7 @@
 use crate::account::helpers::misc::get_selected_player_info;
 use crate::account::helpers::{authlib_injector, microsoft};
 use crate::account::models::PlayerType;
-use crate::error::LXMCLResult;
+use crate::error::XMCLResult;
 use crate::instance::helpers::client_json::{replace_native_libraries, McClientInfo};
 use crate::instance::helpers::misc::{get_instance_game_config, get_instance_subdir_paths};
 use crate::instance::models::misc::{Instance, InstanceError, InstanceSubdirType, ModLoaderStatus};
@@ -50,7 +50,7 @@ pub async fn select_suitable_jre(
   instances_state: State<'_, Mutex<HashMap<String, Instance>>>,
   javas_state: State<'_, Mutex<Vec<JavaInfo>>>,
   launching_queue_state: State<'_, Mutex<Vec<LaunchingState>>>,
-) -> LXMCLResult<()> {
+) -> XMCLResult<()> {
   let instance = instances_state
     .lock()?
     .get(&instance_id)
@@ -95,7 +95,7 @@ pub async fn validate_game_files(
   app: AppHandle,
   launcher_config_state: State<'_, Mutex<LauncherConfig>>,
   launching_queue_state: State<'_, Mutex<Vec<LaunchingState>>>,
-) -> LXMCLResult<()> {
+) -> XMCLResult<()> {
   let (instance, mut client_info, validate_policy) = {
     let mut launching_queue = launching_queue_state.lock()?;
     let launching = launching_queue
@@ -186,7 +186,7 @@ pub async fn validate_game_files(
 pub async fn validate_selected_player(
   app: AppHandle,
   launching_queue_state: State<'_, Mutex<Vec<LaunchingState>>>,
-) -> LXMCLResult<bool> {
+) -> XMCLResult<bool> {
   let player = get_selected_player_info(&app)?;
 
   {
@@ -225,7 +225,7 @@ pub async fn launch_game(
   launching_queue_state: State<'_, Mutex<Vec<LaunchingState>>>,
   quick_play_singleplayer: Option<String>,
   quick_play_multiplayer: Option<String>,
-) -> LXMCLResult<()> {
+) -> XMCLResult<()> {
   let (id, selected_java, game_config, instance) = {
     let mut launching_queue = launching_queue_state.lock()?;
     let launching = launching_queue
@@ -335,7 +335,7 @@ pub async fn launch_game(
 #[tauri::command]
 pub fn cancel_launch_process(
   launching_queue_state: State<'_, Mutex<Vec<LaunchingState>>>,
-) -> LXMCLResult<()> {
+) -> XMCLResult<()> {
   let mut launching_queue = launching_queue_state.lock()?;
 
   // kill process if pid exists
@@ -350,14 +350,14 @@ pub fn cancel_launch_process(
 }
 
 #[tauri::command]
-pub async fn open_game_log_window(app: AppHandle, launching_id: u64) -> LXMCLResult<()> {
+pub async fn open_game_log_window(app: AppHandle, launching_id: u64) -> XMCLResult<()> {
   create_webview_window(&app, &format!("game_log_{launching_id}"), "game_log", None).await?;
 
   Ok(())
 }
 
 #[tauri::command]
-pub fn retrieve_game_log(app: AppHandle, launching_id: u64) -> LXMCLResult<Vec<String>> {
+pub fn retrieve_game_log(app: AppHandle, launching_id: u64) -> XMCLResult<Vec<String>> {
   let log_file_dir = app.path().resolve::<PathBuf>(
     format!("GameLogs/game_log_{launching_id}.log").into(),
     BaseDirectory::AppCache,
@@ -374,7 +374,7 @@ pub fn retrieve_game_log(app: AppHandle, launching_id: u64) -> LXMCLResult<Vec<S
 pub fn retrieve_game_launching_state(
   launching_queue_state: State<'_, Mutex<Vec<LaunchingState>>>,
   launching_id: u64,
-) -> LXMCLResult<LaunchingState> {
+) -> XMCLResult<LaunchingState> {
   let launching_queue = launching_queue_state.lock()?;
   if let Some(launching) = launching_queue.iter().find(|l| l.id == launching_id) {
     Ok(launching.clone())
@@ -389,7 +389,7 @@ pub fn export_game_crash_info(
   launching_queue_state: State<'_, Mutex<Vec<LaunchingState>>>,
   launching_id: u64,
   save_path: String,
-) -> LXMCLResult<String> {
+) -> XMCLResult<String> {
   // game log
   let game_log_path = app.path().resolve::<PathBuf>(
     format!("GameLogs/game_log_{launching_id}.log").into(),

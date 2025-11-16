@@ -1,5 +1,5 @@
 // https://www.mcmod.cn/class/610.html
-use crate::error::{LXMCLError, LXMCLResult};
+use crate::error::{XMCLError, XMCLResult};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::io::{Read, Seek};
@@ -25,18 +25,18 @@ pub struct LiteloaderModMetadata {
 
 pub fn get_mod_metadata_from_jar<R: Read + Seek>(
   jar: &mut ZipArchive<R>,
-) -> LXMCLResult<LiteloaderModMetadata> {
+) -> XMCLResult<LiteloaderModMetadata> {
   let meta: LiteloaderModMetadata = match jar.by_name("litemod.json") {
     Ok(val) => match serde_json::from_reader(val) {
       Ok(val) => val,
-      Err(e) => return Err(LXMCLError::from(e)),
+      Err(e) => return Err(XMCLError::from(e)),
     },
-    Err(e) => return Err(LXMCLError::from(e)),
+    Err(e) => return Err(XMCLError::from(e)),
   };
   Ok(meta)
 }
 
-pub async fn get_mod_metadata_from_dir(dir_path: &Path) -> LXMCLResult<LiteloaderModMetadata> {
+pub async fn get_mod_metadata_from_dir(dir_path: &Path) -> XMCLResult<LiteloaderModMetadata> {
   let liteloader_file_path = dir_path.join("litemod.json");
   let meta: LiteloaderModMetadata = serde_json::from_str(
     tokio::fs::read_to_string(liteloader_file_path)

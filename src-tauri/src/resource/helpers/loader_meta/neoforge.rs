@@ -1,4 +1,4 @@
-use crate::error::LXMCLResult;
+use crate::error::XMCLResult;
 use crate::instance::models::misc::ModLoaderType;
 use crate::resource::helpers::misc::get_download_api;
 use crate::resource::models::{ModLoaderResourceInfo, ResourceError, ResourceType, SourceType};
@@ -27,7 +27,7 @@ struct NeoforgeVersions {
 async fn get_neoforge_meta_by_game_version_official(
   app: &AppHandle,
   game_version: &str,
-) -> LXMCLResult<Vec<ModLoaderResourceInfo>> {
+) -> XMCLResult<Vec<ModLoaderResourceInfo>> {
   lazy_static! {
     static ref OLD_VERSION_REGEX: Regex =
       RegexBuilder::new(r"^(?:1\.20\.1\-)?(\d+)\.(\d+)\.(\d+)$")
@@ -161,7 +161,7 @@ async fn get_neoforge_meta_by_game_version_official(
 async fn get_neoforge_meta_by_game_version_bmcl(
   app: &AppHandle,
   game_version: &str,
-) -> LXMCLResult<Vec<ModLoaderResourceInfo>> {
+) -> XMCLResult<Vec<ModLoaderResourceInfo>> {
   let client = app.state::<reqwest::Client>();
   let url = get_download_api(
     SourceType::BMCLAPIMirror,
@@ -218,7 +218,7 @@ pub async fn get_neoforge_meta_by_game_version(
   app: &AppHandle,
   priority_list: &[SourceType],
   game_version: &str,
-) -> LXMCLResult<Vec<ModLoaderResourceInfo>> {
+) -> XMCLResult<Vec<ModLoaderResourceInfo>> {
   for source_type in priority_list.iter() {
     match *source_type {
       SourceType::Official => {

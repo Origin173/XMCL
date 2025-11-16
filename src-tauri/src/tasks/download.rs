@@ -1,4 +1,4 @@
-use crate::error::{LXMCLError, LXMCLResult};
+use crate::error::{XMCLError, XMCLResult};
 use crate::launcher_config::commands::retrieve_launcher_config;
 use crate::tasks::streams::desc::{PDesc, PStatus};
 use crate::tasks::streams::reporter::Reporter;
@@ -123,7 +123,7 @@ impl DownloadTask {
     app_handle: &AppHandle,
     current: i64,
     param: &DownloadParam,
-  ) -> LXMCLResult<reqwest::Response> {
+  ) -> XMCLResult<reqwest::Response> {
     let state = app_handle.state::<reqwest::Client>();
     let client = with_retry(state.inner().clone());
     let request = if current == 0 {
@@ -137,11 +137,11 @@ impl DownloadTask {
     let response = request
       .send()
       .await
-      .map_err(|e| LXMCLError(format!("{:?}", e.source())))?;
+      .map_err(|e| XMCLError(format!("{:?}", e.source())))?;
 
     let response = response
       .error_for_status()
-      .map_err(|e| LXMCLError(format!("{:?}", e.source())))?;
+      .map_err(|e| XMCLError(format!("{:?}", e.source())))?;
 
     Ok(response)
   }
@@ -150,7 +150,7 @@ impl DownloadTask {
     app_handle: &AppHandle,
     current: i64,
     param: &DownloadParam,
-  ) -> LXMCLResult<(
+  ) -> XMCLResult<(
     impl Stream<Item = Result<bytes::Bytes, std::io::Error>> + Send,
     i64,
   )> {
@@ -173,8 +173,8 @@ impl DownloadTask {
     self,
     app_handle: AppHandle,
     limiter: Option<Limiter>,
-  ) -> LXMCLResult<(
-    impl Future<Output = LXMCLResult<()>> + Send,
+  ) -> XMCLResult<(
+    impl Future<Output = XMCLResult<()>> + Send,
     Arc<RwLock<PTaskHandle>>,
   )> {
     let current = self.p_handle.desc.current;
@@ -222,8 +222,8 @@ impl DownloadTask {
     self,
     app_handle: AppHandle,
     limiter: Option<Limiter>,
-  ) -> LXMCLResult<(
-    impl Future<Output = LXMCLResult<()>> + Send,
+  ) -> XMCLResult<(
+    impl Future<Output = XMCLResult<()>> + Send,
     Arc<RwLock<PTaskHandle>>,
   )> {
     Self::future_impl(self, app_handle, limiter).await

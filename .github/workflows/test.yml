@@ -83,6 +83,6 @@ jobs:
       - name: Test Build
         run: npx tauri build ${{ matrix.args }}
         env:
-          LXMCL_CURSEFORGE_API_KEY: ${{ secrets.LXMCL_CURSEFORGE_API_KEY }}
-          LXMCL_OPENLIST_BASE_URL: ${{ secrets.LXMCL_OPENLIST_BASE_URL }}
+          XMCL_CURSEFORGE_API_KEY: ${{ secrets.XMCL_CURSEFORGE_API_KEY }}
+          XMCL_OPENLIST_BASE_URL: ${{ secrets.XMCL_OPENLIST_BASE_URL }}
           NEXT_PUBLIC_OPENLIST_BASE_URL: ${{ secrets.NEXT_PUBLIC_OPENLIST_BASE_URL }}

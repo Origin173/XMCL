@@ -1,12 +1,12 @@
 **English** · [简体中文](docs/CHANGELOG.zh-Hans.md)
 
-LXMCL follows [Semantic Versioning 2.0.0](http://semver.org/).
+XMCL follows [Semantic Versioning 2.0.0](http://semver.org/).
 
 ## 0.1.0
 
 `2025-10-29`
 
-- Initial release of LXMCL, forked from SJMCL 0.5.0
+- Initial release of XMCL, forked from SJMCL 0.5.0
 
 ---
 

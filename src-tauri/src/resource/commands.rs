@@ -1,4 +1,4 @@
-use crate::error::LXMCLResult;
+use crate::error::XMCLResult;
 use crate::instance::helpers::client_json::McClientInfo;
 use crate::instance::helpers::misc::get_instance_subdir_path_by_id;
 use crate::instance::models::misc::{InstanceSubdirType, ModLoaderType};
@@ -32,7 +32,7 @@ use tauri_plugin_http::reqwest;
 pub async fn fetch_game_version_list(
   app: AppHandle,
   state: State<'_, Mutex<LauncherConfig>>,
-) -> LXMCLResult<Vec<GameClientResourceInfo>> {
+) -> XMCLResult<Vec<GameClientResourceInfo>> {
   let priority_list = {
     let state = state.lock()?;
     get_source_priority_list(&state)
@@ -45,7 +45,7 @@ pub async fn fetch_game_version_specific(
   app: AppHandle,
   state: State<'_, Mutex<LauncherConfig>>,
   game_version: String,
-) -> LXMCLResult<GameClientResourceInfo> {
+) -> XMCLResult<GameClientResourceInfo> {
   let all_versions = fetch_game_version_list(app.clone(), state).await?;
 
   all_versions
@@ -60,7 +60,7 @@ pub async fn fetch_mod_loader_version_list(
   game_version: String,
   mod_loader_type: ModLoaderType,
   state: State<'_, Mutex<LauncherConfig>>,
-) -> LXMCLResult<Vec<ModLoaderResourceInfo>> {
+) -> XMCLResult<Vec<ModLoaderResourceInfo>> {
   let priority_list = {
     let state = state.lock()?;
     get_source_priority_list(&state)
@@ -85,7 +85,7 @@ pub async fn fetch_resource_list_by_name(
   app: AppHandle,
   download_source: OtherResourceSource,
   query: OtherResourceSearchQuery,
-) -> LXMCLResult<OtherResourceSearchRes> {
+) -> XMCLResult<OtherResourceSearchRes> {
   match download_source {
     OtherResourceSource::CurseForge => {
       Ok(fetch_resource_list_by_name_curseforge(&app, &query).await?)
@@ -100,7 +100,7 @@ pub async fn fetch_resource_version_packs(
   app: AppHandle,
   download_source: OtherResourceSource,
   query: OtherResourceVersionPackQuery,
-) -> LXMCLResult<Vec<OtherResourceVersionPack>> {
+) -> XMCLResult<Vec<OtherResourceVersionPack>> {
   match download_source {
     OtherResourceSource::CurseForge => {
       Ok(fetch_resource_version_packs_curseforge(&app, &query).await?)
@@ -116,7 +116,7 @@ pub async fn download_game_server(
   client: State<'_, reqwest::Client>,
   resource_info: GameClientResourceInfo,
   dest: String,
-) -> LXMCLResult<()> {
+) -> XMCLResult<()> {
   let version_details = client
     .get(&resource_info.url)
     .send()
@@ -152,7 +152,7 @@ pub async fn fetch_remote_resource_by_local(
   app: AppHandle,
   download_source: OtherResourceSource,
   file_path: String,
-) -> LXMCLResult<OtherResourceFileInfo> {
+) -> XMCLResult<OtherResourceFileInfo> {
   match download_source {
     OtherResourceSource::CurseForge => {
       Ok(fetch_remote_resource_by_local_curseforge(&app, &file_path).await?)
@@ -169,7 +169,7 @@ pub async fn update_mods(
   app: AppHandle,
   instance_id: String,
   queries: Vec<ModUpdateQuery>,
-) -> LXMCLResult<()> {
+) -> XMCLResult<()> {
   if queries.is_empty() {
     return Ok(());
   }
@@ -215,7 +215,7 @@ pub async fn fetch_remote_resource_by_id(
   app: AppHandle,
   download_source: OtherResourceSource,
   resource_id: String,
-) -> LXMCLResult<OtherResourceInfo> {
+) -> XMCLResult<OtherResourceInfo> {
   match download_source {
     OtherResourceSource::CurseForge => {
       Ok(fetch_remote_resource_by_id_curseforge(&app, &resource_id).await?)

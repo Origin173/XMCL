@@ -17,7 +17,7 @@ const StarUsModal: React.FC<Omit<ModalProps, "children">> = ({ ...props }) => {
   const { t } = useTranslation();
 
   const handleStar = () => {
-    openUrl("https://github.com/Origin173/LXMCL");
+    openUrl("https://github.com/Origin173/XMCL");
     props.onClose();
   };
 
