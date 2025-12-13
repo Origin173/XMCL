@@ -1,10 +1,14 @@
-use crate::error::XMCLResult;
+use crate::error::{XMCLError, XMCLResult};
 use crate::launcher_config::models::{LauncherConfig, LauncherConfigError};
 use crate::tasks::commands::schedule_progressive_task_group;
 use crate::tasks::download::DownloadParam;
 use crate::tasks::PTaskParam;
 use serde_json::Value;
+use std::fs;
+use std::path::PathBuf;
+use std::process::Command;
 use std::sync::Mutex;
+use tauri::path::BaseDirectory;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_http::reqwest;
 
