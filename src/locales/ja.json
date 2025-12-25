@@ -276,14 +276,8 @@
         }
       },
       "presetBgList": {
-        "Jokull": {
-          "name": "雪原の秘境"
-        },
-        "SJTU-eastgate": {
-          "name": "紫気東来（ SJTU 東門）"
-        },
-        "GNLXC": {
-          "name": "GNWork City"
+        "N1": {
+          "name": "Beijiao One"
         }
       }
     },

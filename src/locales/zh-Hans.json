@@ -298,14 +298,8 @@
         }
       },
       "presetBgList": {
-        "Jokull": {
-          "name": "银淞雪镇"
-        },
-        "SJTU-eastgate": {
-          "name": "SJTU 紫气东来门"
-        },
-        "GNLXC": {
-          "name": "GNWork 理想城"
+        "N1": {
+          "name": "北教一"
         }
       }
     },

@@ -229,7 +229,7 @@ export const defaultConfig: LauncherConfig = {
       fontSize: 100,
     },
     background: {
-      choice: "%built-in:Jokull",
+      choice: "%built-in:N1",
       randomCustom: false,
       autoDarken: true,
     },

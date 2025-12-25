@@ -276,14 +276,8 @@
         }
       },
       "presetBgList": {
-        "Jokull": {
-          "name": "La ville de neige"
-        },
-        "SJTU-eastgate": {
-          "name": "Porte Est SJTU"
-        },
-        "GNLXC": {
-          "name": "GNWork City"
+        "N1": {
+          "name": "Beijiao One"
         }
       }
     },

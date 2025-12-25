@@ -298,14 +298,8 @@
         }
       },
       "presetBgList": {
-        "Jokull": {
-          "name": "Jǫkull Village"
-        },
-        "SJTU-eastgate": {
-          "name": "SJTU Eastgate"
-        },
-        "GNLXC": {
-          "name": "GNWork City"
+        "N1": {
+          "name": "Beijiao One"
         }
       }
     },
