@@ -13,7 +13,7 @@ name = "app_lib"
 crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
-tauri-build = { version = "2.0.2", features = [] }
+tauri-build = { version = "=2.5.3", features = [] }
 dotenvy = "0.15.7"
 
 [profile.release]
@@ -26,13 +26,13 @@ panic = "abort"
 serde_json = "1.0"
 serde = { version = "1.0", features = ["derive"] }
 log = "0.4"
-tauri = { version = "2.8.2", features = ["protocol-asset"] }
-tauri-plugin-dialog = "2.3.3"
-tauri-plugin-fs = "2.4.0"
-tauri-plugin-log = "2.7.1"
+tauri = { version = "=2.8.2", features = ["protocol-asset"] }
+tauri-plugin-dialog = "=2.4.2"
+tauri-plugin-fs = "=2.4.4"
+tauri-plugin-log = "=2.7.1"
 structstruck = "0.4.1"
-tauri-plugin-http = { version = "2.5.4", features = ["json", "stream"] }
-tauri-plugin-os = "2.3.2"
+tauri-plugin-http = { version = "=2.5.4", features = ["json", "stream"] }
+tauri-plugin-os = "=2.3.2"
 tokio = { version = "1", features = ["full"] }
 tokio-util = { version = "0.7.13", features = ["compat"] }
 systemstat = "0.2.3"
@@ -43,8 +43,8 @@ uuid = { version = "1.11.0", features = [
     "fast-rng",
     "macro-diagnostics",
 ] }
-tauri-plugin-process = "2.3.1"
-tauri-plugin-opener = "2.5.2"
+tauri-plugin-process = "=2.3.1"
+tauri-plugin-opener = "=2.5.2"
 base64 = "0.22.1"
 image = { version = "0.25.5", features = ["serde"] }
 rand = "0.9.0"
@@ -69,14 +69,14 @@ futures = "0.3.31"
 strum = "0.27.1"
 strum_macros = "0.27.1"
 smart-default = "0.7.1"
-tauri-plugin-clipboard-manager = "2.3.2"
+tauri-plugin-clipboard-manager = "=2.3.2"
 serde_with = "3.12.0"
 chrono = "0.4.40"
 sanitize-filename = "0.6.0"
 cafebabe = "0.8.1"
-tauri-plugin-deep-link = "2.4.5"
+tauri-plugin-deep-link = "=2.4.5"
 flume = { version = "0.11.1", features = ["async", "select"] }
-tauri-utils = "2.8.1"
+tauri-utils = "=2.8.1"
 font-loader = "0.11.0"
 async-speed-limit = "0.4.2"
 reqwest = { version = "0.12", features = ["json"] }
@@ -100,4 +100,4 @@ plist = "1"
 tauri-plugin-single-instance = { version = "2.3", features = ["deep-link"] }
 
 [target."cfg(not(any(target_os = \"android\", target_os = \"ios\")))".dependencies]
-tauri-plugin-window-state = "2.4.1"
+tauri-plugin-window-state = "=2.4.1"
