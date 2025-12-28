@@ -1,17 +1,18 @@
 use crate::account::constants::TEXTURE_ROLES;
 use crate::account::models::{AccountError, PlayerInfo, PlayerType, Texture};
 use crate::error::XMCLResult;
-use crate::utils::fs::get_app_resource_filepath;
-use crate::utils::image::load_image_from_dir;
+use crate::utils::image::decode_image;
 use rand::seq::IndexedRandom;
 use tauri::AppHandle;
 use uuid::Uuid;
 
-pub fn load_preset_skin(app: &AppHandle, preset_role: String) -> XMCLResult<Vec<Texture>> {
-  let texture_path = get_app_resource_filepath(app, &format!("assets/skins/{}.png", preset_role))
-    .map_err(|_| AccountError::TextureError)?;
+pub fn load_preset_skin(_app: &AppHandle, preset_role: String) -> XMCLResult<Vec<Texture>> {
+  let texture_bytes = match preset_role.as_str() {
+    "alex" => include_bytes!("../../../assets/skins/alex.png").to_vec(),
+    _ => include_bytes!("../../../assets/skins/steve.png").to_vec(),
+  };
 
-  let texture_img = load_image_from_dir(&texture_path).ok_or(AccountError::TextureError)?;
+  let texture_img = decode_image(texture_bytes).map_err(|_| AccountError::TextureError)?;
 
   Ok(vec![Texture {
     texture_type: "SKIN".to_string(),

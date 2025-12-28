@@ -2,7 +2,6 @@ use base64::Engine;
 use image::codecs::png::PngEncoder;
 use image::{ImageEncoder, ImageError, ImageReader, RgbaImage};
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
-use std::fs;
 use std::io::{Cursor, Read, Seek};
 use std::path::Path;
 use tokio;
@@ -27,11 +26,6 @@ pub fn load_image_from_jar<R: Read + Seek>(
 
 pub async fn load_image_from_dir_async(path: &Path) -> Option<RgbaImage> {
   let buffer = tokio::fs::read(path).await.ok()?;
-  decode_image(buffer).ok()
-}
-
-pub fn load_image_from_dir(path: &Path) -> Option<RgbaImage> {
-  let buffer = fs::read(path).ok()?;
   decode_image(buffer).ok()
 }
 
