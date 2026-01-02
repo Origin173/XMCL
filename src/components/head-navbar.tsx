@@ -16,7 +16,6 @@ import { useTranslation } from "react-i18next";
 import {
   LuBox,
   LuCircleUserRound,
-  LuCompass,
   LuDownload,
   LuSearch,
   LuSettings,
@@ -60,18 +59,14 @@ const HeadNavBar = () => {
     { icon: LuBox, label: "instances", path: "/instances" },
     { icon: LuCircleUserRound, label: "accounts", path: "/accounts" },
     { icon: LuDownload, label: "openlist", path: "/openlist" },
-    ...(config.general.functionality.discoverPage
-      ? [{ icon: LuCompass, label: "discover", path: "/discover" }]
-      : [
-          {
-            icon: LuSearch,
-            label: "search",
-            path: "%not-page",
-            onNav: () => {
-              openSharedModal("spotlight-search");
-            },
-          },
-        ]),
+    {
+      icon: LuSearch,
+      label: "search",
+      path: "%not-page",
+      onNav: () => {
+        openSharedModal("spotlight-search");
+      },
+    },
     { icon: LuSettings, label: "settings", path: "/settings" },
   ];
 

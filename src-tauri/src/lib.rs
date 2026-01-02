@@ -1,5 +1,4 @@
 mod account;
-mod discover;
 mod error;
 mod instance;
 mod launch;
@@ -140,8 +139,6 @@ pub async fn run() {
       resource::commands::fetch_remote_resource_by_local,
       resource::commands::update_mods,
       resource::commands::fetch_remote_resource_by_id,
-      discover::commands::fetch_news_sources_info,
-      discover::commands::fetch_news_post_summaries,
       openlist::commands::openlist_browse,
       openlist::commands::openlist_download_modpack,
       // 以下 OpenList 下载管理命令已废弃，使用任务系统的命令替代:

@@ -1,4 +1,4 @@
-import { Badge, Button, Kbd, Switch, Text } from "@chakra-ui/react";
+import { Button, Switch } from "@chakra-ui/react";
 import { appCacheDir } from "@tauri-apps/api/path";
 import { openPath } from "@tauri-apps/plugin-opener";
 import React from "react";
@@ -22,7 +22,7 @@ const GeneralSettingsPage = () => {
   const generalConfigs = config.general;
   const primaryColor = config.appearance.theme.primaryColor;
   const { removeHistory } = useRoutingHistory();
-  const { openGenericConfirmDialog, closeSharedModal } = useSharedModals();
+  const { openGenericConfirmDialog } = useSharedModals();
 
   const instancesNavTypes = ["instance", "directory", "hidden"];
 
@@ -41,53 +41,6 @@ const GeneralSettingsPage = () => {
     },
     {
       title: t("GeneralSettingsPage.functions.title"),
-      items: [
-        {
-          title: t("GeneralSettingsPage.functions.settings.discoverPage.title"),
-          titleExtra: <Badge colorScheme="purple">Beta</Badge>,
-          children: (
-            <Switch
-              colorScheme={primaryColor}
-              isChecked={generalConfigs.functionality.discoverPage}
-              onChange={(e) => {
-                update("general.functionality.discoverPage", e.target.checked);
-                if (e.target.checked) {
-                  openGenericConfirmDialog({
-                    title: t("General.notice"),
-                    body: (
-                      <Text>
-                        {t(
-                          "GeneralSettingsPage.functions.settings.discoverPage.openNotice.part-1"
-                        )}
-                        <Kbd>
-                          {t(
-                            `Enums.${
-                              config.basicInfo.osType === "macos"
-                                ? "metaKey"
-                                : "ctrlKey"
-                            }.${config.basicInfo.osType}`
-                          )}
-                        </Kbd>
-                        {" + "}
-                        <Kbd>S</Kbd>
-                        {t(
-                          "GeneralSettingsPage.functions.settings.discoverPage.openNotice.part-2"
-                        )}
-                      </Text>
-                    ),
-                    btnCancel: "",
-                    onOKCallback: () => {
-                      closeSharedModal("generic-confirm");
-                    },
-                  });
-                }
-              }}
-            />
-          ),
-        },
-      ],
-    },
-    {
       items: [
         {
           title: t(
