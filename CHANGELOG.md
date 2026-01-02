@@ -4,7 +4,7 @@ XMCL follows [Semantic Versioning 2.0.0](http://semver.org/).
 
 ## 0.1.0
 
-`2025-12-25`
+`2025-1-2`
 
 - Initial release of XMCL, forked from SJMCL 0.5.0
 
