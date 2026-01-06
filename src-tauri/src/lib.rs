@@ -142,14 +142,6 @@ pub async fn run() {
       resource::commands::fetch_remote_resource_by_id,
       openlist::commands::openlist_browse,
       openlist::commands::openlist_download_modpack,
-      // 以下 OpenList 下载管理命令已废弃，使用任务系统的命令替代:
-      // - cancel_progressive_task
-      // - resume_progressive_task_group
-      // - retrieve_progressive_task_list
-      // openlist::commands::openlist_pause_download,
-      // openlist::commands::openlist_resume_download,
-      // openlist::commands::openlist_get_download_status,
-      // openlist::commands::openlist_cancel_download,
       tasks::commands::schedule_progressive_task_group,
       tasks::commands::cancel_progressive_task,
       tasks::commands::resume_progressive_task,
@@ -212,10 +204,6 @@ pub async fn run() {
 
       let launching_queue = Vec::<LaunchingState>::new();
       app.manage(Mutex::new(launching_queue));
-
-      // OpenList 下载管理器已废弃，现在使用任务系统
-      // let download_manager = openlist::commands::DownloadManager::new();
-      // app.manage(download_manager);
 
       // check if full account feature (offline and 3rd-party login) is available
       let app_handle = app.handle().clone();

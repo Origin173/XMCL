@@ -17,7 +17,7 @@ export const TitleFull: React.FC<LogoTitleProps> = (props) => {
   return (
     <Heading size="md" className={styles.title} {...props}>
       <Highlight query="L" styles={{ color: "blue.600", userSelect: "none" }}>
-        XMCL Launcher
+        XMC Launcher
       </Highlight>
     </Heading>
   );
