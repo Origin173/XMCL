@@ -17,6 +17,7 @@ use instance::models::misc::Instance;
 use launch::models::LaunchingState;
 use launcher_config::helpers::java::refresh_and_update_javas;
 use launcher_config::models::{JavaInfo, LauncherConfig};
+use log::warn;
 use resource::helpers::mod_db::{initialize_mod_db, ModDataBase};
 use std::collections::HashMap;
 use std::path::PathBuf;
@@ -274,7 +275,9 @@ pub async fn run() {
       #[cfg(any(target_os = "linux", target_os = "windows"))]
       {
         use tauri_plugin_deep_link::DeepLinkExt;
-        app.deep_link().register_all()?;
+        if let Err(err) = app.deep_link().register_all() {
+          warn!("Skip deep link registration: {err}");
+        }
       }
 
       Ok(())
