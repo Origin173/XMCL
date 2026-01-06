@@ -116,14 +116,14 @@ jobs:
           # Sign the .app bundle
           codesign --deep --force --options runtime \
             --sign "$SIGNING_IDENTITY" \
-            "SJMCL.app"
+            "XMCL.app"
           
           # Verify signing
-          codesign --verify --deep --strict --verbose=2 SJMCL.app
+          codesign --verify --deep --strict --verbose=2 XMCL.app
           
           # Re-compress the signed .app
           rm XMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.app.tar.gz
-          tar -czf XMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.app.tar.gz SJMCL.app
+          tar -czf XMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.app.tar.gz XMCL.app
 
       - name: Create DMG configuration
         run: |
@@ -148,7 +148,7 @@ jobs:
                 "x": 180,
                 "y": 170,
                 "type": "file",
-                "path": "SJMCL.app"
+                "path": "XMCL.app"
               },
               {
                 "x": 480,
@@ -180,7 +180,7 @@ jobs:
           codesign --verify --deep --strict --verbose=2 XMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.dmg
           
           # Clean up extracted .app and config file
-          rm -rf SJMCL.app dmg-config.json
+          rm -rf XMCL.app dmg-config.json
 
       - name: Notarize .app
         env:
@@ -194,22 +194,22 @@ jobs:
           tar -xzf XMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.app.tar.gz
           
           # Create zip for notarization
-          ditto -c -k --keepParent SJMCL.app SJMCL.zip
+          ditto -c -k --keepParent XMCL.app XMCL.zip
           
           # Submit for notarization
-          xcrun notarytool submit SJMCL.zip \
+          xcrun notarytool submit XMCL.zip \
             --apple-id "$NOTARY_APPLE_ID" \
             --password "$NOTARY_PASSWORD" \
             --team-id "$NOTARY_TEAM_ID" \
             --wait
           
           # Staple the notarization
-          xcrun stapler staple SJMCL.app
+          xcrun stapler staple XMCL.app
           
           # Re-compress the notarized .app
-          rm XMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.app.tar.gz SJMCL.zip
-          tar -czf XMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.app.tar.gz SJMCL.app
-          rm -rf SJMCL.app
+          rm XMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.app.tar.gz XMCL.zip
+          tar -czf XMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.app.tar.gz XMCL.app
+          rm -rf XMCL.app
 
       - name: Notarize DMG
         env:
@@ -237,13 +237,13 @@ jobs:
           tar -xzf XMCL_${{ inputs.version }}_macos_${{ matrix.arch }}.app.tar.gz
           
           echo "=== Testing Gatekeeper assessment on notarized app ==="
-          spctl --verbose=4 --assess --type execute SJMCL.app
+          spctl --verbose=4 --assess --type execute XMCL.app
           
           echo "=== Final signature verification ==="
-          codesign --verify --deep --strict --verbose=2 SJMCL.app
+          codesign --verify --deep --strict --verbose=2 XMCL.app
           
           # Clean up extracted .app
-          rm -rf SJMCL.app
+          rm -rf XMCL.app
 
       - name: Cleanup keychain
         if: always()
