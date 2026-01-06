@@ -147,6 +147,15 @@ jobs:
           echo "**Platform Support:** This release provides builds for Windows and Linux only. macOS builds are not included due to the requirement of an Apple Developer account for code signing." >> release-notes.md
         shell: bash
 
+      - name: Prepare release notes output
+        id: release-notes
+        run: |
+          {
+            echo 'body<<EOF'
+            cat release-notes.md
+            echo EOF
+          } >> $GITHUB_OUTPUT
+
       - name: Create Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -161,4 +170,20 @@ jobs:
             $PRERELEASE \
             --notes-file release-notes.md \
             ./release-artifacts/*
+
+      - name: Publish Gitee Release
+        if: ${{ vars.GITEE_NAMESPACE != '' }}
+        uses: nicennnnnnnlee/action-gitee-release@master
+        with:
+          gitee_action: create_release
+          gitee_owner: ${{ vars.GITEE_NAMESPACE }}
+          gitee_repo: XMCL
+          gitee_token: ${{ secrets.GITEE_TOKEN }}
+          gitee_tag_name: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || format('v{0}', needs.Version-Check.outputs.version) }}
+          gitee_release_name: XMCL ${{ needs.Version-Check.outputs.version }}
+          gitee_release_body: ${{ steps.release-notes.outputs.body }}
+          gitee_target_commitish: ${{ github.sha }}
+          gitee_upload_retry_times: 3
+          gitee_files: |
+            release-artifacts/*
 
