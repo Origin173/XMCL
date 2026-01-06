@@ -3,6 +3,7 @@
 [![Test Build](https://img.shields.io/github/actions/workflow/status/Origin173/XMCL/test.yml?label=test%20build&logo=github&style=for-the-badge)](https://github.com/Origin173/XMCL/blob/main/.github/workflows/test.yml)
 ![Downloads](https://img.shields.io/github/downloads/Origin173/XMCL/total?style=for-the-badge)
 ![Stars](https://img.shields.io/github/stars/Origin173/XMCL?style=for-the-badge)
+[![Ask DeepWiki](https://img.shields.io/badge/Ask-DeepWiki-20B2AA?logo=&style=for-the-badge)](https://deepwiki.com/Origin173/XMCL)
 
 **English** · [简体中文](docs/README.zh-Hans.md) · [繁體中文](docs/README.zh-Hant.md)
 
