@@ -34,8 +34,9 @@ XMCL currently supports the following platforms:
 | Platform  | Versions            | Architectures              | Provided Bundles                        |
 |-----------|---------------------|----------------------------|-----------------------------------------|
 | Windows   | 7 and above         | `aarch64`, `i686`, `x86_64`| `.msi`, portable `.exe`                 |
-| macOS     | 10.15 and above     | `aarch64`, `x86_64`        | `.app`, `.dmg`                          |
 | Linux     | webkit2gtk 4.1 (e.g., Ubuntu 22.04) | `x86_64`   | `.AppImage`, `.deb`, `.rpm`, portable binary |
+
+> **Note on macOS Support:** macOS builds are currently not provided due to the requirement of an Apple Developer Program membership ($99/year) for code signing and notarization. Without proper code signing, macOS applications cannot run on modern macOS systems (macOS 10.15+) due to Gatekeeper security requirements. Distributing unsigned applications would result in security warnings and potential legal/security risks. If you are interested in supporting macOS development, please consider contributing or sponsoring the project.
 
 ### Windows 7
 

@@ -29,13 +29,14 @@
 
 你可以从 [GitHub Releases](https://github.com/Origin173/XMCL/releases) 下载最新版本。
 
-XMCL 目前支持以下平台：
+XMCL 目前支持以下平台:
 
 | 平台      | 版本                | 架构                       | 提供的安装包                           |
 |-----------|---------------------|----------------------------|----------------------------------------|
 | Windows   | 7 及以上            | `aarch64`, `i686`, `x86_64`| `.msi`, 便携版 `.exe`                  |
-| macOS     | 10.15 及以上        | `aarch64`, `x86_64`        | `.app`, `.dmg`                         |
 | Linux     | webkit2gtk 4.1 (如 Ubuntu 22.04) | `x86_64`   | `.AppImage`, `.deb`, `.rpm`, 便携版二进制文件 |
+
+> **关于 macOS 支持的说明：** 目前不提供 macOS 版本，因为需要 Apple Developer Program 会员资格（99 美元/年）进行代码签名和公证。如果没有适当的代码签名，macOS 应用程序无法在现代 macOS 系统（macOS 10.15+）上运行，这是由于 Gatekeeper 安全要求。分发未签名的应用程序会导致安全警告和潜在的法律/安全风险。如果您有兴趣支持 macOS 开发，请考虑为项目做出贡献或赞助。
 
 ### Windows 7
 
