@@ -22,6 +22,10 @@ on:
     secrets:
       XMCL_CURSEFORGE_API_KEY:
         required: true
+      XMCL_OPENLIST_BASE_URL:
+        required: true
+      NEXT_PUBLIC_OPENLIST_BASE_URL:
+        required: true
 
 jobs:
   Build-and-Release:
