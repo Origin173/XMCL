@@ -1,0 +1,32 @@
+name: Mirror to Gitee
+
+on:
+  workflow_run:
+    workflows:
+      - Release
+    types:
+      - completed
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mirror-to-gitee
+  cancel-in-progress: false
+
+jobs:
+  mirror:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mirror XMCL to Gitee
+        uses: Yikun/hub-mirror-action@master
+        with:
+          src: github/${{ github.repository_owner }}
+          dst: gitee/${{ vars.GITEE_NAMESPACE }}
+          dst_key: ${{ secrets.GITEE_PRIVATE_KEY }}
+          dst_token: ${{ secrets.GITEE_TOKEN }}
+          static_list: XMCL
+          force_update: true
+          lfs: true
+          timeout: '60m'
