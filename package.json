@@ -1,6 +1,6 @@
 {
   "name": "xmcl",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -24,8 +24,8 @@
       "eslint --no-fix --max-warnings=0"
     ],
     "src/locales/*.json": [
-    "npm run locale diff en",
-    "npm run locale diff zh-Hans"
+      "npm run locale diff en",
+      "npm run locale diff zh-Hans"
     ]
   },
   "dependencies": {
