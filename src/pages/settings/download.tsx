@@ -71,6 +71,8 @@ const DownloadSettingsPage = () => {
   );
   const [isClearingDownloadCache, setIsClearingDownloadCache] =
     useState<boolean>(false);
+  const [isTestingProxy, setIsTestingProxy] = useState<boolean>(false);
+  const [testUrl, setTestUrl] = useState<string>("");
 
   const sourceStrategyTypes = ["auto", "official", "mirror"];
   const proxyTypeOptions = [
@@ -121,6 +123,33 @@ const DownloadSettingsPage = () => {
         setIsClearingDownloadCache(false);
       });
     closeSharedModal("generic-confirm");
+  };
+
+  const handleTestProxy = async () => {
+    if (isTestingProxy) return;
+
+    const url = testUrl.trim() || "https://www.baidu.com";
+    setIsTestingProxy(true);
+
+    try {
+      const response = await ConfigService.testProxyConnection(url);
+      if (response.status === "success") {
+        toast({
+          title: response.data
+            ? t("DownloadSettingPage.proxy.test.success")
+            : t("DownloadSettingPage.proxy.test.failed"),
+          status: response.data ? "success" : "error",
+        });
+      } else {
+        toast({
+          title: t("DownloadSettingPage.proxy.test.failed"),
+          description: response.message,
+          status: "error",
+        });
+      }
+    } finally {
+      setIsTestingProxy(false);
+    }
   };
 
   const downloadSettingGroups: OptionItemGroupProps[] = [
@@ -444,6 +473,31 @@ const DownloadSettingsPage = () => {
                   >
                     <NumberInputField pr={0} />
                   </NumberInput>
+                ),
+              },
+              {
+                title: t("DownloadSettingPage.proxy.settings.test.title"),
+                children: (
+                  <HStack>
+                    <Input
+                      size="xs"
+                      w="240px"
+                      focusBorderColor={`${primaryColor}.500`}
+                      placeholder={t(
+                        "DownloadSettingPage.proxy.settings.test.placeholder"
+                      )}
+                      value={testUrl}
+                      onChange={(event) => setTestUrl(event.target.value)}
+                    />
+                    <Button
+                      variant="subtle"
+                      size="xs"
+                      isLoading={isTestingProxy}
+                      onClick={handleTestProxy}
+                    >
+                      {t("DownloadSettingPage.proxy.settings.test.button")}
+                    </Button>
+                  </HStack>
                 ),
               },
             ]

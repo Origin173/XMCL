@@ -543,7 +543,18 @@
         },
         "port": {
           "title": "端口"
+        },
+        "test": {
+          "title": "测试代理连接",
+          "placeholder": "https://www.baidu.com 或 https://www.google.com",
+          "button": "测试",
+          "success": "连接成功",
+          "failed": "连接失败"
         }
+      },
+      "test": {
+        "success": "代理连接成功",
+        "failed": "代理连接失败"
       }
     }
   },
