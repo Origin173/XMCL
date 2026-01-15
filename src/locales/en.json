@@ -546,7 +546,7 @@
         },
         "test": {
           "title": "Test Proxy Connection",
-          "placeholder": "https://www.baidu.com or https://www.google.com",
+          "placeholder": "https://www.baidu.com",
           "button": "Test",
           "success": "Connection successful",
           "failed": "Connection failed"

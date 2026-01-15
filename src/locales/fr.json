@@ -462,7 +462,18 @@
         },
         "port": {
           "title": "Port"
+        },
+        "test": {
+          "title": "Tester la connexion du proxy",
+          "placeholder": "https://www.baidu.com",
+          "button": "Tester",
+          "success": "Connexion réussie",
+          "failed": "Connexion échouée"
         }
+      },
+      "test": {
+        "success": "Connexion au proxy réussie",
+        "failed": "Connexion au proxy échouée"
       }
     }
   },

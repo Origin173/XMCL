@@ -543,7 +543,18 @@
         },
         "port": {
           "title": "埠"
+        },
+        "test": {
+          "title": "測試代理連線",
+          "placeholder": "https://www.baidu.com",
+          "button": "測試",
+          "success": "連線成功",
+          "failed": "連線失敗"
         }
+      },
+      "test": {
+        "success": "代理連線成功",
+        "failed": "代理連線失敗"
       }
     }
   },
