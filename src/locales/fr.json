@@ -2297,11 +2297,6 @@
     "launcherConfig": {
       "title": "Paramètres du lanceur",
       "settings": {
-        "internetSync": {
-          "title": "Synchronisation en ligne",
-          "import": "Importer",
-          "export": "Exporter"
-        },
         "restoreAll": {
           "title": "Restaurer tous les paramètres",
           "description": "Restaurer tous les paramètres du lanceur à leur valeur par défaut",
@@ -2309,25 +2304,6 @@
         }
       }
     }
-  },
-  "SyncConfigExportModal": {
-    "header": {
-      "title": "Synchronisation des paramètres - Exporter"
-    },
-    "label": {
-      "token": "Jeton"
-    },
-    "helper": "Saisissez ce jeton sur l'appareil à synchroniser pour terminer la synchronisation",
-    "countdown": "Actualisation dans {{seconds}} secondes"
-  },
-  "SyncConfigImportModal": {
-    "header": {
-      "title": "Synchronisation des paramètres - Importer"
-    },
-    "label": {
-      "token": "Jeton"
-    },
-    "helper": "Veuillez saisir le jeton généré par l'appareil à synchroniser"
   },
   "Utils": {
     "datetime": {

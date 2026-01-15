@@ -2436,11 +2436,6 @@
     "launcherConfig": {
       "title": "啟動器設定",
       "settings": {
-        "internetSync": {
-          "title": "聯網同步",
-          "import": "匯入",
-          "export": "匯出"
-        },
         "restoreAll": {
           "title": "還原所有設定",
           "description": "將所有啟動器設定還原為預設值",
@@ -2448,25 +2443,6 @@
         }
       }
     }
-  },
-  "SyncConfigExportModal": {
-    "header": {
-      "title": "同步設定 - 匯出"
-    },
-    "label": {
-      "token": "令牌"
-    },
-    "helper": "將上述令牌輸入至待同步的裝置以完成同步",
-    "countdown": "{{seconds}} 秒後重新整理"
-  },
-  "SyncConfigImportModal": {
-    "header": {
-      "title": "同步設定 - 匯入"
-    },
-    "label": {
-      "token": "令牌"
-    },
-    "helper": "請輸入需同步裝置生成的令牌"
   },
   "Utils": {
     "datetime": {

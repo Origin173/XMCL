@@ -1,28 +1,8 @@
 use crate::launcher_config::models::MemoryInfo;
-use serde_json::json;
 use std::path::PathBuf;
 use sysinfo::{Disk, Disks};
 use systemstat::{saturating_sub_bytes, Platform};
-use tauri_plugin_http::reqwest;
 use tauri_plugin_os::locale;
-
-/// Sends app version and OS type as statistic data to SJMC asynchronously.
-///
-/// # Examples
-///
-/// ```rust
-/// send_statistics("1.0.0".to_string(), "windows".to_string()).await;
-/// ```
-pub async fn send_statistics(version: String, os: String) {
-  _ = reqwest::Client::new()
-    .post("https://mc.sjtu.cn/api-sjmcl/statistics")
-    .json(&json!({
-      "version": version,
-      "os": os,
-    }))
-    .send()
-    .await;
-}
 
 /// Returns a locale identifier standardized for frontend usage
 /// by mapping OS-specific locale strings. Defaults to "en" if no match is found.

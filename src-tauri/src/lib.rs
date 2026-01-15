@@ -64,8 +64,6 @@ pub async fn run() {
       launcher_config::commands::retrieve_launcher_config,
       launcher_config::commands::update_launcher_config,
       launcher_config::commands::restore_launcher_config,
-      launcher_config::commands::export_launcher_config,
-      launcher_config::commands::import_launcher_config,
       launcher_config::commands::reveal_launcher_config,
       launcher_config::commands::retrieve_custom_background_list,
       launcher_config::commands::add_custom_background,
@@ -176,8 +174,6 @@ pub async fn run() {
       let mut launcher_config: LauncherConfig = LauncherConfig::load().unwrap_or_default();
       launcher_config.setup_with_app(app.handle()).unwrap();
       launcher_config.save().unwrap();
-      let version = launcher_config.basic_info.launcher_version.clone();
-      let os = launcher_config.basic_info.platform.clone();
       app.manage(Mutex::new(launcher_config));
 
       let account_info = AccountInfo::load().unwrap_or_default();
@@ -252,11 +248,6 @@ pub async fn run() {
         let menu = MenuBuilder::new(app).build()?;
         app.set_menu(menu)?;
       }
-
-      // Send statistics
-      tokio::spawn(async move {
-        utils::sys_info::send_statistics(version, os).await;
-      });
 
       // Registering the deep links at runtime on Linux and Windows
       // ref: https://v2.tauri.app/plugin/deep-linking/#registering-desktop-deep-links-at-runtime

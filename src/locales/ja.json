@@ -2261,11 +2261,6 @@
     "launcherConfig": {
       "title": "ランチャー設定",
       "settings": {
-        "internetSync": {
-          "title": "インタネット同期",
-          "import": "インポート",
-          "export": "エクスポート"
-        },
         "restoreAll": {
           "title": "すべての設定を復元",
           "description": "すべてのランチャー設定をデフォルトに復元",
@@ -2273,25 +2268,6 @@
         }
       }
     }
-  },
-  "SyncConfigExportModal": {
-    "header": {
-      "title": "同期設定 - エクスポート"
-    },
-    "label": {
-      "token": "トークン"
-    },
-    "helper": "上記トークンを同期待ちデバイスに入力し、同期を完了してください",
-    "countdown": "{{seconds}} 秒後で再読み込み"
-  },
-  "SyncConfigImportModal": {
-    "header": {
-      "title": "同期設定 - インポート"
-    },
-    "label": {
-      "token": "トークン"
-    },
-    "helper": "同期対象デバイスで生成されたトーコンを入力してください"
   },
   "Utils": {
     "datetime": {

@@ -256,8 +256,7 @@ structstruck::strike! {
     },
     pub global_game_config: GameConfig,
     pub local_game_directories: Vec<GameDirectory>,
-    #[default(_code="vec![\"https://mc.sjtu.cn/api-sjmcl/article\".to_string(),
-    \"https://mc.sjtu.cn/api-sjmcl/article/mua\".to_string()]")]
+    #[default(_code="Vec::new()")]
     pub discover_source_endpoints: Vec<String>,
     pub extra_java_paths: Vec<String>,
     pub suppressed_dialogs: Vec<String>,
@@ -333,9 +332,6 @@ impl Storage for LauncherConfig {
 #[strum(serialize_all = "SCREAMING_SNAKE_CASE")]
 pub enum LauncherConfigError {
   FetchError,
-  InvalidCode,
-  CodeExpired,
-  VersionMismatch,
   GameDirAlreadyAdded,
   GameDirNotExist,
   JavaExecInvalid,

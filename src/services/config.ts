@@ -49,26 +49,6 @@ export class ConfigService {
   }
 
   /**
-   * EXPORT the launcher configs to the meta server and get a token code.
-   * @returns {Promise<InvokeResponse<string>>} the token code if its successful.
-   */
-  @responseHandler("config")
-  static async exportLauncherConfig(): Promise<InvokeResponse<string>> {
-    return await invoke("export_launcher_config");
-  }
-
-  /**
-   * IMPORT the launcher configs from the meta server using the token code.
-   * @returns {Promise<InvokeResponse<LauncherConfig>>} the launcher configs from the server, which have been saved in backend.
-   */
-  @responseHandler("config")
-  static async importLauncherConfig(
-    code: string
-  ): Promise<InvokeResponse<LauncherConfig>> {
-    return await invoke("import_launcher_config", { code });
-  }
-
-  /**
    * REVEAL the launcher config file in the system file manager.
    * @returns {Promise<InvokeResponse<void>>}
    */
