@@ -5,10 +5,7 @@ use std::time::Duration;
 use tauri::{AppHandle, Manager};
 use tauri_plugin_http::reqwest;
 
-pub async fn test_proxy_connectivity(
-  app: &AppHandle,
-  test_url: String,
-) -> XMCLResult<bool> {
+pub async fn test_proxy_connectivity(app: &AppHandle, test_url: String) -> XMCLResult<bool> {
   let config_binding = app.state::<Mutex<LauncherConfig>>();
   let (proxy_enabled, proxy_type, proxy_host, proxy_port) = {
     let config = config_binding.lock()?;
