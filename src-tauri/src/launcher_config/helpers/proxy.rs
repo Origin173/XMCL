@@ -1,4 +1,4 @@
-use crate::error::XMCLResult;
+use crate::error::{XMCLError, XMCLResult};
 use crate::launcher_config::models::{LauncherConfig, ProxyType};
 use std::sync::Mutex;
 use std::time::Duration;
@@ -29,13 +29,13 @@ pub async fn test_proxy_connectivity(
     ProxyType::Socks => format!("socks5://{}:{}", proxy_host, proxy_port),
   };
 
-  let proxy = reqwest::Proxy::all(&proxy_url).map_err(|_| "Invalid proxy configuration")?;
+  let proxy = reqwest::Proxy::all(&proxy_url).map_err(|e| XMCLError::from(e))?;
 
   let client = reqwest::Client::builder()
     .proxy(proxy)
     .timeout(Duration::from_secs(10))
     .build()
-    .map_err(|_| "Failed to build HTTP client")?;
+    .map_err(|e| XMCLError::from(e))?;
 
   match client.get(&test_url).send().await {
     Ok(response) => Ok(response.status().is_success()),
