@@ -451,6 +451,9 @@
         "enabled": {
           "title": "プロキシ有効化"
         },
+        "followSystemProxy": {
+          "title": "システムプロキシを使用"
+        },
         "type": {
           "title": "プロキシタイプ"
         },

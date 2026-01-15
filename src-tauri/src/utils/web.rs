@@ -53,13 +53,18 @@ pub fn build_xmcl_client(app: &AppHandle, use_version_header: bool, use_proxy: b
 
     if use_proxy && config.download.proxy.enabled {
       let proxy_cfg = &config.download.proxy;
-      let proxy_url = match proxy_cfg.selected_type {
-        ProxyType::Http => format!("http://{}:{}", proxy_cfg.host, proxy_cfg.port),
-        ProxyType::Socks => format!("socks5h://{}:{}", proxy_cfg.host, proxy_cfg.port),
-      };
 
-      if let Ok(proxy) = Proxy::all(&proxy_url) {
-        builder = builder.proxy(proxy);
+      // If follow_system_proxy is enabled, don't set manual proxy
+      // Let reqwest use system proxy settings
+      if !proxy_cfg.follow_system_proxy {
+        let proxy_url = match proxy_cfg.selected_type {
+          ProxyType::Http => format!("http://{}:{}", proxy_cfg.host, proxy_cfg.port),
+          ProxyType::Socks => format!("socks5h://{}:{}", proxy_cfg.host, proxy_cfg.port),
+        };
+
+        if let Ok(proxy) = Proxy::all(&proxy_url) {
+          builder = builder.proxy(proxy);
+        }
       }
     }
   }

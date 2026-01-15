@@ -454,6 +454,9 @@
         "enabled": {
           "title": "Activer le proxy"
         },
+        "followSystemProxy": {
+          "title": "Suivre le proxy système"
+        },
         "type": {
           "title": "Type de proxy"
         },

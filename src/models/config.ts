@@ -104,6 +104,7 @@ export interface LauncherConfig {
     };
     proxy: {
       enabled: boolean;
+      followSystemProxy: boolean;
       selectedType: string;
       host: string;
       port: number;
@@ -253,6 +254,7 @@ export const defaultConfig: LauncherConfig = {
     },
     proxy: {
       enabled: false,
+      followSystemProxy: false,
       selectedType: "http",
       host: "127.0.0.1",
       port: 80,

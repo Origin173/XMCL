@@ -535,6 +535,9 @@
         "enabled": {
           "title": "啟用代理"
         },
+        "followSystemProxy": {
+          "title": "跟随系統代理"
+        },
         "type": {
           "title": "代理型別"
         },
