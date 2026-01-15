@@ -419,62 +419,86 @@ const DownloadSettingsPage = () => {
         ...(downloadConfigs.proxy.enabled
           ? [
               {
-                title: t("DownloadSettingPage.proxy.settings.type.title"),
-                children: (
-                  <HStack>
-                    <SegmentedControl
-                      selected={downloadConfigs.proxy.selectedType}
-                      onSelectItem={(s) => {
-                        update("download.proxy.selectedType", s as string);
-                      }}
-                      size="xs"
-                      items={proxyTypeOptions}
-                    />
-                  </HStack>
+                title: t(
+                  "DownloadSettingPage.proxy.settings.followSystemProxy.title"
                 ),
-              },
-              {
-                title: t("DownloadSettingPage.proxy.settings.host.title"),
                 children: (
-                  <Input
-                    size="xs"
-                    w="107px" // align with the segmented-control above
-                    focusBorderColor={`${primaryColor}.500`}
-                    value={proxyHost}
+                  <Switch
+                    colorScheme={primaryColor}
+                    isChecked={downloadConfigs.proxy.followSystemProxy}
                     onChange={(event) => {
-                      setProxyHost(event.target.value);
-                    }}
-                    onBlur={() => {
-                      update("download.proxy.host", proxyHost);
+                      update(
+                        "download.proxy.followSystemProxy",
+                        event.target.checked
+                      );
                     }}
                   />
                 ),
               },
-              {
-                title: t("DownloadSettingPage.proxy.settings.port.title"),
-                children: (
-                  <NumberInput
-                    size="xs"
-                    maxW={16}
-                    min={0}
-                    max={65535}
-                    focusBorderColor={`${primaryColor}.500`}
-                    value={proxyPort || 80}
-                    onChange={(value) => {
-                      if (!/^\d*$/.test(value)) return;
-                      setProxyPort(Number(value));
-                    }}
-                    onBlur={() => {
-                      update(
-                        "download.proxy.port",
-                        Math.max(0, Math.min(proxyPort || 80, 65535))
-                      );
-                    }}
-                  >
-                    <NumberInputField pr={0} />
-                  </NumberInput>
-                ),
-              },
+              ...(downloadConfigs.proxy.followSystemProxy
+                ? []
+                : [
+                    {
+                      title: t("DownloadSettingPage.proxy.settings.type.title"),
+                      children: (
+                        <HStack>
+                          <SegmentedControl
+                            selected={downloadConfigs.proxy.selectedType}
+                            onSelectItem={(s) => {
+                              update(
+                                "download.proxy.selectedType",
+                                s as string
+                              );
+                            }}
+                            size="xs"
+                            items={proxyTypeOptions}
+                          />
+                        </HStack>
+                      ),
+                    },
+                    {
+                      title: t("DownloadSettingPage.proxy.settings.host.title"),
+                      children: (
+                        <Input
+                          size="xs"
+                          w="107px" // align with the segmented-control above
+                          focusBorderColor={`${primaryColor}.500`}
+                          value={proxyHost}
+                          onChange={(event) => {
+                            setProxyHost(event.target.value);
+                          }}
+                          onBlur={() => {
+                            update("download.proxy.host", proxyHost);
+                          }}
+                        />
+                      ),
+                    },
+                    {
+                      title: t("DownloadSettingPage.proxy.settings.port.title"),
+                      children: (
+                        <NumberInput
+                          size="xs"
+                          maxW={16}
+                          min={0}
+                          max={65535}
+                          focusBorderColor={`${primaryColor}.500`}
+                          value={proxyPort || 80}
+                          onChange={(value) => {
+                            if (!/^\d*$/.test(value)) return;
+                            setProxyPort(Number(value));
+                          }}
+                          onBlur={() => {
+                            update(
+                              "download.proxy.port",
+                              Math.max(0, Math.min(proxyPort || 80, 65535))
+                            );
+                          }}
+                        >
+                          <NumberInputField pr={0} />
+                        </NumberInput>
+                      ),
+                    },
+                  ]),
               {
                 title: t("DownloadSettingPage.proxy.settings.test.title"),
                 children: (

@@ -535,6 +535,9 @@
         "enabled": {
           "title": "Enable Proxy"
         },
+        "followSystemProxy": {
+          "title": "Follow System Proxy"
+        },
         "type": {
           "title": "Proxy Type"
         },

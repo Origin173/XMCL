@@ -232,6 +232,7 @@ structstruck::strike! {
       },
       pub proxy: struct ProxyConfig {
         pub enabled: bool,
+        pub follow_system_proxy: bool,
         #[default(ProxyType::Http)]
         pub selected_type: ProxyType,
         pub host: String,
