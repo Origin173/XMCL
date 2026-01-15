@@ -166,8 +166,18 @@ export class ConfigService {
     return await invoke("download_launcher_update", { version });
   }
 
-  /**
-   * INSTALL the launcher update.
+  /**   * TEST the proxy connection.
+   * @param {string} testUrl URL to test the proxy connection.
+   * @returns {Promise<InvokeResponse<boolean>>} Returns true if the connection is successful.
+   */
+  @responseHandler("config")
+  static async testProxyConnection(
+    testUrl: string
+  ): Promise<InvokeResponse<boolean>> {
+    return await invoke("test_proxy_connection", { testUrl });
+  }
+
+  /**   * INSTALL the launcher update.
    * @param {string} downloadedFilename The name of the downloaded new version file.
    * @param {boolean} restart Whether to restart the launcher now.
    * @returns {Promise<InvokeResponse<void>>} Returns void if the update process is started successfully.

@@ -280,6 +280,11 @@ pub async fn check_launcher_update(app: AppHandle) -> XMCLResult<VersionMetaInfo
 }
 
 #[tauri::command]
+pub async fn test_proxy_connection(app: AppHandle, test_url: String) -> XMCLResult<bool> {
+  crate::launcher_config::helpers::proxy::test_proxy_connectivity(&app, test_url).await
+}
+
+#[tauri::command]
 pub async fn download_launcher_update(app: AppHandle, version: VersionMetaInfo) -> XMCLResult<()> {
   if version.version.is_empty() || version.version == "up2date" {
     Ok(())

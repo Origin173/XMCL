@@ -459,7 +459,18 @@
         },
         "port": {
           "title": "ポート"
+        },
+        "test": {
+          "title": "プロキシ接続をテスト",
+          "placeholder": "https://www.baidu.com",
+          "button": "テスト",
+          "success": "接続成功",
+          "failed": "接続失敗"
         }
+      },
+      "test": {
+        "success": "プロキシ接続成功",
+        "failed": "プロキシ接続失敗"
       }
     }
   },
