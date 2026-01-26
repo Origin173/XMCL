@@ -155,22 +155,8 @@ jobs:
     secrets:
       XMCL_CURSEFORGE_API_KEY: ${{ secrets.XMCL_CURSEFORGE_API_KEY }}
 
-  Sign-macOS-Artifacts:
-    needs: [Check-and-Prepare, Build-Nightly]
-    if: needs.Check-and-Prepare.outputs.should_build == 'true'
-    uses: ./.github/workflows/sign-macos.yml
-    with:
-      version: "nightly_${{ needs.Check-and-Prepare.outputs.nightly_version }}"
-    secrets:
-      MACOS_CERT_P12_BASE64: ${{ secrets.MACOS_CERT_P12_BASE64 }}
-      MACOS_CERT_P12_PASSWORD: ${{ secrets.MACOS_CERT_P12_PASSWORD }}
-      MACOS_SIGNING_IDENTITY: ${{ secrets.MACOS_SIGNING_IDENTITY }}
-      MACOS_NOTARY_APPLE_ID: ${{ secrets.MACOS_NOTARY_APPLE_ID }}
-      MACOS_NOTARY_PASSWORD: ${{ secrets.MACOS_NOTARY_PASSWORD }}
-      MACOS_NOTARY_TEAM_ID: ${{ secrets.MACOS_NOTARY_TEAM_ID }}
-
   Create-Nightly-Release:
-    needs: [Check-and-Prepare, Build-Nightly, Sign-macOS-Artifacts]
+    needs: [Check-and-Prepare, Build-Nightly]
     if: always() && needs.Check-and-Prepare.outputs.should_build == 'true' && needs.Build-Nightly.result == 'success'
     runs-on: ubuntu-latest
     
@@ -183,26 +169,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: artifacts
-
-      - name: Organize macOS artifacts based on signing status
-        env:
-          SIGNING_SUCCESS: ${{ needs.Sign-macOS-Artifacts.result == 'success' }}
-        run: |
-          if [ "${{ env.SIGNING_SUCCESS }}" = "true" ]; then
-            echo "Using signed macOS artifacts"
-            # Remove unsigned macOS artifacts since we have signed versions
-            rm -rf ./artifacts/XMCL_*_macos_aarch64/
-            rm -rf ./artifacts/XMCL_*_macos_x86_64/
-            echo "Unsigned macOS artifacts removed"
-          else
-            echo "⚠️ WARNING: macOS signing failed or was skipped, using unsigned artifacts"
-            # Remove signed artifact directories if they exist (likely empty or failed)
-            rm -rf ./artifacts/XMCL_*_macos_*_signed/
-            echo "Using unsigned macOS artifacts"
-          fi
-          
-          echo "Remaining artifacts:"
-          ls -la ./artifacts/*/*
 
       - name: Delete existing nightly release if exists
         env:
@@ -221,7 +187,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NIGHTLY_VERSION: ${{ needs.Check-and-Prepare.outputs.nightly_version }}
           COMMIT_HASH: ${{ needs.Check-and-Prepare.outputs.commit_hash }}
-          SIGNING_SUCCESS: ${{ needs.Sign-macOS-Artifacts.result == 'success' }}
         run: |
           # Create release notes
           cat > release_notes.md << 'EOF'
@@ -238,14 +203,6 @@ jobs:
           - Features may change or be removed without notice
 
           EOF
-          
-          # Add warning if macOS signing failed
-          if [ "${{ env.SIGNING_SUCCESS }}" != "true" ]; then
-            echo "" >> release_notes.md
-            echo "---" >> release_notes.md
-            echo "" >> release_notes.md
-            echo "⚠️ **Note:** macOS artifacts in this nightly build are **not code-signed**. macOS users may see security warnings when running the application." >> release_notes.md
-          fi
           
           echo "Creating nightly pre-release..."
           ls -la ./artifacts/*/*
