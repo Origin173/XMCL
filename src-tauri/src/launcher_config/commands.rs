@@ -5,9 +5,9 @@ use crate::launcher_config::helpers::java::{
   build_mojang_java_download_params, get_java_info_from_command, get_java_info_from_release_file,
   refresh_and_update_javas,
 };
-use crate::launcher_config::helpers::updater::{
-  download_target_version, fetch_latest_version, install_update_windows,
-};
+#[cfg(target_os = "windows")]
+use crate::launcher_config::helpers::updater::install_update_windows;
+use crate::launcher_config::helpers::updater::{download_target_version, fetch_latest_version};
 use crate::launcher_config::models::{
   GameDirectory, JavaInfo, LauncherConfig, LauncherConfigError, VersionMetaInfo,
 };
