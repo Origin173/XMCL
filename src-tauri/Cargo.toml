@@ -19,7 +19,7 @@ dotenvy = "0.15.7"
 [profile.release]
 opt-level = 3   # as default
 strip = true
-lto = true
+lto = false
 panic = "abort"
 
 [dependencies]

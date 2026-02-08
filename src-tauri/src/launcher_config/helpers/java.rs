@@ -115,8 +115,8 @@ pub fn get_java_paths(app: &AppHandle) -> Vec<String> {
     paths.insert(java_path);
   }
 
-  // Scan Mojang Java downloaded by SJMCL itself
-  for java_path in scan_java_paths_in_sjmcl_data_directory(app) {
+  // Scan Mojang Java downloaded by XMCL itself
+  for java_path in scan_java_paths_in_xmcl_data_directory(app) {
     paths.insert(java_path);
   }
 
@@ -286,7 +286,7 @@ fn scan_java_paths_in_common_directories(app: &AppHandle) -> Vec<String> {
   java_paths
 }
 
-fn scan_java_paths_in_sjmcl_data_directory(app: &AppHandle) -> Vec<String> {
+fn scan_java_paths_in_xmcl_data_directory(app: &AppHandle) -> Vec<String> {
   let mut java_paths = Vec::new();
   #[cfg(any(target_os = "linux", target_os = "windows"))]
   {

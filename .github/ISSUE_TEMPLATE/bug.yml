@@ -60,7 +60,7 @@ body:
     id: config
     attributes:
       label: Environment (Optional)
-      description: "Provide your launcher settings (from `sjmcl.conf.json`), or development environment information (full `tauri info` output) to help us better resolve the issue."
+      description: "Provide your launcher settings (from `xmcl.conf.json`), or development environment information (full `tauri info` output) to help us better resolve the issue."
     validations:
       required: false
 

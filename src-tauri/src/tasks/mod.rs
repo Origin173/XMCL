@@ -16,17 +16,17 @@ use std::sync::{Arc, RwLock};
 use streams::{GDesc, PDesc, PHandle};
 use tokio::time::Duration;
 
-pub type SJMCLBoxedFuture = Pin<Box<dyn Future<Output = XMCLResult<()>> + Send>>;
+pub type XMCLBoxedFuture = Pin<Box<dyn Future<Output = XMCLResult<()>> + Send>>;
 
-pub struct SJMCLFuture {
+pub struct XMCLFuture {
   pub task_id: u32,
   pub task_group: Option<String>,
-  pub f: SJMCLBoxedFuture,
+  pub f: XMCLBoxedFuture,
 }
 
-pub struct SJMCLFutureDesc {
+pub struct XMCLFutureDesc {
   pub task_id: u32,
-  pub f: SJMCLBoxedFuture,
+  pub f: XMCLBoxedFuture,
   pub h: Arc<RwLock<PTaskHandle>>,
 }
 

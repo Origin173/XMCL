@@ -2,7 +2,7 @@ use crate::error::XMCLResult;
 use crate::tasks::download::DownloadTask;
 use crate::tasks::events::GEventStatus;
 use crate::tasks::monitor::TaskMonitor;
-use crate::tasks::{PTaskGroupDesc, PTaskParam, SJMCLFutureDesc, THandle};
+use crate::tasks::{PTaskGroupDesc, PTaskParam, THandle, XMCLFutureDesc};
 use crate::utils::fs::extract_filename;
 use std::pin::Pin;
 use std::time::Duration;
@@ -48,7 +48,7 @@ pub async fn schedule_progressive_task_group(
           .future(app.clone(), monitor.download_rate_limiter.clone())
           .await?;
         let task_desc = h.read().unwrap().desc.clone();
-        let future_desc = SJMCLFutureDesc {
+        let future_desc = XMCLFutureDesc {
           task_id,
           f: Box::pin(f),
           h: h.clone(),

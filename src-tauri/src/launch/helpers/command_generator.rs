@@ -176,10 +176,10 @@ pub async fn generate_launch_command(
     version_type: if !game_config.game_window.custom_info.is_empty() {
       game_config.game_window.custom_info.clone()
     } else {
-      format!("SJMCL {}", basic_info.launcher_version)
+      format!("XMCL {}", basic_info.launcher_version)
     },
     natives_directory: natives_dir.to_string_lossy().to_string(),
-    launcher_name: format!("SJMCL {}", basic_info.launcher_version),
+    launcher_name: format!("XMCL {}", basic_info.launcher_version),
     launcher_version: basic_info.launcher_version,
     library_directory: libraries_dir.to_string_lossy().to_string(),
     classpath_separator: get_separator().to_string(),
