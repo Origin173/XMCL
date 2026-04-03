@@ -25,6 +25,7 @@ jobs:
     outputs:
       should_build: ${{ steps.check-changes.outputs.should_build }}
       nightly_version: ${{ steps.version.outputs.nightly_version }}
+      nightly_app_version: ${{ steps.version.outputs.nightly_app_version }}
       commit_hash: ${{ steps.version.outputs.commit_hash }}
     
     steps:
@@ -92,36 +93,43 @@ jobs:
         with:
           node-version: lts/*
 
-      - name: Bump version to 0.0.0
+      - name: Generate nightly version
+        id: version
         if: steps.check-changes.outputs.should_build == 'true'
         run: |
-          echo "Bumping version to 0.0.0..."
-          npm run version bump 0.0.0
+          # Get base version from main branch's package.json (nightly branch now equals main)
+          BASE_VERSION=$(cat package.json | jq -r '.version' | sed 's/-nightly-.*//')
+          NIGHTLY_DATE=$(date -u +"%y%m%d")
+          NIGHTLY_APP_VERSION="${BASE_VERSION}-nightly-${NIGHTLY_DATE}"
+          
+          # YYYYMMDD for artifact naming
+          NIGHTLY_YYYYMMDD=$(date -u +"%Y%m%d")
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          
+          echo "Base version: $BASE_VERSION"
+          echo "Nightly app version: $NIGHTLY_APP_VERSION"
+          echo "Artifact date: $NIGHTLY_YYYYMMDD"
+          echo "Commit hash: $COMMIT_HASH"
+          
+          echo "nightly_app_version=$NIGHTLY_APP_VERSION" >> $GITHUB_OUTPUT
+          echo "nightly_version=$NIGHTLY_YYYYMMDD" >> $GITHUB_OUTPUT
+          echo "commit_hash=$COMMIT_HASH" >> $GITHUB_OUTPUT
+
+      - name: Bump version to nightly format
+        if: steps.check-changes.outputs.should_build == 'true'
+        run: |
+          NIGHTLY_APP_VERSION="${{ steps.version.outputs.nightly_app_version }}"
+          echo "Bumping version to ${NIGHTLY_APP_VERSION}..."
+          npm run version bump "${NIGHTLY_APP_VERSION}"
           
           # Commit the version change to nightly branch
           git add .
-          git commit -m "bump: version to 0.0.0 for statistics server" || echo "No changes to commit"
+          git commit -m "bump: version to ${NIGHTLY_APP_VERSION} for nightly build" || echo "No changes to commit"
           
           # Push the updated nightly branch with version bump
           git push origin refs/heads/nightly:refs/heads/nightly
           
-          echo "Version bumped to 0.0.0 and committed"
-
-      - name: Generate nightly version
-        id: version
-        run: |
-          # Get current date for nightly version
-          NIGHTLY_DATE=$(date -u +"%Y%m%d")
-          COMMIT_HASH=$(git rev-parse --short HEAD)
-          
-          # Get base version from package.json
-          NIGHTLY_VERSION="${NIGHTLY_DATE}"
-          
-          echo "Nightly version: $NIGHTLY_VERSION"
-          echo "Commit hash: $COMMIT_HASH"
-          
-          echo "nightly_version=$NIGHTLY_VERSION" >> $GITHUB_OUTPUT
-          echo "commit_hash=$COMMIT_HASH" >> $GITHUB_OUTPUT
+          echo "Version bumped to ${NIGHTLY_APP_VERSION} and committed"
 
       - name: Create and push nightly tag
         if: steps.check-changes.outputs.should_build == 'true'
@@ -152,6 +160,7 @@ jobs:
       version: "nightly_${{ needs.Check-and-Prepare.outputs.nightly_version }}"
       upload_artifacts: true
       branch: "nightly"
+      skip_msi: true
     secrets:
       XMCL_CURSEFORGE_API_KEY: ${{ secrets.XMCL_CURSEFORGE_API_KEY }}
       XMCL_OPENLIST_BASE_URL: ${{ secrets.XMCL_OPENLIST_BASE_URL }}
@@ -167,11 +176,20 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: nightly
+          fetch-depth: 0
 
       - name: Download all artifacts
         uses: actions/download-artifact@v4
         with:
           path: artifacts
+
+      - name: Remove MSI artifacts if any leaked through
+        run: |
+          # skip_msi=true in build.yml already prevents MSI generation;
+          # this step is a safety net in case any .msi files exist
+          find artifacts -name "*.msi" -delete
+          echo "Remaining artifacts:"
+          find artifacts -type f
 
       - name: Delete existing nightly release if exists
         env:
@@ -239,3 +257,85 @@ jobs:
           done
           
           echo "Cleanup completed" 
+
+      - name: Push nightly branch and tag to Gitee
+        if: ${{ vars.GITEE_NAMESPACE != '' }}
+        env:
+          GITEE_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$GITEE_PRIVATE_KEY" > ~/.ssh/gitee_key
+          chmod 600 ~/.ssh/gitee_key
+          ssh-keyscan gitee.com >> ~/.ssh/known_hosts 2>/dev/null
+          export GIT_SSH_COMMAND="ssh -i ~/.ssh/gitee_key -o StrictHostKeyChecking=yes"
+
+          GITEE_URL="git@gitee.com:${{ vars.GITEE_NAMESPACE }}/XMCL.git"
+          git remote add gitee "$GITEE_URL" 2>/dev/null || git remote set-url gitee "$GITEE_URL"
+
+          # Force push nightly branch
+          git push gitee HEAD:refs/heads/nightly --force
+          echo "Pushed nightly branch to Gitee"
+
+          # Force push nightly tag (delete old one first to avoid conflict)
+          git push gitee :refs/tags/nightly 2>/dev/null || true
+          git push gitee refs/tags/nightly:refs/tags/nightly
+          echo "Pushed nightly tag to Gitee"
+
+      - name: Publish Nightly Release to Gitee
+        if: ${{ vars.GITEE_NAMESPACE != '' }}
+        env:
+          GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
+          NIGHTLY_VERSION: ${{ needs.Check-and-Prepare.outputs.nightly_version }}
+        run: |
+          OWNER="${{ vars.GITEE_NAMESPACE }}"
+          REPO="XMCL"
+          RELEASE_TITLE="XMCL Nightly (${{ env.NIGHTLY_VERSION }})"
+
+          # Delete existing nightly release on Gitee if it exists
+          EXISTING_ID=$(curl -sf \
+            "https://gitee.com/api/v5/repos/${OWNER}/${REPO}/releases/tags/nightly?access_token=${GITEE_TOKEN}" \
+            | jq -r '.id // empty' 2>/dev/null || true)
+          if [ -n "$EXISTING_ID" ]; then
+            curl -sf -X DELETE \
+              "https://gitee.com/api/v5/repos/${OWNER}/${REPO}/releases/${EXISTING_ID}?access_token=${GITEE_TOKEN}" \
+              || echo "Warning: failed to delete existing Gitee nightly release"
+            echo "Deleted existing Gitee nightly release (id: $EXISTING_ID)"
+          fi
+
+          # Create new nightly release on Gitee
+          BODY=$(python3 -c 'import sys, json; print(json.dumps(open("release_notes.md").read()))')
+          RESPONSE=$(curl -sf -X POST "https://gitee.com/api/v5/repos/${OWNER}/${REPO}/releases" \
+            -H "Content-Type: application/json" \
+            -d "{\"access_token\":\"${GITEE_TOKEN}\",\"tag_name\":\"nightly\",\"name\":\"${RELEASE_TITLE}\",\"body\":${BODY},\"prerelease\":true,\"target_commitish\":\"nightly\"}")
+          RELEASE_ID=$(echo "$RESPONSE" | jq -r '.id')
+          if [ -z "$RELEASE_ID" ] || [ "$RELEASE_ID" = "null" ]; then
+            echo "Failed to create Gitee nightly release. Response: $RESPONSE"
+            exit 1
+          fi
+          echo "Created Gitee nightly release (id: $RELEASE_ID)"
+
+          # Upload all artifacts with retry
+          echo "Uploading artifacts..."
+          for f in ./artifacts/*/*; do
+            [ -f "$f" ] || continue
+            FNAME=$(basename "$f")
+            echo "  Uploading: $FNAME"
+            SUCCESS=false
+            for attempt in 1 2 3; do
+              if curl -sf -X POST \
+                "https://gitee.com/api/v5/repos/${OWNER}/${REPO}/releases/${RELEASE_ID}/attach_files" \
+                -F "access_token=${GITEE_TOKEN}" \
+                -F "file=@${f};filename=${FNAME}"; then
+                echo "  ✓ $FNAME uploaded"
+                SUCCESS=true
+                break
+              fi
+              echo "  Attempt $attempt failed, retrying in 5s..."
+              sleep 5
+            done
+            if [ "$SUCCESS" = "false" ]; then
+              echo "  ✗ Failed to upload $FNAME after 3 attempts"
+            fi
+          done
+
+          echo "Gitee nightly release published!"

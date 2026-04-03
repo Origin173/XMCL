@@ -308,6 +308,7 @@ export interface VersionMetaInfo {
   fileName: string;
   releaseNotes?: string;
   publishedAt?: string;
+  isNightly?: boolean;
 }
 
 // empty release meta info indicating up-to-date or error.

@@ -19,6 +19,11 @@ on:
         required: false
         type: string
         default: 'main'
+      skip_msi:
+        description: 'Skip MSI bundling on Windows (required for pre-release version strings like nightly-YYMMDD)'
+        required: false
+        type: boolean
+        default: false
     secrets:
       XMCL_CURSEFORGE_API_KEY:
         required: true
@@ -107,7 +112,13 @@ jobs:
 
       - name: Build the app
         if: matrix.platform != 'macos'
-        run: pnpm run tauri build --target ${{ matrix.target }}
+        shell: bash
+        run: |
+          BUILD_ARGS="--target ${{ matrix.target }}"
+          if [[ "${{ matrix.platform }}" = "windows" && "${{ inputs.skip_msi }}" = "true" ]]; then
+            BUILD_ARGS="$BUILD_ARGS --no-bundle"
+          fi
+          pnpm run tauri build $BUILD_ARGS
         env:
           XMCL_CURSEFORGE_API_KEY: ${{ secrets.XMCL_CURSEFORGE_API_KEY }}
           XMCL_OPENLIST_BASE_URL: ${{ secrets.XMCL_OPENLIST_BASE_URL }}
@@ -126,7 +137,9 @@ jobs:
             python scripts/release/bundle_portable_assets.py -p "src-tauri/target/${{ matrix.target }}/release/" "xmcl.exe"
             # For Windows, copy the portable exe
             mv "src-tauri/target/${{ matrix.target }}/release/xmcl-patched.exe" artifacts/"$ARTIFACT_NAME"_portable.exe
-            mv "src-tauri/target/${{ matrix.target }}/release/bundle/msi/"*.msi artifacts/"$ARTIFACT_NAME".msi
+            if [ "${{ inputs.skip_msi }}" != "true" ]; then
+              mv "src-tauri/target/${{ matrix.target }}/release/bundle/msi/"*.msi artifacts/"$ARTIFACT_NAME".msi
+            fi
             ls -la artifacts
           elif [ "${{ matrix.platform }}" = "macos" ]; then
             ls src-tauri/target/${{ matrix.target }}/release/bundle/macos

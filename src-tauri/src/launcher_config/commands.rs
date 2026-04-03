@@ -7,7 +7,10 @@ use crate::launcher_config::helpers::java::{
 };
 #[cfg(target_os = "windows")]
 use crate::launcher_config::helpers::updater::install_update_windows;
-use crate::launcher_config::helpers::updater::{download_target_version, fetch_latest_version};
+use crate::launcher_config::helpers::updater::{
+  download_nightly_target_version, download_target_version, fetch_latest_version,
+  fetch_nightly_version,
+};
 use crate::launcher_config::models::{
   GameDirectory, JavaInfo, LauncherConfig, LauncherConfigError, VersionMetaInfo,
 };
@@ -250,7 +253,25 @@ pub async fn check_launcher_update(app: AppHandle) -> XMCLResult<VersionMetaInfo
     config_state.basic_info.launcher_version.clone()
   };
 
-  // skip non-semver versions
+  // Handle nightly versions separately via the nightly release channel
+  if current_version.contains("-nightly-") {
+    return match fetch_nightly_version(&app, &current_version).await {
+      Ok(Some((new_version, fname, release_notes, published_at))) => Ok(VersionMetaInfo {
+        version: new_version,
+        file_name: fname,
+        release_notes,
+        published_at,
+        is_nightly: true,
+      }),
+      Ok(None) => Ok(VersionMetaInfo {
+        version: "up2date".to_string(),
+        ..Default::default()
+      }),
+      Err(_) => Ok(VersionMetaInfo::default()),
+    };
+  }
+
+  // Skip non-semver versions (e.g. "dev", legacy "nightly")
   if semver::Version::parse(&current_version).is_err() {
     return Ok(VersionMetaInfo::default());
   }
@@ -268,6 +289,7 @@ pub async fn check_launcher_update(app: AppHandle) -> XMCLResult<VersionMetaInfo
           file_name: fname,
           release_notes,
           published_at,
+          is_nightly: false,
         },
         std::cmp::Ordering::Equal => VersionMetaInfo {
           version: "up2date".to_string(),
@@ -289,10 +311,13 @@ pub async fn test_proxy_connection(app: AppHandle, test_url: String) -> XMCLResu
 #[tauri::command]
 pub async fn download_launcher_update(app: AppHandle, version: VersionMetaInfo) -> XMCLResult<()> {
   if version.version.is_empty() || version.version == "up2date" {
-    Ok(())
+    return Ok(());
+  }
+  if version.is_nightly {
+    download_nightly_target_version(&app, version.file_name).await
   } else {
     // TODO: handle already downloaded case
-    return download_target_version(&app, version.version, version.file_name).await;
+    download_target_version(&app, version.version, version.file_name).await
   }
 }
 
