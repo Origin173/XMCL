@@ -36,6 +36,30 @@ const SOURCES: [SourceTuple; 2] = [
   ),
 ];
 
+// Nightly release channel: uses the rolling "nightly" tag
+const NIGHTLY_SOURCES: [SourceTuple; 2] = [
+  (
+    "https://gitee.com/api/v5/repos/origin173/XMCL/releases/tags/nightly",
+    "tag_name",
+    |_ver, fname| {
+      format!(
+        "https://gitee.com/origin173/XMCL/releases/download/nightly/{}",
+        fname
+      )
+    },
+  ),
+  (
+    "https://api.github.com/repos/Origin173/XMCL/releases/tags/nightly",
+    "tag_name",
+    |_ver, fname| {
+      format!(
+        "https://github.com/Origin173/XMCL/releases/download/nightly/{}",
+        fname
+      )
+    },
+  ),
+];
+
 // Generate the new version filename on remote origin according to the current os, arch and is_portable
 fn build_resource_filename(ver: &str, os: &str, arch: &str, is_portable: bool) -> String {
   let arch = if arch == "x86" { "i686" } else { arch };
@@ -52,6 +76,29 @@ fn build_resource_filename(ver: &str, os: &str, arch: &str, is_portable: bool) -
     _ => "",
   };
   format!("XMCL_{}_{}_{}{}", ver, os, arch, suffix)
+}
+
+// Constructs the nightly artifact filename using YYYYMMDD date
+fn build_nightly_resource_filename(
+  yyyymmdd: &str,
+  os: &str,
+  arch: &str,
+  is_portable: bool,
+) -> String {
+  let arch = if arch == "x86" { "i686" } else { arch };
+  let suffix = match os {
+    "windows" => {
+      if is_portable {
+        "_portable.exe"
+      } else {
+        ".msi"
+      }
+    }
+    "linux" => ".AppImage",
+    "macos" => ".app.tar.gz",
+    _ => "",
+  };
+  format!("XMCL_nightly_{}_{}_{}{}", yyyymmdd, os, arch, suffix)
 }
 
 fn build_local_new_filename(old_name: &str, old_version: &str, new_version: &str) -> String {
@@ -116,6 +163,82 @@ pub async fn fetch_latest_version(
   Err(LauncherConfigError::FetchError.into())
 }
 
+// Fetch nightly release info and compare with current version's embedded date.
+// Returns Ok(Some(...)) if a newer nightly is available,
+//         Ok(None)      if already up-to-date,
+//         Err(...)      if the fetch failed.
+pub async fn fetch_nightly_version(
+  app: &AppHandle,
+  current_version: &str,
+) -> XMCLResult<Option<(String, String, String, String)>> {
+  let config_binding = app.state::<Mutex<LauncherConfig>>();
+  let (os, arch, is_portable, is_china_mainland_ip) = {
+    let config_state = config_binding.lock()?;
+    (
+      config_state.basic_info.os_type.clone(),
+      config_state.basic_info.arch.clone(),
+      config_state.basic_info.is_portable,
+      config_state.basic_info.is_china_mainland_ip,
+    )
+  };
+  let client = app.state::<reqwest::Client>();
+
+  let mut sources = NIGHTLY_SOURCES;
+  if !is_china_mainland_ip {
+    sources.reverse();
+  }
+
+  for (endpoint, _, _mk_url) in sources {
+    if let Ok(resp) = client.get(endpoint).send().await {
+      if let Ok(j) = resp.json::<Value>().await {
+        if let Some(published_at) = j.get("published_at").and_then(|v| v.as_str()) {
+          // Extract YYYYMMDD from "2026-01-10T00:00:00Z"
+          let yyyymmdd: String = published_at
+            .chars()
+            .filter(|c| c.is_ascii_digit())
+            .take(8)
+            .collect();
+          if yyyymmdd.len() < 8 {
+            continue;
+          }
+          let yymmdd = &yyyymmdd[2..]; // "260110"
+
+          // Extract current nightly date from version string, e.g. "0.1.0-nightly-260110"
+          let current_yymmdd = current_version
+            .split("-nightly-")
+            .nth(1)
+            .unwrap_or("000000");
+
+          if yymmdd <= current_yymmdd {
+            return Ok(None); // already up-to-date
+          }
+
+          // Derive the base version (strip any existing pre-release suffix)
+          let base_version = current_version.split("-nightly-").next().unwrap_or("0.0.0");
+          let new_version = format!("{}-nightly-{}", base_version, yymmdd);
+
+          let fname =
+            build_nightly_resource_filename(&yyyymmdd, os.as_str(), arch.as_str(), is_portable);
+          let release_notes = j
+            .get("body")
+            .and_then(|v| v.as_str())
+            .unwrap_or_default()
+            .to_string();
+
+          return Ok(Some((
+            new_version,
+            fname,
+            release_notes,
+            published_at.to_string(),
+          )));
+        }
+      }
+    }
+  }
+
+  Err(LauncherConfigError::FetchError.into())
+}
+
 pub async fn download_target_version(
   app: &AppHandle,
   version: String,
@@ -141,6 +264,49 @@ pub async fn download_target_version(
     if let Ok(resp) = client.get(endpoint).send().await {
       if resp.status().is_success() {
         let url = mk_url(&version, &fname);
+
+        schedule_progressive_task_group(
+          app.clone(),
+          format!("launcher-update?{}", fname),
+          vec![PTaskParam::Download(DownloadParam {
+            src: url::Url::parse(&url).map_err(|_| LauncherConfigError::FetchError)?,
+            dest: download_cache_dir.join(&fname),
+            filename: Some(fname),
+            sha1: None,
+          })],
+          true,
+        )
+        .await?;
+
+        return Ok(());
+      }
+    }
+  }
+
+  Err(LauncherConfigError::FetchError.into())
+}
+
+pub async fn download_nightly_target_version(app: &AppHandle, fname: String) -> XMCLResult<()> {
+  let config_binding = app.state::<Mutex<LauncherConfig>>();
+  let (download_cache_dir, is_china_mainland_ip) = {
+    let config_state = config_binding.lock()?;
+    (
+      config_state.download.cache.directory.clone(),
+      config_state.basic_info.is_china_mainland_ip,
+    )
+  };
+
+  let client = app.state::<reqwest::Client>();
+
+  let mut sources = NIGHTLY_SOURCES;
+  if !is_china_mainland_ip {
+    sources.reverse();
+  }
+
+  for (endpoint, _, mk_url) in sources {
+    if let Ok(resp) = client.get(endpoint).send().await {
+      if resp.status().is_success() {
+        let url = mk_url("", &fname);
 
         schedule_progressive_task_group(
           app.clone(),
@@ -202,7 +368,13 @@ pub async fn install_update_windows(
       .ok_or_else(|| XMCLError("Invalid exe name".to_string()))?
       .to_string();
 
-    let target_name = build_local_new_filename(&old_name, &old_version, &new_version);
+    // For nightly builds the downloaded file already has the correct date-based name,
+    // so place it directly using that name to keep proper versioning.
+    let target_name = if downloaded_filename.contains("_nightly_") {
+      downloaded_filename.clone()
+    } else {
+      build_local_new_filename(&old_name, &old_version, &new_version)
+    };
     let target = cur_dir.join(target_name);
     let pid = std::process::id().to_string();
     let restart_flag = if restart { "1" } else { "0" };
@@ -314,7 +486,12 @@ pub async fn install_update_macos(
     .ok_or_else(|| XMCLError("Invalid .app name".to_string()))?
     .to_string();
 
-  let target_name = build_local_new_filename(&old_name, &old_version, &new_version);
+  // For nightly builds the downloaded file already carries the correct date-based name
+  let target_name = if downloaded_filename.contains("_nightly_") {
+    downloaded_filename.clone()
+  } else {
+    build_local_new_filename(&old_name, &old_version, &new_version)
+  };
   let target_app = app_dir.join(target_name);
   let pid = std::process::id().to_string();
   let restart_flag = if restart { "1" } else { "0" };
