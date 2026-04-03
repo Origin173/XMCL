@@ -196,7 +196,7 @@ pub async fn run() {
 
       app.manage(Box::pin(TaskMonitor::new(app.handle().clone())));
 
-      let client = build_xmcl_client(app.handle(), true, false);
+      let client = build_xmcl_client(app.handle(), true, true);
       app.manage(client);
 
       let launching_queue = Vec::<LaunchingState>::new();

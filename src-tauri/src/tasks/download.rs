@@ -156,14 +156,14 @@ impl DownloadTask {
   )> {
     let resp = Self::send_request(app_handle, current, param).await?;
     let total_progress = if current == 0 {
-      resp.content_length().unwrap() as i64
+      resp.content_length().unwrap_or(0) as i64
     } else {
       -1
     };
     Ok((
       resp.bytes_stream().map(|res| match res {
         Ok(bytes) => Ok(bytes),
-        Err(_) => Ok(bytes::Bytes::new()),
+        Err(e) => Err(std::io::Error::new(std::io::ErrorKind::Other, e)),
       }),
       total_progress,
     ))
@@ -189,7 +189,10 @@ impl DownloadTask {
         let mut file = if current == 0 {
           tokio::fs::File::create(&self.dest_path).await?
         } else {
-          let mut f = tokio::fs::OpenOptions::new().open(&self.dest_path).await?;
+          let mut f = tokio::fs::OpenOptions::new()
+            .write(true)
+            .open(&self.dest_path)
+            .await?;
           f.seek(std::io::SeekFrom::Start(current as u64)).await?;
           f
         };
