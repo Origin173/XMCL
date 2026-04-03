@@ -248,3 +248,85 @@ jobs:
           done
           
           echo "Cleanup completed" 
+
+      - name: Push nightly branch and tag to Gitee
+        if: ${{ vars.GITEE_NAMESPACE != '' }}
+        env:
+          GITEE_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$GITEE_PRIVATE_KEY" > ~/.ssh/gitee_key
+          chmod 600 ~/.ssh/gitee_key
+          ssh-keyscan gitee.com >> ~/.ssh/known_hosts 2>/dev/null
+          export GIT_SSH_COMMAND="ssh -i ~/.ssh/gitee_key -o StrictHostKeyChecking=yes"
+
+          GITEE_URL="git@gitee.com:${{ vars.GITEE_NAMESPACE }}/XMCL.git"
+          git remote add gitee "$GITEE_URL" 2>/dev/null || git remote set-url gitee "$GITEE_URL"
+
+          # Force push nightly branch
+          git push gitee HEAD:refs/heads/nightly --force
+          echo "Pushed nightly branch to Gitee"
+
+          # Force push nightly tag (delete old one first to avoid conflict)
+          git push gitee :refs/tags/nightly 2>/dev/null || true
+          git push gitee refs/tags/nightly:refs/tags/nightly
+          echo "Pushed nightly tag to Gitee"
+
+      - name: Publish Nightly Release to Gitee
+        if: ${{ vars.GITEE_NAMESPACE != '' }}
+        env:
+          GITEE_TOKEN: ${{ secrets.GITEE_TOKEN }}
+          NIGHTLY_VERSION: ${{ needs.Check-and-Prepare.outputs.nightly_version }}
+        run: |
+          OWNER="${{ vars.GITEE_NAMESPACE }}"
+          REPO="XMCL"
+          RELEASE_TITLE="XMCL Nightly (${{ env.NIGHTLY_VERSION }})"
+
+          # Delete existing nightly release on Gitee if it exists
+          EXISTING_ID=$(curl -sf \
+            "https://gitee.com/api/v5/repos/${OWNER}/${REPO}/releases/tags/nightly?access_token=${GITEE_TOKEN}" \
+            | jq -r '.id // empty' 2>/dev/null || true)
+          if [ -n "$EXISTING_ID" ]; then
+            curl -sf -X DELETE \
+              "https://gitee.com/api/v5/repos/${OWNER}/${REPO}/releases/${EXISTING_ID}?access_token=${GITEE_TOKEN}" \
+              || echo "Warning: failed to delete existing Gitee nightly release"
+            echo "Deleted existing Gitee nightly release (id: $EXISTING_ID)"
+          fi
+
+          # Create new nightly release on Gitee
+          BODY=$(python3 -c 'import sys, json; print(json.dumps(open("release_notes.md").read()))')
+          RESPONSE=$(curl -sf -X POST "https://gitee.com/api/v5/repos/${OWNER}/${REPO}/releases" \
+            -H "Content-Type: application/json" \
+            -d "{\"access_token\":\"${GITEE_TOKEN}\",\"tag_name\":\"nightly\",\"name\":\"${RELEASE_TITLE}\",\"body\":${BODY},\"prerelease\":true,\"target_commitish\":\"nightly\"}")
+          RELEASE_ID=$(echo "$RESPONSE" | jq -r '.id')
+          if [ -z "$RELEASE_ID" ] || [ "$RELEASE_ID" = "null" ]; then
+            echo "Failed to create Gitee nightly release. Response: $RESPONSE"
+            exit 1
+          fi
+          echo "Created Gitee nightly release (id: $RELEASE_ID)"
+
+          # Upload all artifacts with retry
+          echo "Uploading artifacts..."
+          for f in ./artifacts/*/*; do
+            [ -f "$f" ] || continue
+            FNAME=$(basename "$f")
+            echo "  Uploading: $FNAME"
+            SUCCESS=false
+            for attempt in 1 2 3; do
+              if curl -sf -X POST \
+                "https://gitee.com/api/v5/repos/${OWNER}/${REPO}/releases/${RELEASE_ID}/attach_files" \
+                -F "access_token=${GITEE_TOKEN}" \
+                -F "file=@${f};filename=${FNAME}"; then
+                echo "  ✓ $FNAME uploaded"
+                SUCCESS=true
+                break
+              fi
+              echo "  Attempt $attempt failed, retrying in 5s..."
+              sleep 5
+            done
+            if [ "$SUCCESS" = "false" ]; then
+              echo "  ✗ Failed to upload $FNAME after 3 attempts"
+            fi
+          done
+
+          echo "Gitee nightly release published!"
