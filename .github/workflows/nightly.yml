@@ -160,6 +160,7 @@ jobs:
       version: "nightly_${{ needs.Check-and-Prepare.outputs.nightly_version }}"
       upload_artifacts: true
       branch: "nightly"
+      skip_msi: true
     secrets:
       XMCL_CURSEFORGE_API_KEY: ${{ secrets.XMCL_CURSEFORGE_API_KEY }}
       XMCL_OPENLIST_BASE_URL: ${{ secrets.XMCL_OPENLIST_BASE_URL }}
@@ -181,6 +182,14 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: artifacts
+
+      - name: Remove MSI artifacts if any leaked through
+        run: |
+          # skip_msi=true in build.yml already prevents MSI generation;
+          # this step is a safety net in case any .msi files exist
+          find artifacts -name "*.msi" -delete
+          echo "Remaining artifacts:"
+          find artifacts -type f
 
       - name: Delete existing nightly release if exists
         env:
