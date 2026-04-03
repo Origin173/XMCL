@@ -231,6 +231,7 @@ pub async fn get_neoforge_meta_by_game_version(
           return Ok(meta);
         }
       }
+      SourceType::NeoForgedCDN => {}
     }
     println!("{:?} failed, fallback", source_type);
   }

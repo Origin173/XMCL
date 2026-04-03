@@ -77,6 +77,7 @@ pub async fn get_forge_meta_by_game_version(
           return Ok(meta);
         }
       }
+      SourceType::NeoForgedCDN => {}
     }
   }
   Err(XMCLError(String::new()))

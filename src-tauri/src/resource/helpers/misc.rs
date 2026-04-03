@@ -73,6 +73,12 @@ pub fn get_download_api(source: SourceType, resource_type: ResourceType) -> XMCL
       ResourceType::QuiltMaven => Ok(Url::parse("https://bmclapi2.bangbang93.com/maven/")?),
       ResourceType::QuiltMeta => Ok(Url::parse("https://bmclapi2.bangbang93.com/quilt-meta/")?),
     },
+    SourceType::NeoForgedCDN => match resource_type {
+      ResourceType::NeoforgeMaven | ResourceType::NeoforgeInstall => {
+        Ok(Url::parse("https://neoforged.forgecdn.net/releases/")?)
+      }
+      _ => Err(ResourceError::NoDownloadApi.into()),
+    },
   }
 }
 
