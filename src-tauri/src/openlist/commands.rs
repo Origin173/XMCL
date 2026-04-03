@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use tauri::AppHandle;
+use tauri::{AppHandle, Manager};
 use tauri_plugin_http::reqwest;
 
 use crate::{
@@ -26,13 +26,16 @@ pub struct BrowseRequest {
 }
 
 #[tauri::command]
-pub async fn openlist_browse(request: BrowseRequest) -> Result<OpenListResponse, Error> {
+pub async fn openlist_browse(
+  app: AppHandle,
+  request: BrowseRequest,
+) -> Result<OpenListResponse, Error> {
   println!(
     "[Rust] OpenList browse request: path={}, page={:?}, perPage={:?}",
     request.path, request.page, request.per_page
   );
 
-  let client = reqwest::Client::new();
+  let client = app.state::<reqwest::Client>();
 
   let response = client
     .post(format!("{}/api/fs/list", OPENLIST_BASE_URL))
@@ -112,7 +115,7 @@ pub async fn openlist_download_modpack(
 
   // 获取真实的下载 URL（raw_url）
   println!("[Rust] Fetching real download URL from API...");
-  let client = reqwest::Client::new();
+  let client = app.state::<reqwest::Client>();
 
   let get_response = client
     .post(format!("{}/api/fs/get", OPENLIST_BASE_URL))

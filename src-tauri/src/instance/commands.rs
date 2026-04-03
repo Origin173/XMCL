@@ -920,13 +920,12 @@ pub async fn create_instance(
     .map_err(|_| InstanceError::ClientJsonParseError)?;
 
   // We only download libraries if they are invalid (not already downloaded)
-  task_params.extend(
-    get_invalid_library_files(priority_list[0], libraries_dir, &version_info, false).await?,
-  );
+  task_params
+    .extend(get_invalid_library_files(&priority_list, libraries_dir, &version_info, false).await?);
 
   // We only download assets if they are invalid (not already downloaded)
   task_params
-    .extend(get_invalid_assets(&app, &version_info, priority_list[0], assets_dir, false).await?);
+    .extend(get_invalid_assets(&app, &version_info, &priority_list, assets_dir, false).await?);
 
   if instance.mod_loader.loader_type != ModLoaderType::Unknown {
     install_mod_loader(

@@ -34,6 +34,7 @@ pub enum ResourceType {
 pub enum SourceType {
   Official,
   BMCLAPIMirror,
+  NeoForgedCDN,
 }
 
 #[derive(Debug, PartialEq, Eq, Clone, Deserialize, Serialize, Default)]

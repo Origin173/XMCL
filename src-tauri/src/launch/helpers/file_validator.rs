@@ -65,7 +65,7 @@ pub fn get_native_library_artifacts(client_info: &McClientInfo) -> Vec<Downloads
 }
 
 pub async fn get_invalid_library_files(
-  source: SourceType,
+  sources: &[SourceType],
   library_path: &Path,
   client_info: &McClientInfo,
   check_hash: bool,
@@ -73,6 +73,8 @@ pub async fn get_invalid_library_files(
   let mut artifacts = Vec::new();
   artifacts.extend(get_native_library_artifacts(client_info));
   artifacts.extend(get_nonnative_library_artifacts(client_info));
+
+  let primary_source = sources.first().copied().unwrap_or(SourceType::Official);
 
   let futs = artifacts.into_iter().map(move |artifact| async move {
     let file_path = library_path.join(&artifact.path);
@@ -91,7 +93,7 @@ pub async fn get_invalid_library_files(
           ResourceType::ForgeMavenNew,
           ResourceType::NeoforgeMaven,
         ],
-        &source,
+        &primary_source,
       )?;
       Ok(Some(PTaskParam::Download(DownloadParam {
         src,
@@ -314,11 +316,12 @@ pub async fn extract_native_libraries(
 pub async fn get_invalid_assets(
   app: &AppHandle,
   client_info: &McClientInfo,
-  source: SourceType,
+  sources: &[SourceType],
   asset_path: &Path,
   check_hash: bool,
 ) -> XMCLResult<Vec<PTaskParam>> {
-  let assets_download_api = get_download_api(source, ResourceType::Assets)?;
+  let primary_source = sources.first().copied().unwrap_or(SourceType::Official);
+  let assets_download_api = get_download_api(primary_source, ResourceType::Assets)?;
 
   let asset_index_path = asset_path.join(format!("indexes/{}.json", client_info.asset_index.id));
   let asset_index = load_asset_index(app, &asset_index_path, &client_info.asset_index.url).await?;

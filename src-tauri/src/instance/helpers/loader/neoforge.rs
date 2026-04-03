@@ -28,18 +28,26 @@ pub async fn install_neoforge_loader(
   let loader_ver = &loader.version;
 
   let (installer_url, installer_coord) = if loader_ver.starts_with("1.20.1-") {
-    (
-      get_download_api(SourceType::Official, ResourceType::NeoforgeInstall)?.join(&format!(
+    let root = get_download_api(priority[0], ResourceType::NeoforgeInstall)?;
+    let url = match priority.first().unwrap_or(&SourceType::Official) {
+      SourceType::Official | SourceType::NeoForgedCDN => root.join(&format!(
         "net/neoforged/forge/{v}/forge-{v}-installer.jar",
         v = loader_ver
       ))?,
+      SourceType::BMCLAPIMirror => {
+        let path = format!("{v}/download/installer", v = loader_ver);
+        root.join(&path)?
+      }
+    };
+    (
+      url,
       format!("net.neoforged:forge:{}-installer", loader.version),
     )
   } else {
     let root = get_download_api(priority[0], ResourceType::NeoforgeInstall)?;
     (
       match priority.first().unwrap_or(&SourceType::Official) {
-        SourceType::Official => {
+        SourceType::Official | SourceType::NeoForgedCDN => {
           let path = format!(
             "net/neoforged/neoforge/{v}/neoforge-{v}-installer.jar",
             v = loader_ver

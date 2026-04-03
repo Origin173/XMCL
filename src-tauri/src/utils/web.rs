@@ -36,7 +36,7 @@ use std::time::Duration;
 /// ```
 pub fn build_xmcl_client(app: &AppHandle, use_version_header: bool, use_proxy: bool) -> Client {
   let mut builder = ClientBuilder::new()
-    .timeout(Duration::from_secs(10))
+    .connect_timeout(Duration::from_secs(30))
     .tcp_keepalive(Duration::from_secs(10));
 
   if let Ok(config) = app.state::<Mutex<LauncherConfig>>().lock() {

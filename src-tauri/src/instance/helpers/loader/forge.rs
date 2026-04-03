@@ -77,6 +77,9 @@ pub async fn install_forge_loader(
       &fetch_bmcl_forge_installer_url(root, game_version, loader_ver, loader.branch.as_deref())
         .await?,
     )?,
+    SourceType::NeoForgedCDN => root.join(&format!(
+      "{game_version}-{loader_ver}/forge-{game_version}-{loader_ver}-installer.jar"
+    ))?,
   };
 
   let installer_coord = format!("net.minecraftforge:forge:{}-installer", loader.version);

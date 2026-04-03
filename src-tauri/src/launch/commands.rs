@@ -156,13 +156,13 @@ pub async fn validate_game_files(
   let incomplete_files = match validate_policy {
     FileValidatePolicy::Disable => return Ok(()), // skip
     FileValidatePolicy::Normal => [
-      get_invalid_library_files(priority_list[0], libraries_dir, &client_info, false).await?,
-      get_invalid_assets(&app, &client_info, priority_list[0], assets_dir, false).await?,
+      get_invalid_library_files(&priority_list, libraries_dir, &client_info, false).await?,
+      get_invalid_assets(&app, &client_info, &priority_list, assets_dir, false).await?,
     ]
     .concat(),
     FileValidatePolicy::Full => [
-      get_invalid_library_files(priority_list[0], libraries_dir, &client_info, true).await?,
-      get_invalid_assets(&app, &client_info, priority_list[0], assets_dir, true).await?,
+      get_invalid_library_files(&priority_list, libraries_dir, &client_info, true).await?,
+      get_invalid_assets(&app, &client_info, &priority_list, assets_dir, true).await?,
     ]
     .concat(),
   };
