@@ -72,12 +72,11 @@ pub async fn get_forge_meta_by_game_version(
           return Ok(meta);
         }
       }
-      SourceType::Official => {
+      SourceType::Official | SourceType::NeoForgedCDN => {
         if let Ok(meta) = get_forge_meta_by_game_version_official(app, game_version).await {
           return Ok(meta);
         }
       }
-      SourceType::NeoForgedCDN => {}
     }
   }
   Err(XMCLError(String::new()))

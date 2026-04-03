@@ -15,13 +15,35 @@ use url::Url;
 
 pub fn get_source_priority_list(launcher_config: &LauncherConfig) -> Vec<SourceType> {
   match launcher_config.download.source.strategy.as_str() {
-    "official" => vec![SourceType::Official, SourceType::BMCLAPIMirror],
-    "mirror" => vec![SourceType::BMCLAPIMirror, SourceType::Official],
+    // NeoForgedCDN is inserted before Official so NeoForge artifacts are fetched from
+    // the CDN while everything else transparently falls back to Official.
+    "official" => vec![
+      SourceType::NeoForgedCDN,
+      SourceType::Official,
+      SourceType::BMCLAPIMirror,
+    ],
+    "mirror" => vec![
+      SourceType::BMCLAPIMirror,
+      SourceType::NeoForgedCDN,
+      SourceType::Official,
+    ],
     "auto" => match launcher_config.basic_info.is_china_mainland_ip {
-      true => vec![SourceType::BMCLAPIMirror, SourceType::Official],
-      false => vec![SourceType::Official, SourceType::BMCLAPIMirror],
+      true => vec![
+        SourceType::BMCLAPIMirror,
+        SourceType::NeoForgedCDN,
+        SourceType::Official,
+      ],
+      false => vec![
+        SourceType::NeoForgedCDN,
+        SourceType::Official,
+        SourceType::BMCLAPIMirror,
+      ],
     },
-    _ => vec![SourceType::BMCLAPIMirror, SourceType::Official],
+    _ => vec![
+      SourceType::BMCLAPIMirror,
+      SourceType::NeoForgedCDN,
+      SourceType::Official,
+    ],
   }
 }
 
@@ -73,11 +95,13 @@ pub fn get_download_api(source: SourceType, resource_type: ResourceType) -> XMCL
       ResourceType::QuiltMaven => Ok(Url::parse("https://bmclapi2.bangbang93.com/maven/")?),
       ResourceType::QuiltMeta => Ok(Url::parse("https://bmclapi2.bangbang93.com/quilt-meta/")?),
     },
+    // https://neoforged.forgecdn.net/ — NeoForge's official CDN mirror.
+    // Mirrors only NeoForge Maven artifacts; all other resource types fall back to Official.
     SourceType::NeoForgedCDN => match resource_type {
       ResourceType::NeoforgeMaven | ResourceType::NeoforgeInstall => {
         Ok(Url::parse("https://neoforged.forgecdn.net/releases/")?)
       }
-      _ => Err(ResourceError::NoDownloadApi.into()),
+      _ => get_download_api(SourceType::Official, resource_type),
     },
   }
 }

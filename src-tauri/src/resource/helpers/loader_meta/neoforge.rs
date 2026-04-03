@@ -221,7 +221,7 @@ pub async fn get_neoforge_meta_by_game_version(
 ) -> XMCLResult<Vec<ModLoaderResourceInfo>> {
   for source_type in priority_list.iter() {
     match *source_type {
-      SourceType::Official => {
+      SourceType::Official | SourceType::NeoForgedCDN => {
         if let Ok(meta) = get_neoforge_meta_by_game_version_official(app, game_version).await {
           return Ok(meta);
         }
@@ -231,7 +231,6 @@ pub async fn get_neoforge_meta_by_game_version(
           return Ok(meta);
         }
       }
-      SourceType::NeoForgedCDN => {}
     }
     println!("{:?} failed, fallback", source_type);
   }
