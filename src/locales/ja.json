@@ -1840,6 +1840,42 @@
         }
       }
     },
+    "cauc": {
+      "caucEduroamLogin": {
+        "success": "CAUCキャンパスログイン成功",
+        "error": {
+          "title": "CAUCキャンパスログイン失敗",
+          "description": {
+            "NETWORK_ERROR": "CAUC認証サーバーに接続できません",
+            "INVALID": "学籍番号またはパスワードが正しくありません",
+            "PARSE_ERROR": "サーバー応答データ形式エラー"
+          }
+        }
+      },
+      "caucBindPlayerName": {
+        "success": "プレイヤー名の設定に成功",
+        "error": {
+          "title": "プレイヤー名の設定に失敗",
+          "description": {
+            "NETWORK_ERROR": "CAUC認証サーバーに接続できません",
+            "INVALID": "プレイヤー名が無効または使用済みです"
+          }
+        }
+      },
+      "caucCompleteLogin": {
+        "success": "CAUCアカウントの追加に成功",
+        "error": {
+          "title": "CAUCログイン認証に失敗",
+          "description": {
+            "NETWORK_ERROR": "CAUC認証サーバーに接続できません",
+            "INVALID": "認証情報が無効です。再ログインしてください",
+            "NOT_FOUND": "プレイヤー情報が見つかりません",
+            "DUPLICATE": "このプレイヤーは既に存在します",
+            "PARSE_ERROR": "サーバー応答データ形式エラー"
+          }
+        }
+      }
+    },
     "resource": {
       "fetchGameVersionList": {
         "error": {

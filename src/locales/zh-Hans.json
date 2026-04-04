@@ -2027,6 +2027,42 @@
         }
       }
     },
+    "cauc": {
+      "caucEduroamLogin": {
+        "success": "CAUC 校园登录成功",
+        "error": {
+          "title": "CAUC 校园登录失败",
+          "description": {
+            "NETWORK_ERROR": "无法连接至 CAUC 认证服务器",
+            "INVALID": "学工号或密码错误",
+            "PARSE_ERROR": "服务器返回数据格式错误"
+          }
+        }
+      },
+      "caucBindPlayerName": {
+        "success": "游戏昵称绑定成功",
+        "error": {
+          "title": "游戏昵称绑定失败",
+          "description": {
+            "NETWORK_ERROR": "无法连接至 CAUC 认证服务器",
+            "INVALID": "昵称无效或已被占用"
+          }
+        }
+      },
+      "caucCompleteLogin": {
+        "success": "CAUC 账号添加成功",
+        "error": {
+          "title": "CAUC 登录认证失败",
+          "description": {
+            "NETWORK_ERROR": "无法连接至 CAUC 认证服务器",
+            "INVALID": "认证信息无效，请重新登录",
+            "NOT_FOUND": "未找到角色信息",
+            "DUPLICATE": "该角色已存在",
+            "PARSE_ERROR": "服务器返回数据格式错误"
+          }
+        }
+      }
+    },
     "launch": {
       "selectSuitableJRE": {
         "error": {

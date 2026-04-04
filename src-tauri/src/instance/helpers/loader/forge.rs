@@ -23,14 +23,17 @@ use crate::resource::models::{ResourceType, SourceType};
 use crate::tasks::commands::schedule_progressive_task_group;
 use crate::tasks::download::DownloadParam;
 use crate::tasks::PTaskParam;
+use crate::utils::web::apply_proxy_config;
 
 async fn fetch_bmcl_forge_installer_url(
+  app: &AppHandle,
   root: Url,
   game_version: &str,
   loader_ver: &str,
   branch: Option<&str>,
 ) -> Result<String, Error> {
-  let client = Client::builder().redirect(Policy::limited(5)).build()?;
+  let builder = Client::builder().redirect(Policy::limited(5));
+  let client = apply_proxy_config(app, builder).build()?;
 
   let response = client
     .get(root)
@@ -49,6 +52,7 @@ async fn fetch_bmcl_forge_installer_url(
 }
 
 pub async fn install_forge_loader(
+  app: &AppHandle,
   priority: &[SourceType],
   game_version: &str,
   loader: &ModLoader,
@@ -74,8 +78,14 @@ pub async fn install_forge_loader(
       root.join(&format!("{full_ver}/forge-{full_ver}-installer.jar"))?
     }
     SourceType::BMCLAPIMirror => Url::parse(
-      &fetch_bmcl_forge_installer_url(root, game_version, loader_ver, loader.branch.as_deref())
-        .await?,
+      &fetch_bmcl_forge_installer_url(
+        app,
+        root,
+        game_version,
+        loader_ver,
+        loader.branch.as_deref(),
+      )
+      .await?,
     )?,
     SourceType::NeoForgedCDN => root.join(&format!(
       "{game_version}-{loader_ver}/forge-{game_version}-{loader_ver}-installer.jar"

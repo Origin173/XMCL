@@ -9,6 +9,21 @@ use urlencoding::decode;
 
 const CAUC_BASE_URL: &str = "https://skin.cauc.fun";
 
+/// CAUC campus auth server (skin.cauc.fun) is session/IP-bound; routing it
+/// through a download proxy breaks cookie-based auth. Keep direct connection
+/// here – the later `retrieve_profile` call already goes through the global
+/// proxy-aware Client.
+fn build_cauc_client(_app: &AppHandle) -> Result<Client, AccountError> {
+  reqwest::Client::builder()
+    .redirect(reqwest::redirect::Policy::none())
+    .cookie_store(true)
+    .build()
+    .map_err(|e| {
+      log::error!("Failed to build CAUC HTTP client: {}", e);
+      AccountError::NetworkError
+    })
+}
+
 async fn get_player_name(client: &Client, cookie_jar: &[(String, String)]) -> XMCLResult<String> {
   let user_page_url = format!("{}/user", CAUC_BASE_URL);
 
@@ -85,21 +100,13 @@ pub struct CAUCAuthState {
 }
 
 pub async fn eduroam_login(
-  _app: &AppHandle,
+  app: &AppHandle,
   student_id: String,
   oa_password: String,
 ) -> XMCLResult<CAUCAuthState> {
   log::info!("CAUC eduroam login attempt for student: {}", student_id);
 
-  // 创建一个不自动跟随重定向的客户端
-  let client = reqwest::Client::builder()
-    .redirect(reqwest::redirect::Policy::none())
-    .cookie_store(true)
-    .build()
-    .map_err(|e| {
-      log::error!("Failed to build HTTP client: {}", e);
-      AccountError::NetworkError
-    })?;
+  let client = build_cauc_client(app)?;
 
   // 步骤 1: 先访问登录页面获取 CSRF token
   let login_page_url = format!("{}/auth/eduroam/login", CAUC_BASE_URL);

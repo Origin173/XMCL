@@ -34,6 +34,27 @@ use std::time::Duration;
 /// ```rust
 /// let client = build_xmcl_client(&app, true, true);
 /// ```
+/// Applies proxy settings from LauncherConfig to a ClientBuilder.
+pub fn apply_proxy_config(app: &AppHandle, builder: ClientBuilder) -> ClientBuilder {
+  if let Ok(config) = app.state::<Mutex<LauncherConfig>>().lock() {
+    if config.download.proxy.enabled {
+      let proxy_cfg = &config.download.proxy;
+
+      if !proxy_cfg.follow_system_proxy {
+        let proxy_url = match proxy_cfg.selected_type {
+          ProxyType::Http => format!("http://{}:{}", proxy_cfg.host, proxy_cfg.port),
+          ProxyType::Socks => format!("socks5h://{}:{}", proxy_cfg.host, proxy_cfg.port),
+        };
+
+        if let Ok(proxy) = Proxy::all(&proxy_url) {
+          return builder.proxy(proxy);
+        }
+      }
+    }
+  }
+  builder
+}
+
 pub fn build_xmcl_client(app: &AppHandle, use_version_header: bool, use_proxy: bool) -> Client {
   let mut builder = ClientBuilder::new()
     .connect_timeout(Duration::from_secs(30))
@@ -50,23 +71,10 @@ pub fn build_xmcl_client(app: &AppHandle, use_version_header: bool, use_proxy: b
         builder = builder.default_headers(headers);
       }
     }
+  }
 
-    if use_proxy && config.download.proxy.enabled {
-      let proxy_cfg = &config.download.proxy;
-
-      // If follow_system_proxy is enabled, don't set manual proxy
-      // Let reqwest use system proxy settings
-      if !proxy_cfg.follow_system_proxy {
-        let proxy_url = match proxy_cfg.selected_type {
-          ProxyType::Http => format!("http://{}:{}", proxy_cfg.host, proxy_cfg.port),
-          ProxyType::Socks => format!("socks5h://{}:{}", proxy_cfg.host, proxy_cfg.port),
-        };
-
-        if let Ok(proxy) = Proxy::all(&proxy_url) {
-          builder = builder.proxy(proxy);
-        }
-      }
-    }
+  if use_proxy {
+    builder = apply_proxy_config(app, builder);
   }
 
   builder.build().unwrap_or_else(|_| Client::new())
