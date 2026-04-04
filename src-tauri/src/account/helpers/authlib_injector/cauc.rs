@@ -1,6 +1,7 @@
 use crate::account::helpers::authlib_injector::common::{parse_profile, retrieve_profile};
 use crate::account::models::{AccountError, PlayerInfo};
 use crate::error::XMCLResult;
+use crate::utils::web::apply_proxy_config;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use tauri::AppHandle;
@@ -8,6 +9,19 @@ use tauri_plugin_http::reqwest::{self, Client};
 use urlencoding::decode;
 
 const CAUC_BASE_URL: &str = "https://skin.cauc.fun";
+
+fn build_cauc_client(app: &AppHandle) -> Result<Client, AccountError> {
+  let builder = reqwest::Client::builder()
+    .redirect(reqwest::redirect::Policy::none())
+    .cookie_store(true);
+
+  let builder = apply_proxy_config(app, builder);
+
+  builder.build().map_err(|e| {
+    log::error!("Failed to build CAUC HTTP client: {}", e);
+    AccountError::NetworkError
+  })
+}
 
 async fn get_player_name(client: &Client, cookie_jar: &[(String, String)]) -> XMCLResult<String> {
   let user_page_url = format!("{}/user", CAUC_BASE_URL);
@@ -85,21 +99,13 @@ pub struct CAUCAuthState {
 }
 
 pub async fn eduroam_login(
-  _app: &AppHandle,
+  app: &AppHandle,
   student_id: String,
   oa_password: String,
 ) -> XMCLResult<CAUCAuthState> {
   log::info!("CAUC eduroam login attempt for student: {}", student_id);
 
-  // 创建一个不自动跟随重定向的客户端
-  let client = reqwest::Client::builder()
-    .redirect(reqwest::redirect::Policy::none())
-    .cookie_store(true)
-    .build()
-    .map_err(|e| {
-      log::error!("Failed to build HTTP client: {}", e);
-      AccountError::NetworkError
-    })?;
+  let client = build_cauc_client(app)?;
 
   // 步骤 1: 先访问登录页面获取 CSRF token
   let login_page_url = format!("{}/auth/eduroam/login", CAUC_BASE_URL);

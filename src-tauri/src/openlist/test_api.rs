@@ -1,12 +1,14 @@
 use serde_json::json;
+use tauri::AppHandle;
+use tauri::Manager;
 use tauri_plugin_http::reqwest;
 
 const OPENLIST_BASE_URL: &str = env!("XMCL_OPENLIST_BASE_URL");
 
 #[tauri::command]
-pub async fn test_openlist_connection() -> Result<String, String> {
+pub async fn test_openlist_connection(app: AppHandle) -> Result<String, String> {
   let url = format!("{}/api/fs/list", OPENLIST_BASE_URL);
-  let client = reqwest::Client::new();
+  let client = app.state::<reqwest::Client>().inner().clone();
 
   let body = json!({
     "path": "/",
