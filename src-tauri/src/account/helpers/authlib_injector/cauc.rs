@@ -1,7 +1,6 @@
 use crate::account::helpers::authlib_injector::common::{parse_profile, retrieve_profile};
 use crate::account::models::{AccountError, PlayerInfo};
 use crate::error::XMCLResult;
-use crate::utils::web::apply_proxy_config;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use tauri::AppHandle;
@@ -10,17 +9,19 @@ use urlencoding::decode;
 
 const CAUC_BASE_URL: &str = "https://skin.cauc.fun";
 
-fn build_cauc_client(app: &AppHandle) -> Result<Client, AccountError> {
-  let builder = reqwest::Client::builder()
+/// CAUC campus auth server (skin.cauc.fun) is session/IP-bound; routing it
+/// through a download proxy breaks cookie-based auth. Keep direct connection
+/// here – the later `retrieve_profile` call already goes through the global
+/// proxy-aware Client.
+fn build_cauc_client(_app: &AppHandle) -> Result<Client, AccountError> {
+  reqwest::Client::builder()
     .redirect(reqwest::redirect::Policy::none())
-    .cookie_store(true);
-
-  let builder = apply_proxy_config(app, builder);
-
-  builder.build().map_err(|e| {
-    log::error!("Failed to build CAUC HTTP client: {}", e);
-    AccountError::NetworkError
-  })
+    .cookie_store(true)
+    .build()
+    .map_err(|e| {
+      log::error!("Failed to build CAUC HTTP client: {}", e);
+      AccountError::NetworkError
+    })
 }
 
 async fn get_player_name(client: &Client, cookie_jar: &[(String, String)]) -> XMCLResult<String> {
