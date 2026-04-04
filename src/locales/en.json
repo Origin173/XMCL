@@ -2027,6 +2027,42 @@
         }
       }
     },
+    "cauc": {
+      "caucEduroamLogin": {
+        "success": "CAUC campus login successful",
+        "error": {
+          "title": "CAUC campus login failed",
+          "description": {
+            "NETWORK_ERROR": "Unable to connect to CAUC authentication server",
+            "INVALID": "Incorrect student ID or password",
+            "PARSE_ERROR": "Server returned data in an incorrect format"
+          }
+        }
+      },
+      "caucBindPlayerName": {
+        "success": "Player name bound successfully",
+        "error": {
+          "title": "Failed to bind player name",
+          "description": {
+            "NETWORK_ERROR": "Unable to connect to CAUC authentication server",
+            "INVALID": "Player name is invalid or already taken"
+          }
+        }
+      },
+      "caucCompleteLogin": {
+        "success": "CAUC account added successfully",
+        "error": {
+          "title": "CAUC login authentication failed",
+          "description": {
+            "NETWORK_ERROR": "Unable to connect to CAUC authentication server",
+            "INVALID": "Authentication info is invalid, please login again",
+            "NOT_FOUND": "No player profile found",
+            "DUPLICATE": "This player already exists",
+            "PARSE_ERROR": "Server returned data in an incorrect format"
+          }
+        }
+      }
+    },
     "launch": {
       "selectSuitableJRE": {
         "error": {

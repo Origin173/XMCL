@@ -1876,6 +1876,42 @@
         }
       }
     },
+    "cauc": {
+      "caucEduroamLogin": {
+        "success": "Connexion campus CAUC réussie",
+        "error": {
+          "title": "Échec de la connexion campus CAUC",
+          "description": {
+            "NETWORK_ERROR": "Impossible de se connecter au serveur d'authentification CAUC",
+            "INVALID": "Numéro d'étudiant ou mot de passe incorrect",
+            "PARSE_ERROR": "Le serveur a renvoyé des données dans un format incorrect"
+          }
+        }
+      },
+      "caucBindPlayerName": {
+        "success": "Nom de joueur lié avec succès",
+        "error": {
+          "title": "Échec de la liaison du nom de joueur",
+          "description": {
+            "NETWORK_ERROR": "Impossible de se connecter au serveur d'authentification CAUC",
+            "INVALID": "Le nom de joueur est invalide ou déjà pris"
+          }
+        }
+      },
+      "caucCompleteLogin": {
+        "success": "Compte CAUC ajouté avec succès",
+        "error": {
+          "title": "Échec de l'authentification CAUC",
+          "description": {
+            "NETWORK_ERROR": "Impossible de se connecter au serveur d'authentification CAUC",
+            "INVALID": "Informations d'authentification invalides, veuillez vous reconnecter",
+            "NOT_FOUND": "Aucun profil de joueur trouvé",
+            "DUPLICATE": "Ce joueur existe déjà",
+            "PARSE_ERROR": "Le serveur a renvoyé des données dans un format incorrect"
+          }
+        }
+      }
+    },
     "launch": {
       "selectSuitableJRE": {
         "error": {

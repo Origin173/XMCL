@@ -2015,6 +2015,42 @@
         }
       }
     },
+    "cauc": {
+      "caucEduroamLogin": {
+        "success": "CAUC 校園登入成功",
+        "error": {
+          "title": "CAUC 校園登入失敗",
+          "description": {
+            "NETWORK_ERROR": "無法連線至 CAUC 認證伺服器",
+            "INVALID": "學工號或密碼錯誤",
+            "PARSE_ERROR": "伺服器返回資料格式錯誤"
+          }
+        }
+      },
+      "caucBindPlayerName": {
+        "success": "遊戲暱稱綁定成功",
+        "error": {
+          "title": "遊戲暱稱綁定失敗",
+          "description": {
+            "NETWORK_ERROR": "無法連線至 CAUC 認證伺服器",
+            "INVALID": "暱稱無效或已被佔用"
+          }
+        }
+      },
+      "caucCompleteLogin": {
+        "success": "CAUC 帳號新增成功",
+        "error": {
+          "title": "CAUC 登入認證失敗",
+          "description": {
+            "NETWORK_ERROR": "無法連線至 CAUC 認證伺服器",
+            "INVALID": "認證資訊無效，請重新登入",
+            "NOT_FOUND": "未找到角色資訊",
+            "DUPLICATE": "該角色已存在",
+            "PARSE_ERROR": "伺服器返回資料格式錯誤"
+          }
+        }
+      }
+    },
     "launch": {
       "selectSuitableJRE": {
         "error": {
