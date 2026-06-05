@@ -1,5 +1,5 @@
 use super::helpers::loader::fabric::remove_fabric_api_mods;
-use crate::error::XMCLResult;
+use crate::error::{XMCLError, XMCLResult};
 use crate::instance::helpers::client_json::{replace_native_libraries, McClientInfo, PatchesInfo};
 use crate::instance::helpers::game_version::{compare_game_versions, get_major_game_version};
 use crate::instance::helpers::loader::common::{execute_processors, install_mod_loader};
@@ -204,7 +204,32 @@ pub async fn delete_instance(app: AppHandle, instance_id: String) -> XMCLResult<
 
   let path = Path::new(&version_path);
   if path.exists() {
-    tokio::fs::remove_dir_all(path).await?;
+    // Retry deletion in case of transient file locks
+    let mut last_error = None;
+    for attempt in 0..3 {
+      match tokio::fs::remove_dir_all(path).await {
+        Ok(_) => {
+          // Verify deletion was successful
+          if path.exists() {
+            last_error = Some(XMCLError(format!(
+              "Failed to fully delete {}",
+              path.display()
+            )));
+            continue;
+          }
+          break;
+        }
+        Err(e) => {
+          last_error = Some(e.into());
+          // Wait a bit before retry
+          tokio::time::sleep(tokio::time::Duration::from_millis(200)).await;
+        }
+      }
+    }
+    // If still exists after retries, return error
+    if path.exists() {
+      return Err(last_error.unwrap_or_else(|| XMCLError("Failed to delete instance".into())));
+    }
   }
 
   // not update instance state here. if send success to frontend, it will call retrieve_instance_list and update state there.
