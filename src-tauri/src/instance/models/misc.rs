@@ -253,3 +253,46 @@ pub enum InstanceError {
 }
 
 impl std::error::Error for InstanceError {}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub enum ExportFormat {
+  Modrinth,
+  CurseForge,
+  MultiMC,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase", deny_unknown_fields)]
+pub struct ExportModpackMeta {
+  pub name: String,
+  pub author: String,
+  pub version: String,
+  pub description: Option<String>,
+  /// Skip remote matching - all files will be included as local overrides
+  #[serde(default)]
+  pub no_create_remote_files: Option<bool>,
+  /// Skip CurseForge remote matching, only use Modrinth
+  #[serde(default)]
+  pub skip_curseforge_remote_files: Option<bool>,
+  /// Minimum memory in MB for MultiMC export
+  #[serde(default)]
+  pub min_memory: Option<u32>,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub enum FileCategory {
+  Hidden,
+  Normal,
+  Suggested,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ExportFileEntry {
+  pub relative_path: String,
+  pub is_directory: bool,
+  pub category: FileCategory,
+  pub file_size: u64,
+}

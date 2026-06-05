@@ -1168,6 +1168,63 @@
       "import": "Import"
     }
   },
+  "ExportModpackModal": {
+    "header": {
+      "title": "Export Modpack"
+    },
+    "stepper": {
+      "format": "Format",
+      "meta": "Information",
+      "files": "Files"
+    },
+    "format": {
+      "modrinth": {
+        "name": "Modrinth",
+        "description": "Export as .mrpack, supports remote mod matching to reduce file size"
+      },
+      "curseforge": {
+        "name": "CurseForge",
+        "description": "Export as CurseForge .zip, supports remote mod ID matching"
+      },
+      "multimc": {
+        "name": "MultiMC / Prism",
+        "description": "Export as MultiMC .zip, compatible with Prism Launcher"
+      }
+    },
+    "meta": {
+      "sectionTitle": "Modpack Information",
+      "name": "Name",
+      "author": "Author",
+      "version": "Version",
+      "description": "Description"
+    },
+    "button": {
+      "export": "Export"
+    },
+    "dialog": {
+      "filterName": "Modpack"
+    },
+    "toast": {
+      "success": "Modpack exported successfully"
+    },
+    "progress": {
+      "stage": {
+        "matching": "Matching remote resources",
+        "packing": "Packing files",
+        "writingManifest": "Writing manifest",
+        "done": "Done"
+      }
+    },
+    "options": {
+      "sectionTitle": "Export Options",
+      "noCreateRemoteFiles": "No remote matching (all files as local)",
+      "skipCurseForgeRemoteFiles": "Skip CurseForge matching (Modrinth only)",
+      "minMemory": "Minimum Memory"
+    }
+  },
+  "FileTreeSelector": {
+    "empty": "No files found"
+  },
   "InstanceBasicSettings": {
     "selectDirectory": "Select Game Directory"
   },
@@ -2404,6 +2461,22 @@
           "description": {
             "FILE_NOT_FOUND_ERROR": "Modpack file not found, it may have been renamed, moved or deleted",
             "MODPACK_MANIFEST_PARSE_ERROR": "Modpack manifest file parse error"
+          }
+        }
+      },
+      "scanInstanceFilesForExport": {
+        "error": {
+          "title": "Failed to scan instance files"
+        }
+      },
+      "exportModpack": {
+        "success": "Modpack exported successfully",
+        "error": {
+          "title": "Failed to export modpack",
+          "description": {
+            "FILE_CREATION_FAILED": "Failed to create output file",
+            "ZIP_FILE_PROCESS_FAILED": "Failed to create zip archive",
+            "INSTANCE_NOT_FOUND_BY_I_D": "Instance not found"
           }
         }
       }
