@@ -2,6 +2,9 @@ import { invoke } from "@tauri-apps/api/core";
 import { InstanceSubdirType } from "@/enums/instance";
 import { GameConfig, GameDirectory } from "@/models/config";
 import {
+  ExportFileEntry,
+  ExportFormat,
+  ExportModpackMeta,
   GameServerInfo,
   InstanceSummary,
   LocalModInfo,
@@ -431,6 +434,30 @@ export class InstanceService {
   ): Promise<InvokeResponse<ModpackMetaInfo>> {
     return await invoke("retrieve_modpack_meta_info", {
       path,
+    });
+  }
+
+  @responseHandler("instance")
+  static async scanInstanceFilesForExport(
+    instanceId: string
+  ): Promise<InvokeResponse<ExportFileEntry[]>> {
+    return await invoke("scan_instance_files_for_export", { instanceId });
+  }
+
+  @responseHandler("instance")
+  static async exportModpack(
+    instanceId: string,
+    format: ExportFormat,
+    meta: ExportModpackMeta,
+    selectedFiles: string[],
+    outputPath: string
+  ): Promise<InvokeResponse<null>> {
+    return await invoke("export_modpack", {
+      instanceId,
+      format,
+      meta,
+      selectedFiles,
+      outputPath,
     });
   }
 }

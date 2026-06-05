@@ -1168,6 +1168,63 @@
       "import": "导入"
     }
   },
+  "ExportModpackModal": {
+    "header": {
+      "title": "导出整合包"
+    },
+    "stepper": {
+      "format": "选择格式",
+      "meta": "填写信息",
+      "files": "选择文件"
+    },
+    "format": {
+      "modrinth": {
+        "name": "Modrinth",
+        "description": "导出为 .mrpack 格式，支持远程模组匹配以减小文件体积"
+      },
+      "curseforge": {
+        "name": "CurseForge",
+        "description": "导出为 CurseForge .zip 格式，支持远程模组 ID 匹配"
+      },
+      "multimc": {
+        "name": "MultiMC / Prism",
+        "description": "导出为 MultiMC .zip 格式，兼容 Prism Launcher"
+      }
+    },
+    "meta": {
+      "sectionTitle": "整合包信息",
+      "name": "名称",
+      "author": "作者",
+      "version": "版本号",
+      "description": "描述"
+    },
+    "button": {
+      "export": "导出"
+    },
+    "dialog": {
+      "filterName": "整合包"
+    },
+    "toast": {
+      "success": "整合包导出成功"
+    },
+    "progress": {
+      "stage": {
+        "matching": "正在匹配远程资源",
+        "packing": "正在打包文件",
+        "writingManifest": "正在写入清单",
+        "done": "完成"
+      }
+    },
+    "options": {
+      "sectionTitle": "导出选项",
+      "noCreateRemoteFiles": "不进行远程匹配（所有文件作为本地）",
+      "skipCurseForgeRemoteFiles": "跳过 CurseForge 匹配（仅 Modrinth）",
+      "minMemory": "最小内存"
+    }
+  },
+  "FileTreeSelector": {
+    "empty": "未找到文件"
+  },
   "InstanceBasicSettings": {
     "selectDirectory": "选择游戏目录"
   },
@@ -2404,6 +2461,22 @@
           "description": {
             "FILE_NOT_FOUND_ERROR": "整合包文件不存在，可能已更名、移动或删除",
             "MODPACK_MANIFEST_PARSE_ERROR": "整合包清单文件解析错误"
+          }
+        }
+      },
+      "scanInstanceFilesForExport": {
+        "error": {
+          "title": "扫描实例文件失败"
+        }
+      },
+      "exportModpack": {
+        "success": "整合包导出成功",
+        "error": {
+          "title": "整合包导出失败",
+          "description": {
+            "FILE_CREATION_FAILED": "无法创建输出文件",
+            "ZIP_FILE_PROCESS_FAILED": "创建 zip 压缩包失败",
+            "INSTANCE_NOT_FOUND_BY_I_D": "实例不存在"
           }
         }
       }

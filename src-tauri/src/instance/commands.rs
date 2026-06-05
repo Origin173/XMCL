@@ -1204,3 +1204,96 @@ pub async fn retrieve_modpack_meta_info(path: String) -> XMCLResult<ModpackMetaI
   let file = fs::File::open(&path).map_err(|_| InstanceError::FileNotFoundError)?;
   ModpackMetaInfo::from_archive(&file).await
 }
+
+#[tauri::command]
+pub async fn scan_instance_files_for_export(
+  app: AppHandle,
+  instance_id: String,
+) -> XMCLResult<Vec<crate::instance::models::misc::ExportFileEntry>> {
+  use crate::instance::helpers::modpack::export_common::scan_dir;
+
+  let instance_path = get_instance_subdir_path_by_id(&app, &instance_id, &InstanceSubdirType::Root)
+    .ok_or(InstanceError::InstanceNotFoundByID)?;
+
+  let entries =
+    scan_dir(&instance_path, &instance_path).map_err(|_| InstanceError::FileNotFoundError)?;
+
+  Ok(entries)
+}
+
+#[tauri::command]
+pub async fn export_modpack(
+  app: AppHandle,
+  instance_id: String,
+  format: crate::instance::models::misc::ExportFormat,
+  meta: crate::instance::models::misc::ExportModpackMeta,
+  selected_files: Vec<String>,
+  output_path: String,
+) -> XMCLResult<()> {
+  use crate::instance::helpers::modpack::export_curseforge::export_curseforge;
+  use crate::instance::helpers::modpack::export_modrinth::export_modrinth;
+  use crate::instance::helpers::modpack::export_multimc::export_multimc;
+  use crate::instance::models::misc::ExportFormat;
+
+  let instance_path = get_instance_subdir_path_by_id(&app, &instance_id, &InstanceSubdirType::Root)
+    .ok_or(InstanceError::InstanceNotFoundByID)?;
+
+  // Retrieve instance to get mc version and mod loader info
+  let (mc_version, loader_type, loader_version) = {
+    let binding = app.state::<Mutex<HashMap<String, Instance>>>();
+    let state = binding.lock().unwrap();
+    let instance = state
+      .get(&instance_id)
+      .ok_or(InstanceError::InstanceNotFoundByID)?;
+    (
+      instance.version.clone(),
+      instance.mod_loader.loader_type.clone(),
+      instance.mod_loader.version.clone(),
+    )
+  };
+
+  let out = PathBuf::from(&output_path);
+
+  match format {
+    ExportFormat::Modrinth => {
+      export_modrinth(
+        &app,
+        &instance_path,
+        &meta,
+        &mc_version,
+        &loader_type,
+        &loader_version,
+        &selected_files,
+        &out,
+      )
+      .await?;
+    }
+    ExportFormat::CurseForge => {
+      export_curseforge(
+        &app,
+        &instance_path,
+        &meta,
+        &mc_version,
+        &loader_type,
+        &loader_version,
+        &selected_files,
+        &out,
+      )
+      .await?;
+    }
+    ExportFormat::MultiMC => {
+      export_multimc(
+        &app,
+        &instance_path,
+        &meta,
+        &mc_version,
+        &loader_type,
+        &loader_version,
+        &selected_files,
+        &out,
+      )?;
+    }
+  }
+
+  Ok(())
+}

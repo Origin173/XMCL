@@ -89,3 +89,32 @@ export interface ScreenshotInfo {
   filePath: string;
   time: number; // UNIX timestamp
 }
+
+export enum ExportFormat {
+  Modrinth = "modrinth",
+  CurseForge = "curseForge",
+  MultiMC = "multiMC",
+}
+
+export enum FileCategory {
+  Hidden = "hidden",
+  Normal = "normal",
+  Suggested = "suggested",
+}
+
+export interface ExportFileEntry {
+  relativePath: string;
+  isDirectory: boolean;
+  category: FileCategory;
+  fileSize: number;
+}
+
+export interface ExportModpackMeta {
+  name: string;
+  author: string;
+  version: string;
+  description?: string;
+  noCreateRemoteFiles?: boolean;
+  skipCurseForgeRemoteFiles?: boolean;
+  minMemory?: number;
+}
