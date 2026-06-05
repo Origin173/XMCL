@@ -476,6 +476,7 @@ pub async fn build_mojang_java_download_params(
   let runtime_type = match version {
     "8" => "jre-legacy",
     "21" => "java-runtime-delta",
+    "25" => "java-runtime-gamma",
     _ => "java-runtime-gamma",
   };
 

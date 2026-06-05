@@ -22,7 +22,7 @@ import { useLauncherConfig } from "@/contexts/config";
 import { useToast } from "@/contexts/toast";
 import { ConfigService } from "@/services/config";
 
-type VendorKey = "mojang" | "zulu" | "bellsoft" | "oracle";
+type VendorKey = "mojang" | "zulu" | "bellsoft" | "oracle" | "microsoft";
 
 interface JavaVendor {
   label: string;
@@ -57,7 +57,9 @@ export const DownloadJavaModal: React.FC<Omit<ModalProps, "children">> = ({
   const arch = config.basicInfo.arch;
 
   const [vendor, setVendor] = useState<VendorKey | "">("");
-  const [version, setVersion] = useState<"" | "8" | "11" | "17" | "21">("");
+  const [version, setVersion] = useState<"" | "8" | "11" | "17" | "21" | "25">(
+    ""
+  );
   const [type, setType] = useState<"" | "jdk" | "jre">("");
 
   const VENDORS: Record<VendorKey, JavaVendor> = {
@@ -65,7 +67,7 @@ export const DownloadJavaModal: React.FC<Omit<ModalProps, "children">> = ({
       label: "Mojang",
       hasJre: true,
       archMap: { x86_64: "x64", aarch64: "arm64" },
-      versions: [...(os === "macos" ? [] : ["8"]), "17", "21"],
+      versions: [...(os === "macos" ? [] : ["8"]), "17", "21", "25"],
       getUrl: () => "",
     },
     zulu: {
@@ -112,6 +114,18 @@ export const DownloadJavaModal: React.FC<Omit<ModalProps, "children">> = ({
         return `https://www.oracle.com/java/technologies/downloads/#${javaOrJdk}${version}-${os.replace("macos", "mac")}`;
       },
     },
+    microsoft: {
+      label: "Microsoft OpenJDK",
+      hasJre: false,
+      archMap: {
+        x86_64: "x64",
+        aarch64: "arm64",
+      },
+      versions: ["21", "25"],
+      getUrl: () => {
+        return "https://learn.microsoft.com/zh-cn/java/openjdk/download";
+      },
+    },
   };
 
   const handleConfirm = async () => {
@@ -144,14 +158,18 @@ export const DownloadJavaModal: React.FC<Omit<ModalProps, "children">> = ({
   };
 
   return (
-    <Modal size={{ base: "sm", lg: "md" }} {...props}>
+    <Modal size={{ base: "sm", lg: "lg" }} {...props}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>{t("DownloadJavaModal.header.title")}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <VStack align="stretch">
-            <Grid templateColumns="1fr 1fr 1fr" gap={4} w="100%">
+            <Grid
+              templateColumns={{ base: "1fr", md: "1fr 1fr 1fr" }}
+              gap={4}
+              w="100%"
+            >
               <MenuSelector
                 options={Object.entries(VENDORS).map(([key, val]) => ({
                   value: key,
@@ -176,6 +194,7 @@ export const DownloadJavaModal: React.FC<Omit<ModalProps, "children">> = ({
                 placeholder={t("DownloadJavaModal.selector.vendor")}
                 size="sm"
                 fontSize="sm"
+                buttonProps={{ minW: "170px" }}
               />
 
               <MenuSelector
@@ -185,6 +204,7 @@ export const DownloadJavaModal: React.FC<Omit<ModalProps, "children">> = ({
                     "11",
                     "17",
                     "21",
+                    "25",
                   ]
                 }
                 value={version}
