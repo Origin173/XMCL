@@ -23,27 +23,28 @@ const DeleteInstanceDialog: React.FC<DeleteInstanceDialogProps> = ({
   const { getInstanceList } = useGlobalData();
   const { config } = useLauncherConfig();
 
-  const handleDeleteInstance = (instanceId: string) => {
-    InstanceService.deleteInstance(instanceId).then((response) => {
-      if (response.status === "success") {
-        toast({
-          title: response.message,
-          status: "success",
-        });
-      } else {
-        toast({
-          title: response.message,
-          description: response.details,
-          status: "error",
-        });
-      }
-    });
+  const handleDeleteInstance = async (instanceId: string) => {
+    const response = await InstanceService.deleteInstance(instanceId);
+    if (response.status === "success") {
+      toast({
+        title: response.message,
+        status: "success",
+      });
+      // Wait a bit for file system to settle after deletion
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      getInstanceList(true);
+    } else {
+      toast({
+        title: response.message,
+        description: response.details,
+        status: "error",
+      });
+    }
 
     // Navigate to /instances/list
     if (!router.asPath.startsWith("/instances/list")) {
       router.push("/instances/list");
     }
-    getInstanceList(true);
   };
 
   if (config.suppressedDialogs?.includes("deleteInstanceAlert")) {
