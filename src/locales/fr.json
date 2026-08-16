@@ -1044,6 +1044,9 @@
       }
     }
   },
+  "FileTreeSelector": {
+    "empty": "Aucun fichier trouvé"
+  },
   "InstanceBasicSettings": {
     "selectDirectory": "Sélectionner le répertoire du jeu"
   },
@@ -2255,6 +2258,22 @@
             "MODPACK_MANIFEST_PARSE_ERROR": "Modpack manifest file parse error"
           }
         }
+      },
+      "scanInstanceFilesForExport": {
+        "error": {
+          "title": "Échec de l'analyse des fichiers de l'instance"
+        }
+      },
+      "exportModpack": {
+        "success": "Intégration exportée avec succès",
+        "error": {
+          "title": "Échec de l'exportation de l'intégration",
+          "description": {
+            "FILE_CREATION_FAILED": "Échec de la création du fichier de sortie",
+            "INSTANCE_NOT_FOUND_BY_I_D": "Instance introuvable",
+            "ZIP_FILE_PROCESS_FAILED": "Échec de la création de l'archive zip"
+          }
+        }
       }
     },
     "task": {
@@ -2510,6 +2529,67 @@
       "content": "After selecting your instance and player and adjusting the relevant settings, click the launch button and enjoy the game! 🥳"
     }
   },
+  "ExportModpackModal": {
+    "header": {
+      "title": "Exporter un modpack"
+    },
+    "stepper": {
+      "format": "Format",
+      "meta": "Informations",
+      "files": "Fichiers"
+    },
+    "format": {
+      "modrinth": {
+        "name": "Modrinth",
+        "description": "Exporter en .mrpack, prend en charge la correspondance distante des mods pour réduire la taille du fichier"
+      },
+      "curseforge": {
+        "name": "CurseForge",
+        "description": "Exporter en .zip CurseForge, prend en charge la correspondance des ID de mods distants"
+      },
+      "multimc": {
+        "name": "MultiMC / Prism",
+        "description": "Exporter en .zip MultiMC, compatible avec Prism Launcher"
+      },
+      "full": {
+        "name": "Pack complet (hors ligne)",
+        "description": "Zip autonome contenant les bibliothèques et ressources du jeu ; importez et jouez sans aucun téléchargement"
+      }
+    },
+    "meta": {
+      "sectionTitle": "Informations du modpack",
+      "name": "Nom",
+      "author": "Auteur",
+      "version": "Version",
+      "description": "Description"
+    },
+    "button": {
+      "export": "Exporter"
+    },
+    "dialog": {
+      "filterName": "Modpack"
+    },
+    "toast": {
+      "success": "Modpack exporté avec succès"
+    },
+    "progress": {
+      "stage": {
+        "matching": "Correspondance des ressources distantes",
+        "packing": "Compression des fichiers",
+        "writingManifest": "Écriture du manifeste",
+        "done": "Terminé",
+        "copying": "Copie des fichiers du jeu"
+      }
+    },
+    "options": {
+      "sectionTitle": "Options d'exportation",
+      "noCreateRemoteFiles": "Aucune correspondance distante (tous les fichiers en local)",
+      "skipCurseForgeRemoteFiles": "Ignorer la correspondance CurseForge (Modrinth uniquement)",
+      "minMemory": "Mémoire minimale",
+      "fullPackIncludes": "Inclure les fichiers du jeu",
+      "fullPackIncludesDesc": "Le pack contient les bibliothèques et ressources du jeu ; l'import ne nécessite aucun téléchargement (le zip peut faire 2 à 4 Go)"
+    }
+  },
   "ImportModpackModal": {
     "header": {
       "title": "Import Modpack"
@@ -2521,7 +2601,10 @@
       "modpackVersion": "Modpack Version",
       "author": "Author",
       "modLoader": "Mod Loader",
-      "gameVersion": "Game Version"
+      "gameVersion": "Game Version",
+      "fullPackInfo": "Informations du pack complet",
+      "fullPackIncludes": "Prêt hors ligne",
+      "fullPackIncludesDesc": "Contient les bibliothèques et ressources du jeu. Après l'import, jouez directement hors ligne sans rien télécharger."
     },
     "button": {
       "import": "Import"

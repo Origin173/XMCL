@@ -1139,6 +1139,67 @@
       }
     }
   },
+  "ExportModpackModal": {
+    "header": {
+      "title": "匯出整合包"
+    },
+    "stepper": {
+      "format": "選擇格式",
+      "meta": "填寫資訊",
+      "files": "選擇檔案"
+    },
+    "format": {
+      "modrinth": {
+        "name": "Modrinth",
+        "description": "匯出為 .mrpack 格式，支援遠端模組比對以減小檔案體積"
+      },
+      "curseforge": {
+        "name": "CurseForge",
+        "description": "匯出為 CurseForge .zip 格式，支援遠端模組 ID 比對"
+      },
+      "multimc": {
+        "name": "MultiMC / Prism",
+        "description": "匯出為 MultiMC .zip 格式，相容 Prism Launcher"
+      },
+      "full": {
+        "name": "全量包（離線）",
+        "description": "自包含 zip，包含遊戲依賴庫與資源，匯入後無需任何下載即可離線遊玩"
+      }
+    },
+    "meta": {
+      "sectionTitle": "整合包資訊",
+      "name": "名稱",
+      "author": "作者",
+      "version": "版本號",
+      "description": "描述"
+    },
+    "button": {
+      "export": "匯出"
+    },
+    "dialog": {
+      "filterName": "整合包"
+    },
+    "toast": {
+      "success": "整合包匯出成功"
+    },
+    "progress": {
+      "stage": {
+        "matching": "正在比對遠端資源",
+        "packing": "正在打包檔案",
+        "writingManifest": "正在寫入清單",
+        "done": "完成",
+        "copying": "正在複製遊戲檔案"
+      }
+    },
+    "options": {
+      "sectionTitle": "匯出選項",
+      "noCreateRemoteFiles": "不進行遠端比對（所有檔案作為本機）",
+      "skipCurseForgeRemoteFiles": "跳過 CurseForge 比對（僅 Modrinth）",
+      "minMemory": "最小記憶體",
+      "fullPackIncludes": "包含遊戲本體",
+      "fullPackIncludesDesc": "包內將包含遊戲依賴庫與資源，匯入無需下載（zip 可能達 2-4GB）"
+    }
+  },
   "ImportModpackModal": {
     "header": {
       "title": "匯入整合包"
@@ -1150,11 +1211,17 @@
       "modpackVersion": "整合包版本",
       "author": "作者",
       "modLoader": "模組載入器",
-      "gameVersion": "遊戲版本"
+      "gameVersion": "遊戲版本",
+      "fullPackInfo": "全量包資訊",
+      "fullPackIncludes": "離線即玩",
+      "fullPackIncludesDesc": "已包含遊戲依賴庫與資源，匯入後可直接離線遊玩，無需下載任何內容"
     },
     "button": {
       "import": "匯入"
     }
+  },
+  "FileTreeSelector": {
+    "empty": "找不到檔案"
   },
   "InstanceBasicSettings": {
     "selectDirectory": "選擇遊戲目錄"
@@ -2392,6 +2459,22 @@
           "description": {
             "FILE_NOT_FOUND_ERROR": "整合包檔案不存在，可能已更名、移動或刪除",
             "MODPACK_MANIFEST_PARSE_ERROR": "整合包清單檔案解析錯誤"
+          }
+        }
+      },
+      "scanInstanceFilesForExport": {
+        "error": {
+          "title": "掃描例項檔案失敗"
+        }
+      },
+      "exportModpack": {
+        "success": "整合包匯出成功",
+        "error": {
+          "title": "整合包匯出失敗",
+          "description": {
+            "FILE_CREATION_FAILED": "無法建立輸出檔案",
+            "INSTANCE_NOT_FOUND_BY_I_D": "找不到例項",
+            "ZIP_FILE_PROCESS_FAILED": "建立 zip 壓縮檔失敗"
           }
         }
       }

@@ -12,6 +12,7 @@ import {
   ModalOverlay,
   ModalProps,
   Radio,
+  Text,
   VStack,
 } from "@chakra-ui/react";
 import { t } from "i18next";
@@ -27,7 +28,9 @@ import {
 import { InstanceIconSelectorPopover } from "@/components/instance-icon-selector";
 import { modLoaderTypesToIcon } from "@/components/modals/create-instance-modal";
 import { useLauncherConfig } from "@/contexts/config";
+import { useGlobalData } from "@/contexts/global-data";
 import { useToast } from "@/contexts/toast";
+import { OtherResourceSource } from "@/enums/resource";
 import { ModpackMetaInfo } from "@/models/instance/misc";
 import { ModLoaderResourceInfo } from "@/models/resource";
 import { InstanceService } from "@/services/instance";
@@ -44,6 +47,7 @@ const ImportModpackModal: React.FC<ImportModpackModalProps> = ({
   ...modalProps
 }) => {
   const { config } = useLauncherConfig();
+  const { getInstanceList } = useGlobalData();
   const router = useRouter();
   const toast = useToast();
   const primaryColor = config.appearance.theme.primaryColor;
@@ -66,6 +70,10 @@ const ImportModpackModal: React.FC<ImportModpackModalProps> = ({
     return 0;
   }, []);
 
+  // Full packs are self-contained (instance + libraries + assets): the instance
+  // name is fixed by the pack content and nothing needs to be downloaded.
+  const isFullPack = modpack?.modpackType === OtherResourceSource.FullPack;
+
   const modpackInfoGroup: OptionItemGroupProps[] = useMemo(() => {
     if (!modpack) return [];
     return [
@@ -74,7 +82,11 @@ const ImportModpackModal: React.FC<ImportModpackModalProps> = ({
         items: [
           {
             title: t("InstanceSettingsPage.name"),
-            children: (
+            children: isFullPack ? (
+              <Text className="secondary-text" fontSize="xs-sm">
+                {modpack.name}
+              </Text>
+            ) : (
               <Editable
                 isTextArea={false}
                 value={name}
@@ -136,31 +148,57 @@ const ImportModpackModal: React.FC<ImportModpackModalProps> = ({
           })
         ),
       },
-      {
-        title: t("ImportModpackModal.label.modpackInfo"),
-        items: [
-          {
-            title: t("ImportModpackModal.label.modpackName"),
-            children: modpack.name,
-          },
-          {
-            title: t("ImportModpackModal.label.modpackVersion"),
-            children: modpack.version,
-          },
-          {
-            title: t("ImportModpackModal.label.author"),
-            children: modpack.author || "-",
-          },
-          {
-            title: t("ImportModpackModal.label.modLoader"),
-            children: `${modpack.modLoader.loaderType} ${modpack.modLoader.version}`,
-          },
-          {
-            title: t("ImportModpackModal.label.gameVersion"),
-            children: modpack.clientVersion,
-          },
-        ],
-      },
+      ...(isFullPack
+        ? [
+            {
+              title: t("ImportModpackModal.label.fullPackInfo"),
+              items: [
+                {
+                  title: t("ImportModpackModal.label.modpackVersion"),
+                  children: modpack.version,
+                },
+                {
+                  title: t("ImportModpackModal.label.gameVersion"),
+                  children: modpack.clientVersion,
+                },
+                {
+                  title: t("ImportModpackModal.label.fullPackIncludes"),
+                  children: (
+                    <Text fontSize="xs" color="green.500">
+                      {t("ImportModpackModal.label.fullPackIncludesDesc")}
+                    </Text>
+                  ),
+                },
+              ],
+            },
+          ]
+        : [
+            {
+              title: t("ImportModpackModal.label.modpackInfo"),
+              items: [
+                {
+                  title: t("ImportModpackModal.label.modpackName"),
+                  children: modpack.name,
+                },
+                {
+                  title: t("ImportModpackModal.label.modpackVersion"),
+                  children: modpack.version,
+                },
+                {
+                  title: t("ImportModpackModal.label.author"),
+                  children: modpack.author || "-",
+                },
+                {
+                  title: t("ImportModpackModal.label.modLoader"),
+                  children: `${modpack.modLoader.loaderType} ${modpack.modLoader.version}`,
+                },
+                {
+                  title: t("ImportModpackModal.label.gameVersion"),
+                  children: modpack.clientVersion,
+                },
+              ],
+            },
+          ]),
     ];
   }, [
     modpack,
@@ -170,14 +208,39 @@ const ImportModpackModal: React.FC<ImportModpackModalProps> = ({
     gameDirectory,
     config.localGameDirectories,
     checkDirNameError,
+    isFullPack,
     setDescription,
     setGameDirectory,
   ]);
 
   const handleImportModpack = useCallback(async () => {
-    if (!modpack || checkDirNameError(name) !== 0 || !gameDirectory) return;
+    if (!modpack || !gameDirectory) return;
+    if (!isFullPack && checkDirNameError(name) !== 0) return;
     try {
       setIsBtnLoading(true);
+
+      // Full packs: pure extraction, nothing to download.
+      if (isFullPack) {
+        const importResp = await InstanceService.importFullPack(
+          gameDirectory,
+          path
+        );
+        if (importResp.status === "success") {
+          onClose();
+          // Refresh the instance list so the imported instance shows up
+          // immediately, matching the refresh used by other instance mutations.
+          getInstanceList(true);
+          router.push("/instances/list");
+        } else {
+          toast({
+            title: importResp.message,
+            description: importResp.details,
+            status: "error",
+          });
+        }
+        return;
+      }
+
       // first get client resource info
       const versionResp = await ResourceService.fetchGameVersionSpecific(
         modpack.clientVersion
@@ -226,7 +289,9 @@ const ImportModpackModal: React.FC<ImportModpackModalProps> = ({
     checkDirNameError,
     description,
     gameDirectory,
+    getInstanceList,
     iconSrc,
+    isFullPack,
     onClose,
     modpack,
     name,

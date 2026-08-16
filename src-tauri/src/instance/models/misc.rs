@@ -260,6 +260,7 @@ pub enum ExportFormat {
   Modrinth,
   CurseForge,
   MultiMC,
+  Full,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]

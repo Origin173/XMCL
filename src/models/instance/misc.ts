@@ -94,6 +94,7 @@ export enum ExportFormat {
   Modrinth = "modrinth",
   CurseForge = "curseForge",
   MultiMC = "multiMC",
+  Full = "full",
 }
 
 export enum FileCategory {

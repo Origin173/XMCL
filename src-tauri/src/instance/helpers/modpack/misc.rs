@@ -1,5 +1,6 @@
 use crate::error::XMCLResult;
 use crate::instance::helpers::modpack::curseforge::CurseForgeManifest;
+use crate::instance::helpers::modpack::export_fullzip::FullPackManifest;
 use crate::instance::helpers::modpack::modrinth::ModrinthManifest;
 use crate::instance::helpers::modpack::multimc::MultiMcManifest;
 use crate::instance::models::misc::{InstanceError, ModLoader};
@@ -7,6 +8,7 @@ use crate::resource::models::OtherResourceSource;
 use serde::{Deserialize, Serialize};
 use std::fs;
 use std::fs::File;
+use std::io::Read;
 use std::path::Path;
 use zip::ZipArchive;
 
@@ -17,18 +19,48 @@ pub struct ModpackMetaInfo {
   pub version: String,
   pub description: Option<String>,
   pub author: Option<String>,
-  pub modpack_source: OtherResourceSource,
+  pub modpack_type: OtherResourceSource,
   pub client_version: String,
   pub mod_loader: ModLoader,
 }
 
 impl ModpackMetaInfo {
+  /// Try to parse the archive as an XMCL full pack (identified by `xmcl-full-pack.json`).
+  fn from_full_pack(file: &File) -> Option<Self> {
+    let mut archive = ZipArchive::new(file).ok()?;
+    let mut manifest_str = String::new();
+    archive
+      .by_name("xmcl-full-pack.json")
+      .ok()?
+      .read_to_string(&mut manifest_str)
+      .ok()?;
+    let manifest: FullPackManifest = serde_json::from_str(&manifest_str).ok()?;
+    if manifest.format_version != 1 {
+      return None;
+    }
+    Some(ModpackMetaInfo {
+      modpack_type: OtherResourceSource::FullPack,
+      name: manifest.name,
+      version: manifest.version,
+      description: manifest.description,
+      author: manifest.author,
+      client_version: manifest.minecraft_version,
+      mod_loader: ModLoader {
+        loader_type: manifest.mod_loader.loader_type,
+        version: manifest.mod_loader.version,
+        ..Default::default()
+      },
+    })
+  }
+
   pub async fn from_archive(file: &File) -> XMCLResult<Self> {
-    if let Ok(manifest) = CurseForgeManifest::from_archive(file) {
+    if let Some(info) = Self::from_full_pack(file) {
+      Ok(info)
+    } else if let Ok(manifest) = CurseForgeManifest::from_archive(file) {
       let client_version = manifest.get_client_version();
       let (loader_type, version) = manifest.get_mod_loader_type_version();
       Ok(ModpackMetaInfo {
-        modpack_source: OtherResourceSource::CurseForge,
+        modpack_type: OtherResourceSource::CurseForge,
         name: manifest.name,
         version: manifest.version,
         description: None,
@@ -44,7 +76,7 @@ impl ModpackMetaInfo {
       let client_version = manifest.get_client_version()?;
       let (loader_type, version) = manifest.get_mod_loader_type_version()?;
       Ok(ModpackMetaInfo {
-        modpack_source: OtherResourceSource::Modrinth,
+        modpack_type: OtherResourceSource::Modrinth,
         name: manifest.name,
         version: manifest.version_id,
         description: manifest.summary,
@@ -60,7 +92,7 @@ impl ModpackMetaInfo {
       let client_version = manifest.get_client_version()?;
       let (loader_type, version) = manifest.get_mod_loader_type_version()?;
       Ok(ModpackMetaInfo {
-        modpack_source: OtherResourceSource::Modrinth,
+        modpack_type: OtherResourceSource::Modrinth,
         name: manifest.cfg.get("name").cloned().unwrap_or_default(),
         version: String::new(),
         description: None,

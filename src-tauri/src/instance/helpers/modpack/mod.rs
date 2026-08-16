@@ -1,6 +1,7 @@
 pub mod curseforge;
 pub mod export_common;
 pub mod export_curseforge;
+pub mod export_fullzip;
 pub mod export_modrinth;
 pub mod export_multimc;
 pub mod misc;

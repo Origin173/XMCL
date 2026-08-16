@@ -445,6 +445,13 @@ export class InstanceService {
   }
 
   @responseHandler("instance")
+  static async scanInstanceFilesForFullExport(
+    instanceId: string
+  ): Promise<InvokeResponse<ExportFileEntry[]>> {
+    return await invoke("scan_instance_files_for_full_export", { instanceId });
+  }
+
+  @responseHandler("instance")
   static async exportModpack(
     instanceId: string,
     format: ExportFormat,
@@ -458,6 +465,22 @@ export class InstanceService {
       meta,
       selectedFiles,
       outputPath,
+    });
+  }
+
+  /**
+   * Import a full pack (self-contained zip with instance + libraries + assets)
+   * into a game directory. Pure extraction, nothing is downloaded.
+   * @returns {Promise<InvokeResponse<string>>} The new instance id.
+   */
+  @responseHandler("instance")
+  static async importFullPack(
+    directory: GameDirectory,
+    packPath: string
+  ): Promise<InvokeResponse<string>> {
+    return await invoke("import_full_pack", {
+      directory,
+      packPath,
     });
   }
 }

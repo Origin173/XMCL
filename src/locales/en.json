@@ -1162,7 +1162,10 @@
       "modpackVersion": "Modpack Version",
       "author": "Author",
       "modLoader": "Mod Loader",
-      "gameVersion": "Game Version"
+      "gameVersion": "Game Version",
+      "fullPackInfo": "Full Pack Info",
+      "fullPackIncludes": "Offline ready",
+      "fullPackIncludesDesc": "Includes the game libraries and assets. After import you can play offline directly without downloading anything."
     },
     "button": {
       "import": "Import"
@@ -1189,6 +1192,10 @@
       "multimc": {
         "name": "MultiMC / Prism",
         "description": "Export as MultiMC .zip, compatible with Prism Launcher"
+      },
+      "full": {
+        "name": "Full Pack (Offline)",
+        "description": "Self-contained zip with game libraries and assets; import and play without any downloads"
       }
     },
     "meta": {
@@ -1212,14 +1219,17 @@
         "matching": "Matching remote resources",
         "packing": "Packing files",
         "writingManifest": "Writing manifest",
-        "done": "Done"
+        "done": "Done",
+        "copying": "Copying game files"
       }
     },
     "options": {
       "sectionTitle": "Export Options",
       "noCreateRemoteFiles": "No remote matching (all files as local)",
       "skipCurseForgeRemoteFiles": "Skip CurseForge matching (Modrinth only)",
-      "minMemory": "Minimum Memory"
+      "minMemory": "Minimum Memory",
+      "fullPackIncludes": "Include game files",
+      "fullPackIncludesDesc": "The pack includes the game libraries and assets, so importing needs no downloads (the zip may be 2-4 GB)"
     }
   },
   "FileTreeSelector": {
