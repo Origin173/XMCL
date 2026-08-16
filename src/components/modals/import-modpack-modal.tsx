@@ -28,6 +28,7 @@ import {
 import { InstanceIconSelectorPopover } from "@/components/instance-icon-selector";
 import { modLoaderTypesToIcon } from "@/components/modals/create-instance-modal";
 import { useLauncherConfig } from "@/contexts/config";
+import { useGlobalData } from "@/contexts/global-data";
 import { useToast } from "@/contexts/toast";
 import { OtherResourceSource } from "@/enums/resource";
 import { ModpackMetaInfo } from "@/models/instance/misc";
@@ -46,6 +47,7 @@ const ImportModpackModal: React.FC<ImportModpackModalProps> = ({
   ...modalProps
 }) => {
   const { config } = useLauncherConfig();
+  const { getInstanceList } = useGlobalData();
   const router = useRouter();
   const toast = useToast();
   const primaryColor = config.appearance.theme.primaryColor;
@@ -225,6 +227,9 @@ const ImportModpackModal: React.FC<ImportModpackModalProps> = ({
         );
         if (importResp.status === "success") {
           onClose();
+          // Refresh the instance list so the imported instance shows up
+          // immediately, matching the refresh used by other instance mutations.
+          getInstanceList(true);
           router.push("/instances/list");
         } else {
           toast({
@@ -284,6 +289,7 @@ const ImportModpackModal: React.FC<ImportModpackModalProps> = ({
     checkDirNameError,
     description,
     gameDirectory,
+    getInstanceList,
     iconSrc,
     isFullPack,
     onClose,
