@@ -30,7 +30,7 @@ interface CAUCLoginModalProps {
  * CAUC (中国民航大学) 登录模态框组件。
  *
  * 认证流程:
- * 1. 使用学工号 + OA 密码完成校园统一身份登录 (eduroam)
+ * 1. 使用学工号 + OA 密码完成 CAUC 校园统一身份登录
  * 2. 根据返回决定是否需要绑定昵称
  * 3. 完成 Yggdrasil 认证并写入启动器账号列表
  */
@@ -108,7 +108,7 @@ export const CAUCLoginModal: React.FC<CAUCLoginModalProps> = ({
     return isValid;
   };
 
-  const handleEduroamLogin = async () => {
+  const handleCaucLogin = async () => {
     if (!validateInputs()) {
       return;
     }
@@ -116,14 +116,11 @@ export const CAUCLoginModal: React.FC<CAUCLoginModalProps> = ({
     setIsSubmitting(true);
 
     try {
-      console.log("Attempting CAUC eduroam login with student ID:", studentId);
+      console.log("Attempting CAUC login with student ID:", studentId);
 
-      const response = await CAUCService.caucEduroamLogin(
-        studentId,
-        oaPassword
-      );
+      const response = await CAUCService.caucLogin(studentId, oaPassword);
 
-      console.log("CAUC eduroam login response:", response);
+      console.log("CAUC login response:", response);
 
       if (response.status === "success") {
         const needBind = Boolean(response.data);
@@ -143,7 +140,7 @@ export const CAUCLoginModal: React.FC<CAUCLoginModalProps> = ({
           await completeLogin(studentId, oaPassword);
         }
       } else {
-        console.error("CAUC eduroam login failed:", response);
+        console.error("CAUC login failed:", response);
         toast({
           title: response.message || "登录失败",
           description: response.details || "学工号或密码错误",
@@ -152,7 +149,7 @@ export const CAUCLoginModal: React.FC<CAUCLoginModalProps> = ({
         });
       }
     } catch (error) {
-      console.error("CAUC eduroam login error:", error);
+      console.error("CAUC login error:", error);
       toast({
         title: "登录失败",
         description:
@@ -275,7 +272,7 @@ export const CAUCLoginModal: React.FC<CAUCLoginModalProps> = ({
                   placeholder="请输入学工号"
                   value={studentId}
                   onChange={(e) => setStudentId(e.target.value)}
-                  onKeyPress={(e) => e.key === "Enter" && handleEduroamLogin()}
+                  onKeyPress={(e) => e.key === "Enter" && handleCaucLogin()}
                 />
                 <FormErrorMessage>{studentIdError}</FormErrorMessage>
               </FormControl>
@@ -287,7 +284,7 @@ export const CAUCLoginModal: React.FC<CAUCLoginModalProps> = ({
                   placeholder="请输入 OA 密码"
                   value={oaPassword}
                   onChange={(e) => setOaPassword(e.target.value)}
-                  onKeyPress={(e) => e.key === "Enter" && handleEduroamLogin()}
+                  onKeyPress={(e) => e.key === "Enter" && handleCaucLogin()}
                 />
                 <FormErrorMessage>{passwordError}</FormErrorMessage>
               </FormControl>
@@ -328,7 +325,7 @@ export const CAUCLoginModal: React.FC<CAUCLoginModalProps> = ({
           </Button>
           <Button
             colorScheme="blue"
-            onClick={requiresBind ? handleBindPlayerName : handleEduroamLogin}
+            onClick={requiresBind ? handleBindPlayerName : handleCaucLogin}
             isLoading={isSubmitting}
             loadingText={requiresBind ? "处理中..." : "登录中..."}
           >

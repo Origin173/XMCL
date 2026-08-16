@@ -113,12 +113,9 @@ export const CAUCLoginModal: React.FC<CAUCLoginModalProps> = ({
     setIsLoading(true);
 
     try {
-      const response = await CAUCService.caucEduroamLogin(
-        studentId,
-        oaPassword
-      );
+      const response = await CAUCService.caucLogin(studentId, oaPassword);
 
-      console.log("CAUC eduroam login response:", response);
+      console.log("CAUC login response:", response);
 
       if (response.status === "success") {
         // 保存凭据供后续使用

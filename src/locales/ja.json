@@ -1844,7 +1844,7 @@
       }
     },
     "cauc": {
-      "caucEduroamLogin": {
+      "caucLogin": {
         "success": "CAUCキャンパスログイン成功",
         "error": {
           "title": "CAUCキャンパスログイン失敗",

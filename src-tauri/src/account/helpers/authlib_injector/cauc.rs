@@ -102,7 +102,7 @@ pub struct CAUCAuthState {
   pub player_name: Option<String>,
 }
 
-pub async fn eduroam_login(
+pub async fn cauc_login(
   app: &AppHandle,
   student_id: String,
   oa_password: String,
@@ -170,7 +170,7 @@ pub async fn eduroam_login(
     .send()
     .await
     .map_err(|e| {
-      log::error!("CAUC eduroam login network error: {}", e);
+      log::error!("CAUC login network error: {}", e);
       AccountError::NetworkError
     })?;
 
@@ -192,7 +192,7 @@ pub async fn eduroam_login(
   }
 
   let status = response.status();
-  log::info!("CAUC eduroam login response status: {}", status);
+  log::info!("CAUC login response status: {}", status);
 
   // 记录Location头用于调试重定向
   if let Some(location_header) = response.headers().get("location") {
@@ -265,7 +265,7 @@ pub async fn eduroam_login(
     let requires_bind = requires_bind || (location.contains("/user") && player_name.is_none());
 
     log::info!(
-      "CAUC eduroam login successful, requires_bind: {}, player_name: {:?}",
+      "CAUC login successful, requires_bind: {}, player_name: {:?}",
       requires_bind,
       player_name
     );
@@ -297,7 +297,7 @@ pub async fn eduroam_login(
         let requires_bind = redirect_url.contains("/user/player/bind");
 
         log::info!(
-          "CAUC eduroam login successful (JSON response), requires_bind: {}",
+          "CAUC login successful (JSON response), requires_bind: {}",
           requires_bind
         );
 
@@ -318,7 +318,7 @@ pub async fn eduroam_login(
     );
     Err(AccountError::Invalid.into())
   } else {
-    log::error!("CAUC eduroam login failed: status {}", status);
+    log::error!("CAUC login failed: status {}", status);
     Err(AccountError::Invalid.into())
   }
 }
@@ -647,8 +647,8 @@ pub async fn login_flow(
   oa_password: String,
   player_name: Option<String>,
 ) -> XMCLResult<LoginFlowResult> {
-  // 步骤 1: eduroam 登录
-  let auth_state = eduroam_login(app, student_id.clone(), oa_password.clone()).await?;
+  // 步骤 1: CAUC 表单登录
+  let auth_state = cauc_login(app, student_id.clone(), oa_password.clone()).await?;
 
   // 步骤 2: 检查是否需要绑定
   if auth_state.requires_bind {

@@ -2095,7 +2095,7 @@
       }
     },
     "cauc": {
-      "caucEduroamLogin": {
+      "caucLogin": {
         "success": "CAUC campus login successful",
         "error": {
           "title": "CAUC campus login failed",

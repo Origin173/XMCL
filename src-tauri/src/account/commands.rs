@@ -586,16 +586,16 @@ pub fn delete_auth_server(app: AppHandle, url: String) -> XMCLResult<()> {
 
 use crate::account::helpers::authlib_injector::cauc;
 
-/// CAUC 步骤 1: eduroam 登录
+/// CAUC 步骤 1: 表单登录
 ///
 /// 返回是否需要绑定昵称
 #[tauri::command]
-pub async fn cauc_eduroam_login(
+pub async fn cauc_login(
   app: AppHandle,
   student_id: String,
   oa_password: String,
 ) -> XMCLResult<bool> {
-  let auth_state = cauc::eduroam_login(&app, student_id, oa_password).await?;
+  let auth_state = cauc::cauc_login(&app, student_id, oa_password).await?;
 
   // 将 auth_state 临时存储到应用状态中
   // 这样后续的绑定操作可以使用
@@ -650,7 +650,7 @@ pub async fn cauc_complete_login(
   log::info!("Auth state retrieved: {:?}", auth_state_option.is_some());
 
   let auth_state = auth_state_option.ok_or_else(|| {
-    log::error!("Auth state is None - user must call cauc_eduroam_login first!");
+    log::error!("Auth state is None - user must call cauc_login first!");
     AccountError::Invalid
   })?;
 

@@ -93,7 +93,7 @@ pub async fn run() {
       account::commands::add_auth_server,
       account::commands::delete_auth_server,
       account::commands::fetch_auth_server,
-      account::commands::cauc_eduroam_login,
+      account::commands::cauc_login,
       account::commands::cauc_bind_player_name,
       account::commands::cauc_complete_login,
       instance::commands::retrieve_instance_list,

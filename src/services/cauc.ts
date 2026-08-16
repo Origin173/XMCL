@@ -7,24 +7,24 @@ import { responseHandler } from "@/utils/response";
  * CAUC (中国民航大学) 认证服务
  *
  * 认证流程:
- * 1. caucEduroamLogin - 使用学工号和OA密码登录
+ * 1. caucLogin - 使用学工号和OA密码登录
  * 2. 如果返回 true,需要绑定昵称,调用 caucBindPlayerName
  * 3. caucCompleteLogin - 完成认证并添加玩家到账号列表
  */
 export class CAUCService {
   /**
-   * 步骤 1: 使用学工号和 OA 密码登录 eduroam
+   * 步骤 1: 使用学工号和 OA 密码提交 CAUC 表单登录
    *
    * @param {string} studentId - 学工号
    * @param {string} oaPassword - OA 密码
    * @returns {Promise<InvokeResponse<boolean>>} true 表示需要绑定昵称,false 表示可以直接登录
    */
   @responseHandler("cauc")
-  static async caucEduroamLogin(
+  static async caucLogin(
     studentId: string,
     oaPassword: string
   ): Promise<InvokeResponse<boolean>> {
-    return await invoke("cauc_eduroam_login", {
+    return await invoke("cauc_login", {
       studentId,
       oaPassword,
     });
@@ -33,7 +33,7 @@ export class CAUCService {
   /**
    * 步骤 2: 绑定游戏昵称 (仅新用户需要)
    *
-   * 这个方法必须在 caucEduroamLogin 返回 true 后调用
+   * 这个方法必须在 caucLogin 返回 true 后调用
    *
    * @param {string} playerName - 游戏昵称
    * @returns {Promise<InvokeResponse<void>>}
