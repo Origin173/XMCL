@@ -56,7 +56,12 @@ import {
 } from "@/models/instance/misc";
 import { InstanceService } from "@/services/instance";
 
-type ExportStage = "matching" | "packing" | "writingManifest" | "done";
+type ExportStage =
+  | "matching"
+  | "packing"
+  | "copying"
+  | "writingManifest"
+  | "done";
 
 interface ExportProgressPayload {
   current: number;
@@ -91,6 +96,13 @@ const FORMAT_OPTIONS = [
     icon: LuArchive,
     ext: ".zip",
     descriptionKey: "ExportModpackModal.format.multimc.description",
+  },
+  {
+    format: ExportFormat.Full,
+    translationKey: "full",
+    icon: LuArchive,
+    ext: ".zip",
+    descriptionKey: "ExportModpackModal.format.full.description",
   },
 ];
 
@@ -144,7 +156,11 @@ const ExportModpackModal: React.FC<ExportModpackModalProps> = ({
   useEffect(() => {
     if (activeStep !== 2 || fileEntries.length > 0) return;
     setIsLoadingFiles(true);
-    InstanceService.scanInstanceFilesForExport(instanceId)
+    const scanFiles =
+      selectedFormat === ExportFormat.Full
+        ? InstanceService.scanInstanceFilesForFullExport
+        : InstanceService.scanInstanceFilesForExport;
+    scanFiles(instanceId)
       .then((res) => {
         if (res.status === "success") {
           setFileEntries(res.data);
@@ -158,7 +174,7 @@ const ExportModpackModal: React.FC<ExportModpackModalProps> = ({
         }
       })
       .finally(() => setIsLoadingFiles(false));
-  }, [activeStep, instanceId, fileEntries.length, toast]);
+  }, [activeStep, instanceId, fileEntries.length, selectedFormat, toast]);
 
   const handleExport = useCallback(async () => {
     const ext = selectedFormat === ExportFormat.Modrinth ? "mrpack" : "zip";
@@ -251,7 +267,11 @@ const ExportModpackModal: React.FC<ExportModpackModalProps> = ({
                       ? `${primaryColor}.400`
                       : "transparent"
                   }
-                  onClick={() => setSelectedFormat(format)}
+                  onClick={() => {
+                    setSelectedFormat(format);
+                    // Files differ per format; force a rescan on next visit.
+                    setFileEntries([]);
+                  }}
                   _hover={{ borderColor: `${primaryColor}.300` }}
                 >
                   <HStack spacing={3}>
@@ -515,6 +535,22 @@ const ExportModpackModal: React.FC<ExportModpackModalProps> = ({
                                   MB
                                 </Text>
                               </HStack>
+                            ),
+                          },
+                        ]
+                      : []),
+                    ...(selectedFormat === ExportFormat.Full
+                      ? [
+                          {
+                            title: t(
+                              "ExportModpackModal.options.fullPackIncludes"
+                            ),
+                            children: (
+                              <Text fontSize="xs" color="gray.500">
+                                {t(
+                                  "ExportModpackModal.options.fullPackIncludesDesc"
+                                )}
+                              </Text>
                             ),
                           },
                         ]

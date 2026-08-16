@@ -1028,6 +1028,9 @@
       }
     }
   },
+  "FileTreeSelector": {
+    "empty": "ファイルが見つかりません"
+  },
   "InstanceBasicSettings": {
     "selectDirectory": "ゲームディレクトリ選択"
   },
@@ -2173,6 +2176,22 @@
             "MODPACK_MANIFEST_PARSE_ERROR": "Modpack manifest file parse error"
           }
         }
+      },
+      "scanInstanceFilesForExport": {
+        "error": {
+          "title": "インスタンスファイルのスキャンに失敗しました"
+        }
+      },
+      "exportModpack": {
+        "success": "モッドパックのエクスポートに成功しました",
+        "error": {
+          "title": "モッドパックのエクスポートに失敗しました",
+          "description": {
+            "FILE_CREATION_FAILED": "出力ファイルの作成に失敗しました",
+            "INSTANCE_NOT_FOUND_BY_I_D": "インスタンスが見つかりません",
+            "ZIP_FILE_PROCESS_FAILED": "ZIP アーカイブの作成に失敗しました"
+          }
+        }
       }
     },
     "launch": {
@@ -2490,6 +2509,67 @@
       "content": "After selecting your instance and player and adjusting the relevant settings, click the launch button and enjoy the game! 🥳"
     }
   },
+  "ExportModpackModal": {
+    "header": {
+      "title": "モッドパックをエクスポート"
+    },
+    "stepper": {
+      "format": "形式",
+      "meta": "情報",
+      "files": "ファイル"
+    },
+    "format": {
+      "modrinth": {
+        "name": "Modrinth",
+        "description": ".mrpack 形式でエクスポート。リモートの MOD マッチングに対応し、ファイルサイズを削減"
+      },
+      "curseforge": {
+        "name": "CurseForge",
+        "description": "CurseForge の .zip 形式でエクスポート。リモートの MOD ID マッチングに対応"
+      },
+      "multimc": {
+        "name": "MultiMC / Prism",
+        "description": "MultiMC の .zip 形式でエクスポート。Prism Launcher と互換"
+      },
+      "full": {
+        "name": "フルパック（オフライン）",
+        "description": "ゲームのライブラリとアセットを含む自己完結型 zip。インポート後はダウンロード不要でオフラインでプレイ可能"
+      }
+    },
+    "meta": {
+      "sectionTitle": "モッドパック情報",
+      "name": "名前",
+      "author": "作者",
+      "version": "バージョン",
+      "description": "説明"
+    },
+    "button": {
+      "export": "エクスポート"
+    },
+    "dialog": {
+      "filterName": "モッドパック"
+    },
+    "toast": {
+      "success": "モッドパックをエクスポートしました"
+    },
+    "progress": {
+      "stage": {
+        "matching": "リモートリソースを照合中",
+        "packing": "ファイルをパッキング中",
+        "writingManifest": "マニフェストを書き込み中",
+        "done": "完了",
+        "copying": "ゲームファイルをコピー中"
+      }
+    },
+    "options": {
+      "sectionTitle": "エクスポートオプション",
+      "noCreateRemoteFiles": "リモートマッチングなし（すべてのファイルをローカルとして扱う）",
+      "skipCurseForgeRemoteFiles": "CurseForge のマッチングをスキップ（Modrinth のみ）",
+      "minMemory": "最小メモリ",
+      "fullPackIncludes": "ゲーム本体を含める",
+      "fullPackIncludesDesc": "パックにはゲームのライブラリとアセットが含まれ、インポートにダウンロードは不要です（zip は 2〜4GB になる場合があります）"
+    }
+  },
   "ImportModpackModal": {
     "header": {
       "title": "Import Modpack"
@@ -2501,7 +2581,10 @@
       "modpackVersion": "Modpack Version",
       "author": "Author",
       "modLoader": "Mod Loader",
-      "gameVersion": "Game Version"
+      "gameVersion": "Game Version",
+      "fullPackInfo": "フルパック情報",
+      "fullPackIncludes": "オフライン即時プレイ",
+      "fullPackIncludesDesc": "ゲームのライブラリとアセットが含まれています。インポート後は何もダウンロードせずにオフラインで直接プレイできます。"
     },
     "button": {
       "import": "Import"

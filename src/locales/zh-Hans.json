@@ -1162,7 +1162,10 @@
       "modpackVersion": "整合包版本",
       "author": "作者",
       "modLoader": "模组加载器",
-      "gameVersion": "游戏版本"
+      "gameVersion": "游戏版本",
+      "fullPackInfo": "全量包信息",
+      "fullPackIncludes": "离线即玩",
+      "fullPackIncludesDesc": "已包含游戏依赖库与资源，导入后可直接离线游玩，无需下载任何内容"
     },
     "button": {
       "import": "导入"
@@ -1189,6 +1192,10 @@
       "multimc": {
         "name": "MultiMC / Prism",
         "description": "导出为 MultiMC .zip 格式，兼容 Prism Launcher"
+      },
+      "full": {
+        "name": "全量包（离线）",
+        "description": "自包含 zip，包含游戏依赖库与资源，导入后无需任何下载即可离线游玩"
       }
     },
     "meta": {
@@ -1212,14 +1219,17 @@
         "matching": "正在匹配远程资源",
         "packing": "正在打包文件",
         "writingManifest": "正在写入清单",
-        "done": "完成"
+        "done": "完成",
+        "copying": "正在复制游戏文件"
       }
     },
     "options": {
       "sectionTitle": "导出选项",
       "noCreateRemoteFiles": "不进行远程匹配（所有文件作为本地）",
       "skipCurseForgeRemoteFiles": "跳过 CurseForge 匹配（仅 Modrinth）",
-      "minMemory": "最小内存"
+      "minMemory": "最小内存",
+      "fullPackIncludes": "包含游戏本体",
+      "fullPackIncludesDesc": "包内将包含游戏依赖库与资源，导入无需下载（zip 可能达 2-4GB）"
     }
   },
   "FileTreeSelector": {

@@ -1246,6 +1246,47 @@ pub async fn scan_instance_files_for_export(
   Ok(entries)
 }
 
+/// Scan an instance for the full pack export: the version-isolated instance
+/// content plus (when version isolation is off) the shared game dir directories.
+#[tauri::command]
+pub async fn scan_instance_files_for_full_export(
+  app: AppHandle,
+  instance_id: String,
+) -> XMCLResult<Vec<crate::instance::models::misc::ExportFileEntry>> {
+  use crate::instance::helpers::modpack::export_fullzip::scan_instance_for_full_export;
+
+  let (version_path, version_isolation) = {
+    let binding = app.state::<Mutex<HashMap<String, Instance>>>();
+    let state = binding.lock().unwrap();
+    let instance = state
+      .get(&instance_id)
+      .ok_or(InstanceError::InstanceNotFoundByID)?;
+    (
+      instance.version_path.clone(),
+      get_instance_game_config(&app, instance).version_isolation,
+    )
+  };
+  let game_dir = version_path
+    .parent()
+    .and_then(|p| p.parent())
+    .ok_or(InstanceError::InstanceNotFoundByID)?;
+
+  let entries = scan_instance_for_full_export(&version_path, game_dir, version_isolation)
+    .map_err(|_| InstanceError::FileNotFoundError)?;
+
+  Ok(entries)
+}
+
+/// Import a full pack (self-contained zip with instance + libraries + assets)
+/// into the given game directory. Pure extraction, nothing is downloaded.
+/// Returns the new instance id (`<gameDirectoryName>:<instanceName>`).
+#[tauri::command]
+pub async fn import_full_pack(directory: GameDirectory, pack_path: String) -> XMCLResult<String> {
+  use crate::instance::helpers::modpack::export_fullzip::import_full_pack as do_import_full_pack;
+
+  do_import_full_pack(&directory, &PathBuf::from(pack_path))
+}
+
 #[tauri::command]
 pub async fn export_modpack(
   app: AppHandle,
@@ -1263,8 +1304,8 @@ pub async fn export_modpack(
   let instance_path = get_instance_subdir_path_by_id(&app, &instance_id, &InstanceSubdirType::Root)
     .ok_or(InstanceError::InstanceNotFoundByID)?;
 
-  // Retrieve instance to get mc version and mod loader info
-  let (mc_version, loader_type, loader_version) = {
+  // Retrieve instance to get mc version, mod loader info and full pack details
+  let (mc_version, loader_type, loader_version, version_path, version_isolation) = {
     let binding = app.state::<Mutex<HashMap<String, Instance>>>();
     let state = binding.lock().unwrap();
     let instance = state
@@ -1274,6 +1315,8 @@ pub async fn export_modpack(
       instance.version.clone(),
       instance.mod_loader.loader_type.clone(),
       instance.mod_loader.version.clone(),
+      instance.version_path.clone(),
+      get_instance_game_config(&app, instance).version_isolation,
     )
   };
 
@@ -1314,6 +1357,25 @@ pub async fn export_modpack(
         &mc_version,
         &loader_type,
         &loader_version,
+        &selected_files,
+        &out,
+      )?;
+    }
+    ExportFormat::Full => {
+      use crate::instance::helpers::modpack::export_fullzip::export_full_pack;
+      let game_dir = version_path
+        .parent()
+        .and_then(|p| p.parent())
+        .ok_or(InstanceError::InstanceNotFoundByID)?;
+      export_full_pack(
+        &app,
+        &version_path,
+        game_dir,
+        &meta,
+        &mc_version,
+        &loader_type,
+        &loader_version,
+        version_isolation,
         &selected_files,
         &out,
       )?;

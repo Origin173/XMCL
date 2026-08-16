@@ -22,6 +22,7 @@ pub struct ExportProgressPayload {
 pub enum ExportStage {
   Matching,
   Packing,
+  Copying,
   WritingManifest,
   Done,
 }

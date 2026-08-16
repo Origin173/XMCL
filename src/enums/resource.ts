@@ -10,6 +10,7 @@ export enum OtherResourceType {
 export enum OtherResourceSource {
   CurseForge = "CurseForge",
   Modrinth = "Modrinth",
+  FullPack = "FullPack",
 }
 
 export enum DependencyType {
@@ -258,7 +259,7 @@ export const modpackTagList = {
   },
 };
 
-export const sortByLists = {
+export const sortByLists: Record<string, string[]> = {
   CurseForge: [
     "Popularity",
     "A-Z",
