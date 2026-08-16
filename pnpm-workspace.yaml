@@ -1,0 +1,5 @@
+# Allow native build scripts for dependencies with ignored builds (pnpm v10+).
+# This replaces the old `onlyBuiltDependencies` setting.
+allowBuilds:
+  sharp: true
+  unrs-resolver: true
