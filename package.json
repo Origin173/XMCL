@@ -1,6 +1,6 @@
 {
   "name": "xmcl",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -86,10 +86,5 @@
   },
   "overrides": {
     "mdast-util-gfm-autolink-literal": "2.0.0"
-  },
-  "pnpm": {
-    "overrides": {
-      "mdast-util-gfm-autolink-literal": "2.0.0"
-    }
   }
 }

@@ -51,6 +51,10 @@ pub async fn select_java_runtime(
 async fn get_minimum_java_version_by_game(app: &AppHandle, instance: &Instance) -> i32 {
   // only allow fallback remote fetch here in the launch process, as Java selection and command generation are used sequentially.
   // ref: https://github.com/UNIkeEN/SJMCL/pull/799
+  // 1.21.5(25w14a)+
+  if compare_game_versions(app, &instance.version, "25w14a", true).await >= Ordering::Equal {
+    return 25;
+  }
   // 1.20.5(24w14a)+
   if compare_game_versions(app, &instance.version, "24w14a", true).await >= Ordering::Equal {
     return 21;

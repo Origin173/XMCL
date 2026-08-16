@@ -7811,7 +7811,7 @@ checksum = "ec107c4503ea0b4a98ef47356329af139c0a4f7750e621cf2973cd3385ebcb3d"
 
 [[package]]
 name = "xmcl"
-version = "0.1.2"
+version = "0.2.0"
 dependencies = [
  "async-speed-limit",
  "base64 0.22.1",
