@@ -46,11 +46,14 @@ async fn get_player_name(client: &Client, cookie_jar: &[(String, String)]) -> XM
     .await
     .map_err(|_| AccountError::NetworkError)?;
 
-  // 使用正则提取 data-mark="nickname">玩家名<
-  let re = regex::Regex::new(r#"data-mark="nickname">([^<]+)<"#).unwrap();
-  if let Some(caps) = re.captures(&html) {
+  // 使用正则提取 data-mark="nickname">玩家名<, 跳过页面里空的占位项
+  let re = regex::Regex::new(r#"data-mark="nickname">([^<]*)<"#).unwrap();
+  for caps in re.captures_iter(&html) {
     if let Some(name) = caps.get(1) {
-      return Ok(name.as_str().trim().to_string());
+      let trimmed = name.as_str().trim();
+      if !trimmed.is_empty() {
+        return Ok(trimmed.to_string());
+      }
     }
   }
 
@@ -99,17 +102,17 @@ pub struct CAUCAuthState {
   pub player_name: Option<String>,
 }
 
-pub async fn eduroam_login(
+pub async fn cauc_login(
   app: &AppHandle,
   student_id: String,
   oa_password: String,
 ) -> XMCLResult<CAUCAuthState> {
-  log::info!("CAUC eduroam login attempt for student: {}", student_id);
+  log::info!("CAUC login attempt for student: {}", student_id);
 
   let client = build_cauc_client(app)?;
 
-  // 步骤 1: 先访问登录页面获取 CSRF token
-  let login_page_url = format!("{}/auth/eduroam/login", CAUC_BASE_URL);
+  // 步骤 1: 先访问 CAUC 登录页获取 CSRF token
+  let login_page_url = format!("{}/auth/cauc/login", CAUC_BASE_URL);
   log::info!("Fetching login page: {}", login_page_url);
 
   let page_response = client.get(&login_page_url).send().await.map_err(|e| {
@@ -160,14 +163,14 @@ pub async fn eduroam_login(
     .post(&login_page_url)
     .header("Cookie", cookie_header.clone())
     .form(&[
-      ("student_number", student_id.as_str()),
-      ("password", oa_password.as_str()),
+      ("cauc_username", student_id.as_str()),
+      ("cauc_password", oa_password.as_str()),
       ("_token", csrf_token),
     ])
     .send()
     .await
     .map_err(|e| {
-      log::error!("CAUC eduroam login network error: {}", e);
+      log::error!("CAUC login network error: {}", e);
       AccountError::NetworkError
     })?;
 
@@ -189,7 +192,7 @@ pub async fn eduroam_login(
   }
 
   let status = response.status();
-  log::info!("CAUC eduroam login response status: {}", status);
+  log::info!("CAUC login response status: {}", status);
 
   // 记录Location头用于调试重定向
   if let Some(location_header) = response.headers().get("location") {
@@ -224,6 +227,15 @@ pub async fn eduroam_login(
 
     log::info!("Login redirect to: {}", location);
 
+    // CAUC 表单登录成功重定向到 /user, 失败(账号密码错误)会重定向回登录页。
+    if !location.contains("/user") {
+      log::error!(
+        "CAUC login failed: redirected to {} instead of /user",
+        location
+      );
+      return Err(AccountError::Invalid.into());
+    }
+
     // 检查重定向位置来判断是否需要绑定昵称
     let requires_bind = location.contains("/user/player/bind");
 
@@ -253,7 +265,7 @@ pub async fn eduroam_login(
     let requires_bind = requires_bind || (location.contains("/user") && player_name.is_none());
 
     log::info!(
-      "CAUC eduroam login successful, requires_bind: {}, player_name: {:?}",
+      "CAUC login successful, requires_bind: {}, player_name: {:?}",
       requires_bind,
       player_name
     );
@@ -285,7 +297,7 @@ pub async fn eduroam_login(
         let requires_bind = redirect_url.contains("/user/player/bind");
 
         log::info!(
-          "CAUC eduroam login successful (JSON response), requires_bind: {}",
+          "CAUC login successful (JSON response), requires_bind: {}",
           requires_bind
         );
 
@@ -306,7 +318,7 @@ pub async fn eduroam_login(
     );
     Err(AccountError::Invalid.into())
   } else {
-    log::error!("CAUC eduroam login failed: status {}", status);
+    log::error!("CAUC login failed: status {}", status);
     Err(AccountError::Invalid.into())
   }
 }
@@ -400,7 +412,10 @@ pub async fn authenticate(
   auth_state: &CAUCAuthState,
   oa_password: String,
 ) -> XMCLResult<(Vec<PlayerInfo>, bool)> {
-  let mut candidate_usernames: Vec<String> = vec![];
+  // CAUC 皮肤站上的账号以 <学工号>@cauc.edu.cn 为用户名, 纯学工号或玩家名无法通过
+  // yggdrasil authenticate, 所以邮箱优先。
+  let email = format!("{}@cauc.edu.cn", auth_state.student_id);
+  let mut candidate_usernames: Vec<String> = vec![email.clone()];
 
   if let Some(player_name) = auth_state.player_name.as_ref() {
     let trimmed = player_name.trim();
@@ -413,10 +428,6 @@ pub async fn authenticate(
     .iter()
     .any(|name| name.eq_ignore_ascii_case(&auth_state.student_id))
   {
-    candidate_usernames.push(auth_state.student_id.clone());
-  }
-
-  if candidate_usernames.is_empty() {
     candidate_usernames.push(auth_state.student_id.clone());
   }
 
@@ -490,7 +501,7 @@ pub async fn authenticate(
       Some(access_token),
       None,
       Some(CAUC_YGGDRASIL_URL.to_string()),
-      Some(auth_state.student_id.clone()),
+      Some(email.clone()),
     )
     .await
     {
@@ -521,7 +532,7 @@ pub async fn authenticate(
         Some(access_token.clone()),
         None,
         Some(CAUC_YGGDRASIL_URL.to_string()),
-        Some(auth_state.student_id.clone()),
+        Some(email.clone()),
       )
       .await?;
 
@@ -636,8 +647,8 @@ pub async fn login_flow(
   oa_password: String,
   player_name: Option<String>,
 ) -> XMCLResult<LoginFlowResult> {
-  // 步骤 1: eduroam 登录
-  let auth_state = eduroam_login(app, student_id.clone(), oa_password.clone()).await?;
+  // 步骤 1: CAUC 表单登录
+  let auth_state = cauc_login(app, student_id.clone(), oa_password.clone()).await?;
 
   // 步骤 2: 检查是否需要绑定
   if auth_state.requires_bind {

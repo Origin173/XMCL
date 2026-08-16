@@ -1880,7 +1880,7 @@
       }
     },
     "cauc": {
-      "caucEduroamLogin": {
+      "caucLogin": {
         "success": "Connexion campus CAUC réussie",
         "error": {
           "title": "Échec de la connexion campus CAUC",

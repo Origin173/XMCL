@@ -2083,7 +2083,7 @@
       }
     },
     "cauc": {
-      "caucEduroamLogin": {
+      "caucLogin": {
         "success": "CAUC 校園登入成功",
         "error": {
           "title": "CAUC 校園登入失敗",
