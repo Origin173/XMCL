@@ -1,6 +1,6 @@
 {
   "name": "xmcl",
-  "version": "0.2.0",
+  "version": "0.2.0-nightly-260906",
   "private": true,
   "scripts": {
     "dev": "next dev",
