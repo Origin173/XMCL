@@ -24,6 +24,19 @@ fn build_cauc_client(_app: &AppHandle) -> Result<Client, AccountError> {
     })
 }
 
+// Only log cookie names: values are session credentials and logs may be shared in bug reports.
+fn cookie_name(set_cookie: &str) -> &str {
+  set_cookie.split('=').next().unwrap_or_default().trim()
+}
+
+fn cookie_names(cookie_jar: &[(String, String)]) -> String {
+  cookie_jar
+    .iter()
+    .map(|(k, _)| k.as_str())
+    .collect::<Vec<_>>()
+    .join(", ")
+}
+
 async fn get_player_name(client: &Client, cookie_jar: &[(String, String)]) -> XMCLResult<String> {
   let user_page_url = format!("{}/user", CAUC_BASE_URL);
 
@@ -124,7 +137,10 @@ pub async fn cauc_login(
   let mut cookie_jar = Vec::new();
   for cookie_header in page_response.headers().get_all("set-cookie").iter() {
     if let Ok(cookie_str) = cookie_header.to_str() {
-      log::info!("Received cookie from login page: {}", cookie_str);
+      log::info!(
+        "Received cookie from login page: {}",
+        cookie_name(cookie_str)
+      );
       if let Some((key, rest)) = cookie_str.split_once('=') {
         if let Some((value, _)) = rest.split_once(';') {
           cookie_jar.push((key.trim().to_string(), value.trim().to_string()));
@@ -148,7 +164,7 @@ pub async fn cauc_login(
       AccountError::ParseError
     })?;
 
-  log::info!("Extracted CSRF token: {}", csrf_token);
+  log::info!("Extracted CSRF token (length: {})", csrf_token.len());
 
   // 步骤 2: 使用正确的字段名提交登录
   let cookie_header = cookie_jar
@@ -157,7 +173,10 @@ pub async fn cauc_login(
     .collect::<Vec<_>>()
     .join("; ");
 
-  log::info!("Submitting login with cookie: {}", cookie_header);
+  log::info!(
+    "Submitting login with cookies: {}",
+    cookie_names(&cookie_jar)
+  );
 
   let response = client
     .post(&login_page_url)
@@ -177,7 +196,10 @@ pub async fn cauc_login(
   // 更新 cookie jar
   for cookie_header_val in response.headers().get_all("set-cookie").iter() {
     if let Ok(cookie_str) = cookie_header_val.to_str() {
-      log::info!("Received cookie from login response: {}", cookie_str);
+      log::info!(
+        "Received cookie from login response: {}",
+        cookie_name(cookie_str)
+      );
       if let Some((key, rest)) = cookie_str.split_once('=') {
         if let Some((value, _)) = rest.split_once(';') {
           // 更新或添加 cookie
@@ -204,13 +226,10 @@ pub async fn cauc_login(
   let xsrf_token = cookie_jar
     .iter()
     .find(|(k, _)| k.eq_ignore_ascii_case("XSRF-TOKEN"))
-    .and_then(|(_, v)| {
-      log::info!("Found XSRF-TOKEN cookie (encoded): {}", v);
-      decode(v).ok()
-    })
+    .and_then(|(_, v)| decode(v).ok())
     .map(|token| {
       let decoded = token.to_string();
-      log::info!("Decoded XSRF-TOKEN: {}", &decoded[..decoded.len().min(50)]);
+      log::info!("Found XSRF-TOKEN (length: {})", decoded.len());
       decoded
     });
 
@@ -343,14 +362,9 @@ pub async fn bind_player_name(
   log::info!("Sending bind request for player_name: {}", player_name);
   log::info!("Bind URL: {}", bind_url);
   log::info!(
-    "Cookie header (length: {}): {}",
-    cookie_header.len(),
-    &cookie_header[..cookie_header.len().min(200)]
+    "Bind request cookies: {}",
+    cookie_names(&auth_state.cookie_jar)
   );
-  log::info!("Cookie jar contents:");
-  for (k, v) in &auth_state.cookie_jar {
-    log::info!("  {} = {} (length: {})", k, &v[..v.len().min(50)], v.len());
-  }
 
   let mut request = client
     .post(&bind_url)
@@ -360,7 +374,7 @@ pub async fn bind_player_name(
     .header("X-Requested-With", "XMLHttpRequest");
 
   if let Some(token) = &auth_state.xsrf_token {
-    log::info!("Using XSRF-TOKEN: {}", token);
+    log::info!("Using XSRF-TOKEN (length: {})", token.len());
     request = request.header("X-XSRF-TOKEN", token);
   } else {
     log::warn!("No XSRF-TOKEN available for bind request");
@@ -622,10 +636,11 @@ async fn perform_auth_request(
     return Err(AccountError::NetworkError);
   }
 
+  // the body contains the access token, only log its size
   log::info!(
-    "CAUC authenticate response for username {}: {}",
+    "CAUC authenticate response for username {} (length: {})",
     username,
-    &response_text[..response_text.len().min(200)]
+    response_text.len()
   );
 
   let content: CAUCAuthResponse = serde_json::from_str(&response_text).map_err(|e| {
