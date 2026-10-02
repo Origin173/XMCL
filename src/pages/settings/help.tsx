@@ -1,13 +1,17 @@
+import { Icon } from "@chakra-ui/react";
 import { openUrl } from "@tauri-apps/plugin-opener";
 import { useTranslation } from "react-i18next";
+import { LuArrowRight } from "react-icons/lu";
 import { CommonIconButton } from "@/components/common/common-icon-button";
 import {
   OptionItemGroup,
   OptionItemGroupProps,
 } from "@/components/common/option-item";
+import { useSharedModals } from "@/contexts/shared-modal";
 
 const HelpSettingsPage = () => {
   const { t } = useTranslation();
+  const { openSharedModal } = useSharedModals();
   const helpSettingGroups: OptionItemGroupProps[] = [
     {
       items: [
@@ -26,6 +30,13 @@ const HelpSettingsPage = () => {
               }
             />
           ),
+        },
+        {
+          title: t("HelpSettingsPage.top.settings.bugReport.title"),
+          description: t("HelpSettingsPage.top.settings.bugReport.description"),
+          children: <Icon as={LuArrowRight} boxSize={3.5} mr="5px" />,
+          isFullClickZone: true,
+          onClick: () => openSharedModal("bug-report"),
         },
       ],
     },

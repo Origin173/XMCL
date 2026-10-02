@@ -293,6 +293,33 @@
       }
     }
   },
+  "BugReportModal": {
+    "header": "不具合を報告",
+    "field": {
+      "title": "タイトル",
+      "description": "問題の説明",
+      "steps": "再現手順",
+      "expected": "期待される動作"
+    },
+    "placeholder": {
+      "title": "問題の概要（例：CAUC アカウントでログインすると認証エラーになる）",
+      "description": "何が起きましたか？どんなエラーが表示されましたか？",
+      "steps": "1. …を開く\n2. …をクリック"
+    },
+    "includeLogs": "診断レポートに最近のログを含める",
+    "privacyNote": "レポートにはシステム情報、ランチャー設定、最近のログが含まれます。アカウントのトークン、Cookie、パスワード、ホームディレクトリは自動的に隠されます。送信前に展開して確認できます。",
+    "qqGroup": "QQ グループ：{{group}}",
+    "button": {
+      "copyGroup": "コピー",
+      "featureRequest": "機能をリクエスト",
+      "copyText": "テキストでコピー",
+      "export": "レポートを書き出す",
+      "openIssue": "GitHub で報告"
+    },
+    "issue": {
+      "attachHint": "診断レポートを書き出しました。zip ファイルをここにドラッグしてアップロードしてください。"
+    }
+  },
   "ComingSoonSign": {
     "text": "このページは今準備中で、しばらくお待ちしてください。"
   },
@@ -873,6 +900,11 @@
         },
         "launcherLogDir": {
           "title": "Launcher Logs Directory"
+        },
+        "clearCache": {
+          "title": "キャッシュを削除",
+          "description": "ログインできない、読み込みに失敗するなどの場合は、ランチャーのキャッシュを削除してみてください",
+          "button": "削除"
         }
       }
     }
@@ -1024,6 +1056,10 @@
         "LauncherDocs": {
           "title": "XMCL ドキュメント",
           "url": "https://github.com/Origin173/XMCL"
+        },
+        "bugReport": {
+          "title": "不具合を報告",
+          "description": "診断レポートを書き出し、GitHub または QQ グループで報告します"
         }
       }
     }
@@ -1225,6 +1261,10 @@
     "toast": {
       "noSelectedPlayer": "キャラクターを追加して選択してください"
     }
+  },
+  "LoginFailureDescription": {
+    "hint": "何度も失敗する場合は：",
+    "clearCache": "ログインキャッシュを削除"
   },
   "ManageSkinModal": {
     "skinManage": "スキン管理",
@@ -1674,6 +1714,15 @@
           "description": {
             "HAS_ACTIVE_DOWNLOAD_TASKS": "There are active download tasks in progress.",
             "FILE_DELETION_FAILED": "Failed to delete files, they may be in use."
+          }
+        }
+      },
+      "clearLauncherCache": {
+        "success": "キャッシュを削除しました",
+        "error": {
+          "title": "キャッシュの削除に失敗しました",
+          "description": {
+            "HAS_ACTIVE_DOWNLOAD_TASKS": "ダウンロード中です。後でもう一度試すか、ダウンロードキャッシュのチェックを外してください"
           }
         }
       }
@@ -2260,6 +2309,12 @@
         "error": {
           "title": "Failed to delete file"
         }
+      },
+      "exportDiagnosticReport": {
+        "success": "診断レポートを書き出しました",
+        "error": {
+          "title": "診断レポートの書き出しに失敗しました"
+        }
       }
     }
   },
@@ -2442,6 +2497,39 @@
     "dialog": {
       "title": "Clear Download Cache",
       "content": "Are you sure you want to clear the download cache? This action cannot be undone."
+    }
+  },
+  "ClearCacheModal": {
+    "header": "キャッシュを削除",
+    "body": "削除する項目を選択してください。インスタンス、ワールド、ランチャー設定には影響しません。",
+    "options": {
+      "login": {
+        "title": "ログインキャッシュ",
+        "description": "ログイン状態のリセット、認証サーバー情報の再取得、authlib-injector の削除、Web データの消去"
+      },
+      "credentials": {
+        "title": "保存済みのログイン情報も削除",
+        "description": "プレイヤー一覧は残りますが、オフライン以外のアカウントは再ログインが必要です"
+      },
+      "download": {
+        "title": "ダウンロードキャッシュ",
+        "description": "ダウンロードキャッシュフォルダ内のファイルを削除します"
+      },
+      "temp": {
+        "title": "一時ファイル",
+        "description": "バージョン一覧や Mod 翻訳など、自動で再生成されるキャッシュ"
+      },
+      "logs": {
+        "title": "ログファイル",
+        "description": "過去のランチャーログとゲームログ（不具合報告に必要な場合があります。現在のログは保持されます）"
+      }
+    },
+    "button": {
+      "clear": "削除"
+    },
+    "result": {
+      "freed": "{{size}} を解放しました",
+      "failed": "、使用中の {{count}} 項目は削除できませんでした"
     }
   },
   "CreateRenamedInstShortcutAlertDialog": {

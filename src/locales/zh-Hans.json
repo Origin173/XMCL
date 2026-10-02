@@ -315,6 +315,33 @@
       }
     }
   },
+  "BugReportModal": {
+    "header": "反馈问题",
+    "field": {
+      "title": "标题",
+      "description": "问题描述",
+      "steps": "复现步骤",
+      "expected": "期望结果"
+    },
+    "placeholder": {
+      "title": "一句话概括问题，例如：CAUC 账号登录后提示认证失败",
+      "description": "发生了什么？出现了什么报错提示？",
+      "steps": "1. 打开…\n2. 点击…"
+    },
+    "includeLogs": "在诊断包中附带近期日志",
+    "privacyNote": "诊断包包含系统信息、启动器设置和近期日志，账号令牌、Cookie、密码和用户目录会被自动隐藏。提交前可解压检查。",
+    "qqGroup": "QQ 反馈群：{{group}}",
+    "button": {
+      "copyGroup": "复制群号",
+      "featureRequest": "请求新功能",
+      "copyText": "复制反馈信息",
+      "export": "导出诊断包",
+      "openIssue": "提交到 GitHub"
+    },
+    "issue": {
+      "attachHint": "已导出诊断包，请将 zip 文件拖拽到此处上传。"
+    }
+  },
   "CheckModUpdateModal": {
     "header": {
       "title": "检查模组更新"
@@ -350,6 +377,39 @@
     "dialog": {
       "title": "清除下载缓存",
       "content": "确定要清除下载缓存吗？此操作无法撤销。"
+    }
+  },
+  "ClearCacheModal": {
+    "header": "清理缓存",
+    "body": "请选择要清理的内容，游戏实例、存档和启动器设置不受影响。",
+    "options": {
+      "login": {
+        "title": "登录缓存",
+        "description": "重置登录状态、重新获取认证服务器信息、删除 authlib-injector 并清除网页数据"
+      },
+      "credentials": {
+        "title": "同时清除账号登录凭据",
+        "description": "保留角色列表，但所有非离线账号都需要重新登录"
+      },
+      "download": {
+        "title": "下载缓存",
+        "description": "删除下载缓存目录中的文件"
+      },
+      "temp": {
+        "title": "临时文件",
+        "description": "版本列表、模组翻译等可自动重新生成的缓存"
+      },
+      "logs": {
+        "title": "日志文件",
+        "description": "历史启动器日志与游戏日志（反馈问题时可能需要，当前日志会保留）"
+      }
+    },
+    "button": {
+      "clear": "开始清理"
+    },
+    "result": {
+      "freed": "共释放 {{size}}",
+      "failed": "，{{count}} 项因被占用未能删除"
     }
   },
   "ComingSoonSign": {
@@ -982,6 +1042,11 @@
         },
         "launcherLogDir": {
           "title": "启动器日志目录"
+        },
+        "clearCache": {
+          "title": "清理缓存",
+          "description": "遇到无法登录、加载异常等问题时，可尝试清理启动器缓存",
+          "button": "清理"
         }
       }
     }
@@ -1147,6 +1212,10 @@
         "LauncherDocs": {
           "title": "XMCL 文档",
           "url": "https://github.com/Origin173/XMCL"
+        },
+        "bugReport": {
+          "title": "反馈问题",
+          "description": "导出诊断包并通过 GitHub 或 QQ 群反馈"
         }
       }
     }
@@ -1429,6 +1498,10 @@
     "toast": {
       "noSelectedPlayer": "请先添加并选择游戏角色"
     }
+  },
+  "LoginFailureDescription": {
+    "hint": "多次失败？试试",
+    "clearCache": "清理登录缓存"
   },
   "ManageSkinModal": {
     "skinManage": "管理皮肤",
@@ -1925,6 +1998,15 @@
           "description": {
             "HAS_ACTIVE_DOWNLOAD_TASKS": "当前有下载任务正在进行中，请稍后再试",
             "FILE_DELETION_FAILED": "无法删除缓存文件，可能是文件正在被使用"
+          }
+        }
+      },
+      "clearLauncherCache": {
+        "success": "缓存清理完成",
+        "error": {
+          "title": "清理缓存失败",
+          "description": {
+            "HAS_ACTIVE_DOWNLOAD_TASKS": "当前有下载任务正在进行中，请稍后再试或取消勾选下载缓存"
           }
         }
       }
@@ -2510,6 +2592,12 @@
         "success": "删除文件成功",
         "error": {
           "title": "删除文件失败"
+        }
+      },
+      "exportDiagnosticReport": {
+        "success": "诊断包已导出",
+        "error": {
+          "title": "导出诊断包失败"
         }
       }
     }

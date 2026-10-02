@@ -1,6 +1,7 @@
 use crate::error::XMCLError;
 use crate::error::XMCLResult;
 use crate::instance::helpers::misc::refresh_instances;
+use crate::launcher_config::helpers::cache::clear_launcher_cache as clear_launcher_cache_helper;
 use crate::launcher_config::helpers::java::{
   build_mojang_java_download_params, get_java_info_from_command, get_java_info_from_release_file,
   refresh_and_update_javas,
@@ -12,7 +13,8 @@ use crate::launcher_config::helpers::updater::{
   fetch_nightly_version,
 };
 use crate::launcher_config::models::{
-  GameDirectory, JavaInfo, LauncherConfig, LauncherConfigError, VersionMetaInfo,
+  ClearCacheOptions, ClearCacheResult, GameDirectory, JavaInfo, LauncherConfig,
+  LauncherConfigError, VersionMetaInfo,
 };
 use crate::storage::Storage;
 use crate::tasks::{commands::schedule_progressive_task_group, monitor::TaskMonitor};
@@ -243,6 +245,21 @@ pub async fn clear_download_cache(app: AppHandle) -> XMCLResult<()> {
   std::fs::create_dir_all(&cache_path).map_err(|_| LauncherConfigError::FileDeletionFailed)?;
 
   Ok(())
+}
+
+#[tauri::command]
+pub async fn clear_launcher_cache(
+  app: AppHandle,
+  options: ClearCacheOptions,
+) -> XMCLResult<ClearCacheResult> {
+  if options.download {
+    let monitor = app.state::<Pin<Box<TaskMonitor>>>();
+    if monitor.has_active_download_tasks() {
+      return Err(LauncherConfigError::HasActiveDownloadTasks.into());
+    }
+  }
+
+  clear_launcher_cache_helper(&app, &options).await
 }
 
 #[tauri::command]

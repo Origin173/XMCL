@@ -30,6 +30,23 @@ pub struct JavaInfo {
   pub is_user_added: bool,
 }
 
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ClearCacheOptions {
+  pub login: bool,
+  pub credentials: bool,
+  pub download: bool,
+  pub temp: bool,
+  pub logs: bool,
+}
+
+#[derive(Debug, Serialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ClearCacheResult {
+  pub freed_bytes: u64,
+  pub failed_count: u32,
+}
+
 // Info about the latest release version fetched from remote, shown to the user to update.
 #[derive(Debug, Serialize, Deserialize, Default)]
 #[serde(rename_all = "camelCase", deny_unknown_fields)]

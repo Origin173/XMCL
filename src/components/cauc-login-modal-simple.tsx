@@ -17,6 +17,11 @@ import {
 } from "@chakra-ui/react";
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import LoginFailureDescription, {
+  LOGIN_CACHE_ONLY_OPTIONS,
+  LOGIN_FAILURE_TOAST_DURATION,
+} from "@/components/login-failure-description";
+import { useSharedModals } from "@/contexts/shared-modal";
 import { useToast } from "@/contexts/toast";
 import { CAUCService } from "@/services/cauc";
 
@@ -41,6 +46,25 @@ export const CAUCLoginModal: React.FC<CAUCLoginModalProps> = ({
 }) => {
   const { t } = useTranslation();
   const toast = useToast();
+  const { openSharedModal } = useSharedModals();
+
+  const toastLoginFailure = (title: string, details: string) => {
+    toast({
+      title,
+      description: (
+        <LoginFailureDescription
+          details={details}
+          onClearCache={() =>
+            openSharedModal("clear-cache", {
+              initialOptions: LOGIN_CACHE_ONLY_OPTIONS,
+            })
+          }
+        />
+      ),
+      status: "error",
+      duration: LOGIN_FAILURE_TOAST_DURATION,
+    });
+  };
 
   // 表单状态
   const [studentId, setStudentId] = useState("");
@@ -141,22 +165,17 @@ export const CAUCLoginModal: React.FC<CAUCLoginModalProps> = ({
         }
       } else {
         console.error("CAUC login failed:", response);
-        toast({
-          title: response.message || "登录失败",
-          description: response.details || "学工号或密码错误",
-          status: "error",
-          duration: 5000,
-        });
+        toastLoginFailure(
+          response.message || "登录失败",
+          response.details || "学工号或密码错误"
+        );
       }
     } catch (error) {
       console.error("CAUC login error:", error);
-      toast({
-        title: "登录失败",
-        description:
-          error instanceof Error ? error.message : "网络错误或服务器异常",
-        status: "error",
-        duration: 5000,
-      });
+      toastLoginFailure(
+        "登录失败",
+        error instanceof Error ? error.message : "网络错误或服务器异常"
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -229,22 +248,17 @@ export const CAUCLoginModal: React.FC<CAUCLoginModalProps> = ({
         onSuccess?.();
         onClose();
       } else {
-        toast({
-          title: response.message || "登录失败",
-          description: response.details || "无法完成认证",
-          status: "error",
-          duration: 5000,
-        });
+        toastLoginFailure(
+          response.message || "登录失败",
+          response.details || "无法完成认证"
+        );
       }
     } catch (error) {
       console.error("CAUC complete login error:", error);
-      toast({
-        title: "登录失败",
-        description:
-          error instanceof Error ? error.message : "网络错误或服务器异常",
-        status: "error",
-        duration: 5000,
-      });
+      toastLoginFailure(
+        "登录失败",
+        error instanceof Error ? error.message : "网络错误或服务器异常"
+      );
     } finally {
       setIsSubmitting(false);
     }

@@ -43,6 +43,10 @@ import {
 } from "react-icons/lu";
 import { Section } from "@/components/common/section";
 import SegmentedControl from "@/components/common/segmented";
+import LoginFailureDescription, {
+  LOGIN_CACHE_ONLY_OPTIONS,
+  LOGIN_FAILURE_TOAST_DURATION,
+} from "@/components/login-failure-description";
 import SelectPlayerModal from "@/components/modals/select-player-modal";
 import OAuthLoginPanel from "@/components/oauth-login-panel";
 import { useLauncherConfig } from "@/contexts/config";
@@ -197,8 +201,18 @@ const AddPlayerModal: React.FC<AddPlayerModalProps> = ({
   const afterFailure = (response: ResponseError) => {
     toast({
       title: response.message,
-      description: response.details,
+      description: (
+        <LoginFailureDescription
+          details={response.details}
+          onClearCache={() =>
+            openSharedModal("clear-cache", {
+              initialOptions: LOGIN_CACHE_ONLY_OPTIONS,
+            })
+          }
+        />
+      ),
       status: "error",
+      duration: LOGIN_FAILURE_TOAST_DURATION,
     });
     setIsLoading(false);
   };

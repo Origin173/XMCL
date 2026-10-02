@@ -38,6 +38,26 @@ export class UtilsService {
   }
 
   /**
+   * EXPORT a diagnostic report zip (system info, redacted config and recent logs) for bug reports.
+   * @param description the problem description written by the user.
+   * @param includeLogs whether to include recent launcher and game logs.
+   * @param savePath the zip file path to save.
+   * @returns {Promise<InvokeResponse<string>>} the saved zip file path.
+   */
+  @responseHandler("utils")
+  static async exportDiagnosticReport(
+    description: string,
+    includeLogs: boolean,
+    savePath: string
+  ): Promise<InvokeResponse<string>> {
+    return await invoke("export_diagnostic_report", {
+      description,
+      includeLogs,
+      savePath,
+    });
+  }
+
+  /**
    * RETRIEVE the list of installed TrueType fonts.
    * @returns {Promise<InvokeResponse<string[]>>}
    */

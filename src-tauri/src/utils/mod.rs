@@ -1,4 +1,5 @@
 pub mod commands;
+pub mod diagnostics;
 pub mod fs;
 pub mod image;
 pub mod logging;

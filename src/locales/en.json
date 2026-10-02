@@ -315,6 +315,33 @@
       }
     }
   },
+  "BugReportModal": {
+    "header": "Report a Bug",
+    "field": {
+      "title": "Title",
+      "description": "Description",
+      "steps": "Steps to reproduce",
+      "expected": "Expected behavior"
+    },
+    "placeholder": {
+      "title": "Summarize the problem, e.g. CAUC login fails with an auth error",
+      "description": "What happened? What error message did you see?",
+      "steps": "1. Open...\n2. Click..."
+    },
+    "includeLogs": "Include recent logs in the diagnostic report",
+    "privacyNote": "The report contains system info, launcher settings and recent logs. Account tokens, cookies, passwords and your home directory are hidden automatically. You can unzip it to check before sending.",
+    "qqGroup": "QQ group: {{group}}",
+    "button": {
+      "copyGroup": "Copy",
+      "featureRequest": "Request a feature",
+      "copyText": "Copy as text",
+      "export": "Export report",
+      "openIssue": "Submit on GitHub"
+    },
+    "issue": {
+      "attachHint": "A diagnostic report has been exported. Please drag the zip file here to upload it."
+    }
+  },
   "ChangeModLoaderModal": {
     "header": {
       "title": "Change Mod Loader"
@@ -350,6 +377,39 @@
     "dialog": {
       "title": "Clear Download Cache",
       "content": "Are you sure you want to clear the download cache? This action cannot be undone."
+    }
+  },
+  "ClearCacheModal": {
+    "header": "Clear Cache",
+    "body": "Choose what to clear. Instances, worlds and launcher settings are not affected.",
+    "options": {
+      "login": {
+        "title": "Login cache",
+        "description": "Reset login state, re-fetch auth server info, remove authlib-injector and clear web data"
+      },
+      "credentials": {
+        "title": "Also clear saved login credentials",
+        "description": "Players are kept, but every non-offline account will need to log in again"
+      },
+      "download": {
+        "title": "Download cache",
+        "description": "Delete files in the download cache directory"
+      },
+      "temp": {
+        "title": "Temporary files",
+        "description": "Version list, mod translations and other caches that are regenerated automatically"
+      },
+      "logs": {
+        "title": "Log files",
+        "description": "Old launcher and game logs (may be needed for bug reports; the current log is kept)"
+      }
+    },
+    "button": {
+      "clear": "Clear"
+    },
+    "result": {
+      "freed": "Freed {{size}}",
+      "failed": ", {{count}} item(s) in use could not be deleted"
     }
   },
   "ComingSoonSign": {
@@ -982,6 +1042,11 @@
         },
         "launcherLogDir": {
           "title": "Launcher Logs Directory"
+        },
+        "clearCache": {
+          "title": "Clear Cache",
+          "description": "Try clearing the launcher cache if you cannot log in or something fails to load",
+          "button": "Clear"
         }
       }
     }
@@ -1147,6 +1212,10 @@
         "LauncherDocs": {
           "title": "XMCL Documentation",
           "url": "https://github.com/Origin173/XMCL"
+        },
+        "bugReport": {
+          "title": "Report a Bug",
+          "description": "Export a diagnostic report and send it via GitHub or the QQ group"
         }
       }
     }
@@ -1429,6 +1498,10 @@
     "toast": {
       "noSelectedPlayer": "Please add and select a player first"
     }
+  },
+  "LoginFailureDescription": {
+    "hint": "Keeps failing? Try ",
+    "clearCache": "clearing the login cache"
   },
   "ManageSkinModal": {
     "skinManage": "Manage Skin",
@@ -1925,6 +1998,15 @@
           "description": {
             "HAS_ACTIVE_DOWNLOAD_TASKS": "There are active download tasks in progress.",
             "FILE_DELETION_FAILED": "Failed to delete files, they may be in use."
+          }
+        }
+      },
+      "clearLauncherCache": {
+        "success": "Cache cleared",
+        "error": {
+          "title": "Failed to clear cache",
+          "description": {
+            "HAS_ACTIVE_DOWNLOAD_TASKS": "Downloads are in progress. Try again later or uncheck the download cache"
           }
         }
       }
@@ -2510,6 +2592,12 @@
         "success": "File deleted successfully",
         "error": {
           "title": "Failed to delete file"
+        }
+      },
+      "exportDiagnosticReport": {
+        "success": "Diagnostic report exported",
+        "error": {
+          "title": "Failed to export diagnostic report"
         }
       }
     }

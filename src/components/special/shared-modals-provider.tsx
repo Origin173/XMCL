@@ -1,6 +1,8 @@
 import DownloadSpecificResourceModal from "@/components//modals/download-specific-resource-modal";
 import AddAuthServerModal from "@/components/modals/add-auth-server-modal";
 import AlertResourceDependencyModal from "@/components/modals/alert-resource-dependency-modal";
+import BugReportModal from "@/components/modals/bug-report-modal";
+import ClearCacheModal from "@/components/modals/clear-cache-modal";
 import CopyOrMoveModal from "@/components/modals/copy-or-move-modal";
 import DeleteInstanceDialog from "@/components/modals/delete-instance-alert-dialog";
 import DownloadModpackModal from "@/components/modals/download-modpack-modal";
@@ -33,6 +35,8 @@ const SharedModals: React.FC<{ children: React.ReactNode }> = ({
   const modals: Record<string, React.FC<any>> = {
     "add-auth-server": AddAuthServerModal,
     "alert-resource-dependency": AlertResourceDependencyModal,
+    "bug-report": BugReportModal,
+    "clear-cache": ClearCacheModal,
     "copy-or-move": CopyOrMoveModal,
     "delete-instance-alert": DeleteInstanceDialog,
     "download-modpack": DownloadModpackModal,
