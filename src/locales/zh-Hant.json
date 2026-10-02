@@ -315,6 +315,33 @@
       }
     }
   },
+  "BugReportModal": {
+    "header": "回報問題",
+    "field": {
+      "title": "標題",
+      "description": "問題描述",
+      "steps": "重現步驟",
+      "expected": "預期結果"
+    },
+    "placeholder": {
+      "title": "一句話概括問題，例如：CAUC 帳號登入後提示認證失敗",
+      "description": "發生了什麼？出現了什麼錯誤提示？",
+      "steps": "1. 開啟…\n2. 點擊…"
+    },
+    "includeLogs": "在診斷包中附帶近期日誌",
+    "privacyNote": "診斷包包含系統資訊、啟動器設定和近期日誌，帳號權杖、Cookie、密碼和使用者目錄會被自動隱藏。提交前可解壓檢查。",
+    "qqGroup": "QQ 回報群：{{group}}",
+    "button": {
+      "copyGroup": "複製群號",
+      "featureRequest": "請求新功能",
+      "copyText": "複製回報資訊",
+      "export": "匯出診斷包",
+      "openIssue": "提交到 GitHub"
+    },
+    "issue": {
+      "attachHint": "已匯出診斷包，請將 zip 檔案拖曳到此處上傳。"
+    }
+  },
   "CheckModUpdateModal": {
     "header": {
       "title": "檢查模組更新"
@@ -1173,6 +1200,10 @@
         "LauncherDocs": {
           "title": "XMCL 文件",
           "url": "https://github.com/Origin173/XMCL"
+        },
+        "bugReport": {
+          "title": "回報問題",
+          "description": "匯出診斷包並透過 GitHub 或 QQ 群回報"
         }
       }
     }
@@ -2549,6 +2580,12 @@
         "success": "刪除檔案成功",
         "error": {
           "title": "刪除檔案失敗"
+        }
+      },
+      "exportDiagnosticReport": {
+        "success": "診斷包已匯出",
+        "error": {
+          "title": "匯出診斷包失敗"
         }
       }
     }

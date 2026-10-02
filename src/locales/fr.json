@@ -293,6 +293,33 @@
       }
     }
   },
+  "BugReportModal": {
+    "header": "Signaler un bug",
+    "field": {
+      "title": "Titre",
+      "description": "Description",
+      "steps": "Étapes pour reproduire",
+      "expected": "Comportement attendu"
+    },
+    "placeholder": {
+      "title": "Résumez le problème, ex. la connexion CAUC échoue avec une erreur d'authentification",
+      "description": "Que s'est-il passé ? Quel message d'erreur avez-vous vu ?",
+      "steps": "1. Ouvrir...\n2. Cliquer..."
+    },
+    "includeLogs": "Inclure les journaux récents dans le rapport",
+    "privacyNote": "Le rapport contient les infos système, les paramètres du lanceur et les journaux récents. Les jetons de compte, cookies, mots de passe et votre dossier personnel sont masqués automatiquement. Vous pouvez le décompresser pour vérifier avant l'envoi.",
+    "qqGroup": "Groupe QQ : {{group}}",
+    "button": {
+      "copyGroup": "Copier",
+      "featureRequest": "Demander une fonctionnalité",
+      "copyText": "Copier en texte",
+      "export": "Exporter le rapport",
+      "openIssue": "Soumettre sur GitHub"
+    },
+    "issue": {
+      "attachHint": "Un rapport de diagnostic a été exporté. Faites glisser le fichier zip ici pour le téléverser."
+    }
+  },
   "ComingSoonSign": {
     "text": "Cette page n'est pas encore disponible, restez à l'écoute."
   },
@@ -1045,6 +1072,10 @@
         "LauncherDocs": {
           "title": "Documentation XMCL",
           "url": "https://github.com/Origin173/XMCL"
+        },
+        "bugReport": {
+          "title": "Signaler un bug",
+          "description": "Exporter un rapport de diagnostic et l'envoyer via GitHub ou le groupe QQ"
         }
       }
     }
@@ -2313,6 +2344,12 @@
         "success": "File deleted successfully",
         "error": {
           "title": "Failed to delete file"
+        }
+      },
+      "exportDiagnosticReport": {
+        "success": "Rapport de diagnostic exporté",
+        "error": {
+          "title": "Échec de l'export du rapport de diagnostic"
         }
       }
     }

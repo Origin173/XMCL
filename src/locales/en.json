@@ -315,6 +315,33 @@
       }
     }
   },
+  "BugReportModal": {
+    "header": "Report a Bug",
+    "field": {
+      "title": "Title",
+      "description": "Description",
+      "steps": "Steps to reproduce",
+      "expected": "Expected behavior"
+    },
+    "placeholder": {
+      "title": "Summarize the problem, e.g. CAUC login fails with an auth error",
+      "description": "What happened? What error message did you see?",
+      "steps": "1. Open...\n2. Click..."
+    },
+    "includeLogs": "Include recent logs in the diagnostic report",
+    "privacyNote": "The report contains system info, launcher settings and recent logs. Account tokens, cookies, passwords and your home directory are hidden automatically. You can unzip it to check before sending.",
+    "qqGroup": "QQ group: {{group}}",
+    "button": {
+      "copyGroup": "Copy",
+      "featureRequest": "Request a feature",
+      "copyText": "Copy as text",
+      "export": "Export report",
+      "openIssue": "Submit on GitHub"
+    },
+    "issue": {
+      "attachHint": "A diagnostic report has been exported. Please drag the zip file here to upload it."
+    }
+  },
   "ChangeModLoaderModal": {
     "header": {
       "title": "Change Mod Loader"
@@ -1185,6 +1212,10 @@
         "LauncherDocs": {
           "title": "XMCL Documentation",
           "url": "https://github.com/Origin173/XMCL"
+        },
+        "bugReport": {
+          "title": "Report a Bug",
+          "description": "Export a diagnostic report and send it via GitHub or the QQ group"
         }
       }
     }
@@ -2561,6 +2592,12 @@
         "success": "File deleted successfully",
         "error": {
           "title": "Failed to delete file"
+        }
+      },
+      "exportDiagnosticReport": {
+        "success": "Diagnostic report exported",
+        "error": {
+          "title": "Failed to export diagnostic report"
         }
       }
     }

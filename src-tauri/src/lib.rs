@@ -162,6 +162,7 @@ pub async fn run() {
       utils::commands::extract_filename,
       utils::commands::delete_file,
       utils::commands::delete_directory,
+      utils::commands::export_diagnostic_report,
       utils::commands::retrieve_truetype_font_list,
       utils::commands::check_service_availability,
       openlist::test_api::test_openlist_connection,

@@ -117,19 +117,9 @@ const AboutSettingsPage = () => {
         },
         {
           title: t("AboutSettingsPage.about.settings.reportIssue.title"),
-          children: (
-            <CommonIconButton
-              label="https://github.com/Origin173/XMCL/issues"
-              icon="external"
-              withTooltip
-              tooltipPlacement="bottom-end"
-              size="xs"
-              h={18}
-              onClick={() => {
-                openUrl("https://github.com/Origin173/XMCL/issues");
-              }}
-            />
-          ),
+          children: <Icon as={LuArrowRight} boxSize={3.5} mr="5px" />,
+          isFullClickZone: true,
+          onClick: () => openSharedModal("bug-report"),
         },
         {
           title: t("AboutSettingsPage.about.settings.aboutSJMC.title"),

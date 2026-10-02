@@ -1,5 +1,6 @@
 use crate::error::XMCLResult;
 use crate::launcher_config::models::{LauncherConfigError, MemoryInfo};
+use crate::utils::diagnostics::export_diagnostic_report as export_diagnostic_report_helper;
 use crate::utils::fs::extract_filename as extract_filename_helper;
 use crate::utils::sys_info::get_memory_info;
 use font_loader::system_fonts;
@@ -26,6 +27,22 @@ pub fn delete_file(path: String) -> XMCLResult<()> {
 #[tauri::command]
 pub fn delete_directory(path: String) -> XMCLResult<()> {
   fs::remove_dir_all(&path).map_err(Into::into)
+}
+
+#[tauri::command]
+pub async fn export_diagnostic_report(
+  app: tauri::AppHandle,
+  description: String,
+  include_logs: bool,
+  save_path: String,
+) -> XMCLResult<String> {
+  export_diagnostic_report_helper(
+    &app,
+    &description,
+    include_logs,
+    std::path::Path::new(&save_path),
+  )?;
+  Ok(save_path)
 }
 
 #[tauri::command]
