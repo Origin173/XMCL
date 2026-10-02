@@ -889,6 +889,11 @@
         },
         "launcherLogDir": {
           "title": "Launcher Logs Directory"
+        },
+        "clearCache": {
+          "title": "Vider le cache",
+          "description": "Essayez de vider le cache du lanceur si vous ne pouvez pas vous connecter ou si un chargement échoue",
+          "button": "Vider"
         }
       }
     }
@@ -1241,6 +1246,10 @@
     "toast": {
       "noSelectedPlayer": "Veuillez d'abord ajouter et sélectionner un joueur"
     }
+  },
+  "LoginFailureDescription": {
+    "hint": "Échecs répétés ? Essayez de ",
+    "clearCache": "vider le cache de connexion"
   },
   "ManageSkinModal": {
     "skinManage": "Gérer les skins",
@@ -1710,6 +1719,15 @@
           "description": {
             "HAS_ACTIVE_DOWNLOAD_TASKS": "There are active download tasks in progress.",
             "FILE_DELETION_FAILED": "Failed to delete files, they may be in use."
+          }
+        }
+      },
+      "clearLauncherCache": {
+        "success": "Cache vidé",
+        "error": {
+          "title": "Échec du vidage du cache",
+          "description": {
+            "HAS_ACTIVE_DOWNLOAD_TASKS": "Des téléchargements sont en cours. Réessayez plus tard ou décochez le cache de téléchargement"
           }
         }
       }
@@ -2478,6 +2496,39 @@
     "dialog": {
       "title": "Clear Download Cache",
       "content": "Are you sure you want to clear the download cache? This action cannot be undone."
+    }
+  },
+  "ClearCacheModal": {
+    "header": "Vider le cache",
+    "body": "Choisissez ce qu'il faut vider. Les instances, mondes et paramètres du lanceur ne sont pas affectés.",
+    "options": {
+      "login": {
+        "title": "Cache de connexion",
+        "description": "Réinitialise l'état de connexion, récupère à nouveau les infos des serveurs d'authentification, supprime authlib-injector et efface les données web"
+      },
+      "credentials": {
+        "title": "Effacer aussi les identifiants enregistrés",
+        "description": "Les joueurs sont conservés, mais tous les comptes non hors ligne devront se reconnecter"
+      },
+      "download": {
+        "title": "Cache de téléchargement",
+        "description": "Supprime les fichiers du dossier de cache de téléchargement"
+      },
+      "temp": {
+        "title": "Fichiers temporaires",
+        "description": "Liste des versions, traductions de mods et autres caches régénérés automatiquement"
+      },
+      "logs": {
+        "title": "Fichiers journaux",
+        "description": "Anciens journaux du lanceur et du jeu (peuvent servir aux rapports de bug ; le journal actuel est conservé)"
+      }
+    },
+    "button": {
+      "clear": "Vider"
+    },
+    "result": {
+      "freed": "{{size}} libéré(s)",
+      "failed": ", {{count}} élément(s) en cours d'utilisation n'ont pas pu être supprimés"
     }
   },
   "DeleteModAlertDialog": {

@@ -73,6 +73,7 @@ pub async fn run() {
       launcher_config::commands::download_mojang_java,
       launcher_config::commands::check_game_directory,
       launcher_config::commands::clear_download_cache,
+      launcher_config::commands::clear_launcher_cache,
       launcher_config::commands::check_launcher_update,
       launcher_config::commands::test_proxy_connection,
       launcher_config::commands::download_launcher_update,

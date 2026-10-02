@@ -352,6 +352,39 @@
       "content": "確定要清除下載快取嗎？此操作無法撤銷。"
     }
   },
+  "ClearCacheModal": {
+    "header": "清理快取",
+    "body": "請選擇要清理的內容，遊戲實例、存檔和啟動器設定不受影響。",
+    "options": {
+      "login": {
+        "title": "登入快取",
+        "description": "重設登入狀態、重新取得認證伺服器資訊、刪除 authlib-injector 並清除網頁資料"
+      },
+      "credentials": {
+        "title": "同時清除帳號登入憑證",
+        "description": "保留角色列表，但所有非離線帳號都需要重新登入"
+      },
+      "download": {
+        "title": "下載快取",
+        "description": "刪除下載快取目錄中的檔案"
+      },
+      "temp": {
+        "title": "暫存檔案",
+        "description": "版本列表、模組翻譯等可自動重新產生的快取"
+      },
+      "logs": {
+        "title": "日誌檔案",
+        "description": "歷史啟動器日誌與遊戲日誌（回報問題時可能需要，目前日誌會保留）"
+      }
+    },
+    "button": {
+      "clear": "開始清理"
+    },
+    "result": {
+      "freed": "共釋放 {{size}}",
+      "failed": "，{{count}} 項因被佔用未能刪除"
+    }
+  },
   "ComingSoonSign": {
     "text": "該頁面暫未開放，敬請期待"
   },
@@ -970,6 +1003,11 @@
         },
         "launcherLogDir": {
           "title": "Launcher Logs Directory"
+        },
+        "clearCache": {
+          "title": "清理快取",
+          "description": "遇到無法登入、載入異常等問題時，可嘗試清理啟動器快取",
+          "button": "清理"
         }
       }
     }
@@ -1417,6 +1455,10 @@
     "toast": {
       "noSelectedPlayer": "請先新增並選擇遊戲角色"
     }
+  },
+  "LoginFailureDescription": {
+    "hint": "多次失敗？試試",
+    "clearCache": "清理登入快取"
   },
   "ManageSkinModal": {
     "skinManage": "管理皮膚",
@@ -1913,6 +1955,15 @@
           "description": {
             "HAS_ACTIVE_DOWNLOAD_TASKS": "當前有下載任務正在進行中，請稍後再試",
             "FILE_DELETION_FAILED": "無法刪除快取檔案，可能是檔案正在被使用"
+          }
+        }
+      },
+      "clearLauncherCache": {
+        "success": "快取清理完成",
+        "error": {
+          "title": "清理快取失敗",
+          "description": {
+            "HAS_ACTIVE_DOWNLOAD_TASKS": "目前有下載任務正在進行，請稍後再試或取消勾選下載快取"
           }
         }
       }

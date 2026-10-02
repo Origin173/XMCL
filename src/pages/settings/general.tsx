@@ -22,7 +22,7 @@ const GeneralSettingsPage = () => {
   const generalConfigs = config.general;
   const primaryColor = config.appearance.theme.primaryColor;
   const { removeHistory } = useRoutingHistory();
-  const { openGenericConfirmDialog } = useSharedModals();
+  const { openGenericConfirmDialog, openSharedModal } = useSharedModals();
 
   const instancesNavTypes = ["instance", "directory", "hidden"];
 
@@ -183,6 +183,21 @@ const GeneralSettingsPage = () => {
               }
             >
               {t("General.open")}
+            </Button>
+          ),
+        },
+        {
+          title: t("GeneralSettingsPage.advanced.settings.clearCache.title"),
+          description: t(
+            "GeneralSettingsPage.advanced.settings.clearCache.description"
+          ),
+          children: (
+            <Button
+              variant="subtle"
+              size="xs"
+              onClick={() => openSharedModal("clear-cache")}
+            >
+              {t("GeneralSettingsPage.advanced.settings.clearCache.button")}
             </Button>
           ),
         },

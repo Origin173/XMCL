@@ -303,6 +303,19 @@ export const defaultConfig: LauncherConfig = {
   },
 };
 
+export interface ClearCacheOptions {
+  login: boolean;
+  credentials: boolean;
+  download: boolean;
+  temp: boolean;
+  logs: boolean;
+}
+
+export interface ClearCacheResult {
+  freedBytes: number;
+  failedCount: number;
+}
+
 export interface VersionMetaInfo {
   version: string;
   fileName: string;

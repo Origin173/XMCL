@@ -1,6 +1,11 @@
 import { invoke } from "@tauri-apps/api/core";
 import { getCurrentWebview } from "@tauri-apps/api/webview";
-import { LauncherConfig, VersionMetaInfo } from "@/models/config";
+import {
+  ClearCacheOptions,
+  ClearCacheResult,
+  LauncherConfig,
+  VersionMetaInfo,
+} from "@/models/config";
 import { InvokeResponse } from "@/models/response";
 import { JavaInfo } from "@/models/system-info";
 import { responseHandler } from "@/utils/response";
@@ -142,6 +147,18 @@ export class ConfigService {
   @responseHandler("config")
   static async clearDownloadCache(): Promise<InvokeResponse<void>> {
     return await invoke("clear_download_cache");
+  }
+
+  /**
+   * CLEAR launcher caches by category (login state, download cache, temporary files, logs).
+   * @param {ClearCacheOptions} options The cache categories to clear.
+   * @returns {Promise<InvokeResponse<ClearCacheResult>>} The freed size and the number of entries failed to delete.
+   */
+  @responseHandler("config")
+  static async clearLauncherCache(
+    options: ClearCacheOptions
+  ): Promise<InvokeResponse<ClearCacheResult>> {
+    return await invoke("clear_launcher_cache", { options });
   }
 
   /**

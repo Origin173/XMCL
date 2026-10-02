@@ -352,6 +352,39 @@
       "content": "Are you sure you want to clear the download cache? This action cannot be undone."
     }
   },
+  "ClearCacheModal": {
+    "header": "Clear Cache",
+    "body": "Choose what to clear. Instances, worlds and launcher settings are not affected.",
+    "options": {
+      "login": {
+        "title": "Login cache",
+        "description": "Reset login state, re-fetch auth server info, remove authlib-injector and clear web data"
+      },
+      "credentials": {
+        "title": "Also clear saved login credentials",
+        "description": "Players are kept, but every non-offline account will need to log in again"
+      },
+      "download": {
+        "title": "Download cache",
+        "description": "Delete files in the download cache directory"
+      },
+      "temp": {
+        "title": "Temporary files",
+        "description": "Version list, mod translations and other caches that are regenerated automatically"
+      },
+      "logs": {
+        "title": "Log files",
+        "description": "Old launcher and game logs (may be needed for bug reports; the current log is kept)"
+      }
+    },
+    "button": {
+      "clear": "Clear"
+    },
+    "result": {
+      "freed": "Freed {{size}}",
+      "failed": ", {{count}} item(s) in use could not be deleted"
+    }
+  },
   "ComingSoonSign": {
     "text": "This page is not available yet, coming soon!"
   },
@@ -982,6 +1015,11 @@
         },
         "launcherLogDir": {
           "title": "Launcher Logs Directory"
+        },
+        "clearCache": {
+          "title": "Clear Cache",
+          "description": "Try clearing the launcher cache if you cannot log in or something fails to load",
+          "button": "Clear"
         }
       }
     }
@@ -1429,6 +1467,10 @@
     "toast": {
       "noSelectedPlayer": "Please add and select a player first"
     }
+  },
+  "LoginFailureDescription": {
+    "hint": "Keeps failing? Try ",
+    "clearCache": "clearing the login cache"
   },
   "ManageSkinModal": {
     "skinManage": "Manage Skin",
@@ -1925,6 +1967,15 @@
           "description": {
             "HAS_ACTIVE_DOWNLOAD_TASKS": "There are active download tasks in progress.",
             "FILE_DELETION_FAILED": "Failed to delete files, they may be in use."
+          }
+        }
+      },
+      "clearLauncherCache": {
+        "success": "Cache cleared",
+        "error": {
+          "title": "Failed to clear cache",
+          "description": {
+            "HAS_ACTIVE_DOWNLOAD_TASKS": "Downloads are in progress. Try again later or uncheck the download cache"
           }
         }
       }
