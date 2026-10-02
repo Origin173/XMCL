@@ -3,3 +3,11 @@
 allowBuilds:
   sharp: true
   unrs-resolver: true
+
+# framer-motion, motion-dom and motion-utils are released in lockstep, but framer-motion only
+# declares `^` ranges on the others, so a fresh resolve can pick a newer motion-dom that breaks it
+# at runtime (e.g. motion-dom 12.43 no longer exports `activeAnimations`).
+# Keep them on the same minor as framer-motion 12.23.x, matching package-lock.json.
+overrides:
+  motion-dom: ~12.23.23
+  motion-utils: ~12.23.6
