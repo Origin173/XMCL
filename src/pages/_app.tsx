@@ -123,7 +123,15 @@ export default function App({ Component, pageProps }: AppProps) {
                   <TaskContextProvider>
                     <GlobalEventHandler>
                       <MainLayout>
-                        <Fade key={router.pathname.split("/")[1] || ""} in>
+                        {/* initial={false}: this Fade remounts on every
+                            top-level navigation (keyed by route), and without
+                            it the page would fade in from opacity 0, flashing
+                            the background image through the content. */}
+                        <Fade
+                          key={router.pathname.split("/")[1] || ""}
+                          in
+                          initial={false}
+                        >
                           <SpecLayout>
                             <Component {...pageProps} />
                           </SpecLayout>
